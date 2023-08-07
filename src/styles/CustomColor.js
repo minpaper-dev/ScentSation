@@ -7,6 +7,8 @@ const palette = {
 
     Gray100 : '#A0A0A0',
     Gray200 : '#828282',
+    Gray300 : '#F9F9F9',
+    Gray400 : '#F5F5F5',
 
     Red100 : '#F24726',
     Red200 : '#E75401',
