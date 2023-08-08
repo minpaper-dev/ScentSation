@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 
 import palette from '../styles/CustomColor'
@@ -6,11 +6,13 @@ import CustomFont from '../styles/CustomFont'
 import { genderList } from '../common/data'
 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { setDoc, doc } from 'firebase/firestore/lite'
+import { setDoc, doc, collection, getDocs } from 'firebase/firestore/lite'
 import { db } from '../Firebase'
+import { useNavigate } from 'react-router-dom'
 
 const Signup = () => {
   const auth = getAuth()
+  const navigate = useNavigate()
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
@@ -48,6 +50,59 @@ const Signup = () => {
     perfume: { type: 'text', title: '대표 향수', value: '', placeholder: '' },
   })
 
+  const [errorMsg, setErrorMsg] = useState({
+    nickname: '',
+    email: '',
+    password: '',
+    age: '',
+  })
+
+  const [userInfo, setUserInfo] = useState({
+    nickname: [],
+    email: [],
+  })
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
+  useEffect(() => {
+    let copyErrorMsg = { ...errorMsg }
+
+    // 닉네임 유효성 검사
+    if (userInfo.nickname.includes(inputInfo.nickname.value)) {
+      copyErrorMsg = {
+        ...copyErrorMsg,
+        nickname: '이미 존재하는 닉네임입니다.',
+      }
+    } else {
+      copyErrorMsg = { ...copyErrorMsg, nickname: '' }
+    }
+
+    // 이메일 유효성 검사
+    if (userInfo.email.includes(inputInfo.email.value)) {
+      copyErrorMsg = { ...copyErrorMsg, email: '이미 존재하는 이메일입니다.' }
+    } else {
+      copyErrorMsg = { ...copyErrorMsg, email: '' }
+    }
+
+    setErrorMsg(copyErrorMsg)
+  }, [inputInfo])
+
+  const getUserInfo = async () => {
+    let info = { nickname: [], email: [] }
+    const data = await getDocs(collection(db, 'user'))
+    data.forEach(
+      doc =>
+        (info = {
+          ...info,
+          nickname: [...info.nickname, doc.data().nickname],
+          email: [...info.email, doc.data().email],
+        })
+    )
+    setUserInfo(info)
+  }
+
   const renderRadio = category => {
     return (
       <Flex>
@@ -65,9 +120,12 @@ const Signup = () => {
             />
             <CustomFont
               color={
-                inputInfo.gender.value === gender.value ? 'white' : 'black'
+                inputInfo.gender.value === gender.value
+                  ? 'white'
+                  : palette.Gray100
               }
               content={gender.title}
+              size={0.8}
             />
           </Label>
         ))}
@@ -93,6 +151,8 @@ const Signup = () => {
         category: inputInfo.category.value,
         major: inputInfo.perfume.value,
       })
+
+      navigate('/', { replace: true })
     } catch (error) {
       console.log(error)
     }
@@ -114,25 +174,40 @@ const Signup = () => {
           {Object.values(inputInfo).map((item, index) => (
             <React.Fragment key={item.title}>
               <Center>
-                <CustomFont content={item.title} />
+                <CustomFont
+                  color={palette.Brown500}
+                  weight={400}
+                  content={item.title}
+                  size={0.8}
+                />
               </Center>
               {item.type === 'radio' ? (
                 renderRadio(Object.keys(inputInfo)[index])
               ) : (
-                <Input
-                  type={item.type}
-                  placeholder={item.placeholder}
-                  onChange={e =>
-                    onChange(e.target.value, Object.keys(inputInfo)[index])
-                  }
-                  value={item.value}
-                />
+                <FlexCol>
+                  <Input
+                    type={item.type}
+                    placeholder={item.placeholder}
+                    onChange={e =>
+                      onChange(e.target.value, Object.keys(inputInfo)[index])
+                    }
+                    value={item.value}
+                  />
+                  <CustomFont
+                    content={errorMsg[Object.keys(inputInfo)[index]]}
+                    size={0.8}
+                    marginTop={10}
+                    color={palette.Red200}
+                  />
+                </FlexCol>
               )}
             </React.Fragment>
           ))}
         </FormGrid>
       </Wrap>
-      <SignupButton onClick={onSignup}>회원가입</SignupButton>
+      <SignupButton onClick={onSignup}>
+        <CustomFont size={0.8} content={'회원가입'} />
+      </SignupButton>
     </Container>
   )
 }
@@ -157,7 +232,7 @@ const FormGrid = styled.div`
   display: grid;
   grid-template-columns: 8rem 1fr;
   padding: 0px 3rem;
-  row-gap: 1.5rem;
+  row-gap: 1rem;
 `
 
 const SignupButton = styled.button`
@@ -182,9 +257,9 @@ const Label = styled.label`
   align-items: center;
   justify-content: center;
   background-color: ${props => (props.$isActive ? palette.Brown200 : 'white')};
-  border: 1px solid ${palette.Brown200};
+  border: 1px solid ${palette.Gray100};
   border-radius: 0.5rem;
-  padding: 1rem 0px;
+  padding: 0.8rem 0px;
 
   cursor: pointer;
 `
@@ -201,12 +276,15 @@ const Center = styled.div`
 `
 
 const Input = styled.input`
+  width: 100%;
   border-radius: 8px;
-  border: 1px solid ${palette.Brown200};
-  padding: 15px 18px;
+  border: 1px solid ${palette.Gray100};
+  padding: 0.8rem 1rem;
+  font-size: 0.8rem;
 
   &::placeholder {
-    color: ${palette.Gray200};
+    color: ${palette.Gray100};
+    font-size: 0.8rem;
   }
 
   &:focus {
@@ -225,6 +303,11 @@ const ProfileImage = styled.button`
   height: 10rem;
   margin: 2rem 0px;
   border-radius: 100%;
+`
+
+const FlexCol = styled.div`
+  display: flex;
+  flex-direction: column;
 `
 
 export default Signup
