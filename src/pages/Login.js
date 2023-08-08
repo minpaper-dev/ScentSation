@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import CustomInput from '../components/Custom/CustomInput'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 const Login = () => {
   const auth = getAuth()
+  const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -16,6 +17,7 @@ const Login = () => {
       const { user } = await signInWithEmailAndPassword(auth, email, password)
       console.log(user)
       console.log(user.accessToken)
+      navigate('/', { replace: true })
     } catch (error) {
       console.log(error)
     }
