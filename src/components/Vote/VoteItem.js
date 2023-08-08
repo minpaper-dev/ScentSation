@@ -9,7 +9,6 @@ const VoteItem = () => {
     <Container>
       <ProfileItem />
       <CustomFont
-        size={12}
         content={
           '안녕하세요 제가 이런저런 이유로 향수를 고민중인데 투표 부탁드려요'
         }
@@ -18,10 +17,10 @@ const VoteItem = () => {
       />
       <VoteList>
         <VoteBox>
-          <CustomFont size={10} content={'어나더 13'} />
+          <CustomFont content={'어나더 13'} />
         </VoteBox>
         <VoteBox>
-          <CustomFont size={10} content={'어나더 13'} />
+          <CustomFont content={'어나더 13'} />
         </VoteBox>
       </VoteList>
     </Container>

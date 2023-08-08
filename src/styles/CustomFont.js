@@ -1,9 +1,9 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const Text = styled.span`
-  font-weight : ${props =>(props.weight ? props.weight : 400)};
-  font-size: ${props => (props.size ? props.size : 12)}px;
+  font-weight: ${props => (props.weight ? props.weight : 400)};
+  font-size: ${props => (props.size ? props.size : 1.0)}rem;
   color: ${props => (props.color ? props.color : '#292A2B')};
   margin-right: ${props => (props.marginRi ? props.marginRi : 0)}px;
   margin-left: ${props => (props.marginLf ? props.marginLf : 0)}px;
@@ -16,7 +16,7 @@ const Text = styled.span`
     props.textDecoLine ? props.textDecoLine : 'none'};
   text-decoration-color: ${props =>
     props.textDecoColor ? props.textDecoColor : '#292A2B'};
-`;
+`
 
 export default ({
   type,
@@ -33,32 +33,29 @@ export default ({
   opacity,
   textDecoLine,
   textDecoColor,
-  style
+  style,
 }) => {
-  
   const checkType = () => {
-    
-      return (
-        <Text
-          size={size}
-          color={color}
-          weight={weight}
-          marginRi={marginRi}
-          marginLf={marginLf}
-          marginBt={marginBt}
-          marginTop={marginTop}
-          center={center}
-          right={right}
-          opacity={opacity}
-          textDecoLine={textDecoLine}
-          textDecoColor={textDecoColor}
-          style={{ ...style }}
-        >
-          {content}
-        </Text>
-      );
-    
-  };
+    return (
+      <Text
+        size={size}
+        color={color}
+        weight={weight}
+        marginRi={marginRi}
+        marginLf={marginLf}
+        marginBt={marginBt}
+        marginTop={marginTop}
+        center={center}
+        right={right}
+        opacity={opacity}
+        textDecoLine={textDecoLine}
+        textDecoColor={textDecoColor}
+        style={{ ...style }}
+      >
+        {content}
+      </Text>
+    )
+  }
 
-  return checkType(type);
-};
+  return checkType(type)
+}

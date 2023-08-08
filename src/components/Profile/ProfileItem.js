@@ -8,8 +8,8 @@ const ProfileItem = () => {
     <Profile>
       <ProfileImage />
       <ProfileInfo>
-        <CustomFont size={12} content={'김땡땡'} />
-        <CustomFont size={12} content={'31세 / 우디 / 남'} />
+        <CustomFont content={'김땡땡'} />
+        <CustomFont content={'31세 / 우디 / 남'} />
       </ProfileInfo>
     </Profile>
   )

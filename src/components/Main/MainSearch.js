@@ -8,13 +8,11 @@ const MainSearch = () => {
     <Container>
       <CustomFont
         weight={800}
-        size={20}
         content={'어떤 향수를 찾으세요?'}
         marginBt={20}
       />
       <WrapInput>
         <CustomFont
-          size={12}
           content={'제품명, 브랜드를 입력해보세요 : )'}
           color={palette.Gray200}
         />
@@ -22,22 +20,22 @@ const MainSearch = () => {
       </WrapInput>
       <RecommendList>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
         <RecommendItem>
-          <CustomFont size={10} content={'딥디크'} />
+          <CustomFont content={'딥디크'} />
         </RecommendItem>
       </RecommendList>
     </Container>

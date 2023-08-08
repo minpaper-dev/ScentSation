@@ -5,7 +5,7 @@ import CustomFont from '../../styles/CustomFont'
 const MainComponent = ({ title, component }) => {
   return (
     <Container>
-      <CustomFont size={20} weight={800} content={title} marginBt={25} />
+      <CustomFont weight={800} content={title} marginBt={25} />
       {component}
     </Container>
   )

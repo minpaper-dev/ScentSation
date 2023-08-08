@@ -11,8 +11,8 @@ const ReviewItemWithProduct = () => {
       <Product>
         <ProductImage />
         <ProductInfo>
-          <CustomFont size={12} content={'르라보'} />
-          <CustomFont size={12} content={'어나더 13'} />
+          <CustomFont content={'르라보'} />
+          <CustomFont content={'어나더 13'} />
         </ProductInfo>
       </Product>
       <ProfileItem />
@@ -21,7 +21,6 @@ const ReviewItemWithProduct = () => {
         <CustomTags />
       </TagList>
       <CustomFont
-        size={14}
         content={
           '리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...'
         }

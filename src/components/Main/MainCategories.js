@@ -8,8 +8,8 @@ const MainCategories = () => {
   const renderCategory = item => {
     return (
       <CategoryBox>
-        <CustomFont size={25} content={item.icon} marginBt={10} />
-        <CustomFont size={12} content={item.title} />
+        <CustomFont content={item.icon} marginBt={10} />
+        <CustomFont content={item.title} />
       </CategoryBox>
     )
   }
