@@ -1,44 +1,51 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import { genderList } from '../common/data'
+import CustomLogo from '../components/Custom/CustomLogo'
 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { setDoc, doc, collection, getDocs } from 'firebase/firestore/lite'
 import { db } from '../Firebase'
-import { useNavigate } from 'react-router-dom'
 
 const Signup = () => {
   const auth = getAuth()
   const navigate = useNavigate()
+  const { state } = useLocation()
+  const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
     nickname: {
       type: 'text',
       title: '닉네임',
-      value: '',
+      value: nickname ? nickname : '',
       placeholder: '닉네임을 입력해주세요.',
     },
     email: {
       type: 'text',
       title: 'E-mail',
-      value: '',
+      value: email ? email : '',
       placeholder: 'E-mail을 입력해주세요.',
+      readOnly: oauth ? true : false,
     },
     password: {
       type: 'password',
       title: '비밀번호',
       value: '',
       placeholder: '비밀번호를 입력해주세요',
+      hidden: oauth ? true : false,
     },
     passwordCheck: {
       type: 'password',
       title: '비밀번호 확인',
       value: '',
       placeholder: '',
+      hidden: oauth ? true : false,
     },
     age: { type: 'text', title: '나이', value: '', placeholder: '' },
     category: {
@@ -135,15 +142,19 @@ const Signup = () => {
 
   const onSignup = async () => {
     try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        inputInfo.email.value,
-        inputInfo.password.value
-      )
-      console.log(user.uid)
-      await setDoc(doc(db, 'user', user.uid), {
-        // auth : email,
-        email: inputInfo.email.value,
+      let userId = uid ?? ''
+      if (!userId) {
+        const { user } = await createUserWithEmailAndPassword(
+          auth,
+          inputInfo.email.value,
+          inputInfo.password.value
+        )
+        userId = user.uid
+      }
+
+      await setDoc(doc(db, 'user', userId), {
+        auth: oauth ? oauth : 'email',
+        email: email ? email : inputInfo.email.value,
         nickname: inputInfo.nickname.value,
         password: inputInfo.password.value,
         age: inputInfo.age.value,
@@ -168,41 +179,52 @@ const Signup = () => {
   return (
     <Container>
       <Wrap>
-        <Logo>ScentSation</Logo>
+        <CustomLogo $marginTop={5} />
         <ProfileImage />
+        <label>
+          <input type="file" />
+        </label>
         <FormGrid>
-          {Object.values(inputInfo).map((item, index) => (
-            <React.Fragment key={item.title}>
-              <Center>
-                <CustomFont
-                  color={palette.Brown500}
-                  weight={400}
-                  content={item.title}
-                  size={0.8}
-                />
-              </Center>
-              {item.type === 'radio' ? (
-                renderRadio(Object.keys(inputInfo)[index])
-              ) : (
-                <FlexCol>
-                  <Input
-                    type={item.type}
-                    placeholder={item.placeholder}
-                    onChange={e =>
-                      onChange(e.target.value, Object.keys(inputInfo)[index])
-                    }
-                    value={item.value}
-                  />
-                  <CustomFont
-                    content={errorMsg[Object.keys(inputInfo)[index]]}
-                    size={0.8}
-                    marginTop={10}
-                    color={palette.Red200}
-                  />
-                </FlexCol>
-              )}
-            </React.Fragment>
-          ))}
+          {Object.values(inputInfo).map(
+            (item, index) =>
+              !item.hidden && (
+                <React.Fragment key={item.title}>
+                  <Center>
+                    <CustomFont
+                      color={palette.Brown500}
+                      weight={400}
+                      content={item.title}
+                      size={0.8}
+                    />
+                  </Center>
+                  {item.type === 'radio' ? (
+                    renderRadio(Object.keys(inputInfo)[index])
+                  ) : (
+                    <FlexCol>
+                      <Input
+                        $bgc={item.readOnly}
+                        type={item.type}
+                        placeholder={item.placeholder}
+                        onChange={e =>
+                          onChange(
+                            e.target.value,
+                            Object.keys(inputInfo)[index]
+                          )
+                        }
+                        readOnly={item.readOnly}
+                        value={item.value}
+                      />
+                      <CustomFont
+                        content={errorMsg[Object.keys(inputInfo)[index]]}
+                        size={0.8}
+                        $marginTop={10}
+                        color={palette.Red200}
+                      />
+                    </FlexCol>
+                  )}
+                </React.Fragment>
+              )
+          )}
         </FormGrid>
       </Wrap>
       <SignupButton onClick={onSignup}>
@@ -219,12 +241,6 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-`
-
-const Logo = styled.div`
-  color: ${palette.Brown100};
-  font-weight: 700;
-  font-size: 2rem;
 `
 
 const FormGrid = styled.div`
@@ -281,6 +297,7 @@ const Input = styled.input`
   border: 1px solid ${palette.Gray100};
   padding: 0.8rem 1rem;
   font-size: 0.8rem;
+  background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
 
   &::placeholder {
     color: ${palette.Gray100};
