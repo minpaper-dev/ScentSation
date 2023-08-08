@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { NO_HEADER } from '../common/data'
 
 const Header = () => {
   const auth = getAuth()
@@ -26,6 +27,7 @@ const Header = () => {
     })
   }, [])
 
+  if (NO_HEADER.includes(window.location.pathname)) return null
   return (
     <Container>
       <Logo></Logo>

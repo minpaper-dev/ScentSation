@@ -29,3 +29,5 @@ export const genderList = [
   { title: '남자', value: 'male' },
   { title: '여자', value: 'feMail' },
 ]
+
+export const NO_HEADER = ['/signup', '/login']
