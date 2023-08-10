@@ -28,7 +28,7 @@ const MyPage = () => {
 
   const onLogout = () => {
     auth.signOut()
-    navigate('/')
+    navigate('/', { replace: true })
   }
 
   return (
