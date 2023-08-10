@@ -3,8 +3,9 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import ProfileItem from '../Profile/ProfileItem'
+import { MAIN_CATEGORY_WIDTH } from '../../common/size'
 
-const VoteItem = () => {
+const VoteItem = ({ data }) => {
   return (
     <Container>
       <ProfileItem />
@@ -12,12 +13,12 @@ const VoteItem = () => {
         content={
           '안녕하세요 제가 이런저런 이유로 향수를 고민중인데 투표 부탁드려요'
         }
-        marginBt={18}
-        marginTop={18}
+        $marginBt={1}
+        $marginTop={1}
       />
       <VoteList>
         <VoteBox>
-          <CustomFont content={'어나더 13'} />
+          <CustomFont content={JSON.stringify(data)} />
         </VoteBox>
         <VoteBox>
           <CustomFont content={'어나더 13'} />
@@ -28,8 +29,16 @@ const VoteItem = () => {
 }
 
 const Container = styled.div`
+  flex: none;
+  object-fit: contain;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  border-right: 2px solid colors.$WHITE;
+  border-left: 2px solid colors.$WHITE;
+  transition: border 300ms;
+  padding: 5%;
 `
 
 const VoteList = styled.div`
