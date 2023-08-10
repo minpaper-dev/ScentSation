@@ -4,8 +4,6 @@ import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import { doc, getDoc } from 'firebase/firestore/lite'
-import { db } from '../Firebase'
 
 const MyPage = () => {
   const auth = getAuth()
@@ -18,7 +16,7 @@ const MyPage = () => {
         // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid
         console.log(user, uid)
-        getUserInfo(uid)
+
         // setUserId(uid)
         // ...
       } else {
@@ -27,12 +25,6 @@ const MyPage = () => {
       }
     })
   }, [])
-
-  const getUserInfo = async uid => {
-    const ref = doc(db, 'user', uid)
-    const data = await getDoc(ref)
-    console.log(data.data())
-  }
 
   const onLogout = () => {
     auth.signOut()

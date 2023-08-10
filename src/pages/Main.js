@@ -6,8 +6,13 @@ import MainSearch from '../components/Main/MainSearch'
 import MainCategories from '../components/Main/MainCategories'
 import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import useFirestore from '../hooks/useFirestore'
 
 const Main = () => {
+  const auth = getAuth()
+  const { getDataAll, getDataOne } = useFirestore()
+
   const MainContent = [
     {
       title: '향료별로 찾기',
@@ -23,16 +28,27 @@ const Main = () => {
     },
   ]
 
-  // const [products, setProduct] = useState([])
+  useEffect(() => {
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const uid = user.uid
+        getUserInfo(uid)
+        // setUserId(uid)
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    })
+  }, [])
 
-  // useEffect(()=>{
-  //     getProduct()
-  // },[])
-
-  // const getProduct = async () => {
-  //     const data = await getData('products')
-  //     setProduct(data)
-  // }
+  const getUserInfo = async uid => {
+    const data1 = await getDataAll('user')
+    const data2 = await getDataOne('user', uid)
+    console.log(data1, data2)
+  }
 
   return (
     <>

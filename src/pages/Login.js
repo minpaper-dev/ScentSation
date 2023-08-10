@@ -5,9 +5,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import CustomInput from '../components/Custom/CustomInput'
 import CustomLogo from '../components/Custom/CustomLogo'
 import CustomFont from '../styles/CustomFont'
+import useFirestore from '../hooks/useFirestore'
 
-import { db } from '../Firebase'
-import { getDoc, doc } from 'firebase/firestore/lite'
 import {
   GoogleAuthProvider,
   getAuth,
@@ -18,6 +17,7 @@ import {
 const Login = () => {
   const auth = getAuth()
   const navigate = useNavigate()
+  const { getDataOne } = useFirestore()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -55,8 +55,9 @@ const Login = () => {
       const provider = new GoogleAuthProvider()
       const { user } = await signInWithPopup(auth, provider)
 
-      // user DB에 해당 메일이 존재하는 지 검증
-      const result = await getDoc(doc(db, 'user', user.uid))
+      // user DB에 해당 메일이 존재하는 지 검증.uid))
+      const result = await getDataOne('user', user.uid)
+      console.log(result)
 
       if (result.exists()) {
         navigate('/', { replace: true })

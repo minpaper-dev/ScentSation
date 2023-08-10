@@ -5,14 +5,14 @@ import { useLocation } from 'react-router-dom'
 
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
-import { genderList } from '../common/data'
 import CustomLogo from '../components/Custom/CustomLogo'
+import { genderList } from '../common/data'
+import useFirestore from '../hooks/useFirestore'
 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { setDoc, doc, collection, getDocs } from 'firebase/firestore/lite'
-import { db } from '../Firebase'
 
 const Signup = () => {
+  const { addData, getDataAll } = useFirestore()
   const auth = getAuth()
   const navigate = useNavigate()
   const { state } = useLocation()
@@ -98,13 +98,13 @@ const Signup = () => {
 
   const getUserInfo = async () => {
     let info = { nickname: [], email: [] }
-    const data = await getDocs(collection(db, 'user'))
+    const data = await getDataAll('user')
     data.forEach(
       doc =>
         (info = {
           ...info,
-          nickname: [...info.nickname, doc.data().nickname],
-          email: [...info.email, doc.data().email],
+          nickname: [...info.nickname, doc.nickname],
+          email: [...info.email, doc.email],
         })
     )
     setUserInfo(info)
@@ -152,7 +152,7 @@ const Signup = () => {
         userId = user.uid
       }
 
-      await setDoc(doc(db, 'user', userId), {
+      await addData('user', userId, {
         auth: oauth ? oauth : 'email',
         email: email ? email : inputInfo.email.value,
         nickname: inputInfo.nickname.value,
