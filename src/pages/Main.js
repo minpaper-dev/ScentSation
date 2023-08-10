@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import MainComponent from '../components/Main/MainComponent'
@@ -6,49 +6,25 @@ import MainSearch from '../components/Main/MainSearch'
 import MainCategories from '../components/Main/MainCategories'
 import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import useFirestore from '../hooks/useFirestore'
 
 const Main = () => {
-  const auth = getAuth()
-  const { getDataAll, getDataOne } = useFirestore()
-
   const MainContent = [
     {
+      id: 0,
       title: '향료별로 찾기',
       component: <MainCategories />,
     },
     {
+      id: 1,
       title: '투표',
       component: <MainVote />,
     },
     {
+      id: 2,
       title: '최신 리뷰',
       component: <MainReview />,
     },
   ]
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
-        const uid = user.uid
-        getUserInfo(uid)
-        // setUserId(uid)
-        // ...
-      } else {
-        // User is signed out
-        // ...
-      }
-    })
-  }, [])
-
-  const getUserInfo = async uid => {
-    const data1 = await getDataAll('user')
-    const data2 = await getDataOne('user', uid)
-    console.log(data1, data2)
-  }
 
   return (
     <>
@@ -56,6 +32,7 @@ const Main = () => {
         <MainSearch />
         {MainContent.map(contents => (
           <MainComponent
+            key={contents.id}
             title={contents.title}
             component={contents.component}
           />
