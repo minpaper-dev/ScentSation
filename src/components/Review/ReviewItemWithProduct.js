@@ -2,8 +2,7 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
-import ProfileItem from '../Profile/ProfileItem'
-import CustomTags from '../../styles/CustomTags'
+import ReviewItem from './ReviewItem'
 
 const ReviewItemWithProduct = () => {
   return (
@@ -15,17 +14,7 @@ const ReviewItemWithProduct = () => {
           <CustomFont content={'어나더 13'} />
         </ProductInfo>
       </Product>
-      <ProfileItem />
-      <TagList>
-        <CustomTags />
-        <CustomTags />
-      </TagList>
-      <CustomFont
-        content={
-          '리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...'
-        }
-        marginBt={15}
-      />
+      <ReviewItem />
     </Container>
   )
 }
@@ -54,12 +43,6 @@ const ProductImage = styled.img`
 const ProductInfo = styled.div`
   display: flex;
   flex-direction: column;
-`
-
-const TagList = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 15px 0px;
 `
 
 export default ReviewItemWithProduct
