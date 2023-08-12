@@ -8,6 +8,9 @@ import Login from './pages/Login'
 import Signup from './pages/SignUp'
 import app from './Firebase'
 import MyPage from './pages/MyPage'
+import Search from './pages/Search'
+import Filter from './pages/Filter'
+import Product from './pages/Product'
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/filter" element={<Filter />} />
+          <Route path="/product/:id" element={<Product />} />
         </Routes>
       </BrowserRouter>
     </Container>

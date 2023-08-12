@@ -3,6 +3,7 @@ import { categories } from '../../common/data'
 import CustomFont from '../../styles/CustomFont'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
+import { Link } from 'react-router-dom'
 
 const MainCategories = () => {
   const renderCategory = item => {
@@ -15,9 +16,11 @@ const MainCategories = () => {
   }
 
   return (
-    <WrapCategoryBox>
-      {categories.map(category => renderCategory(category))}
-    </WrapCategoryBox>
+    <Link to={'/filter'}>
+      <WrapCategoryBox>
+        {categories.map(category => renderCategory(category))}
+      </WrapCategoryBox>
+    </Link>
   )
 }
 
