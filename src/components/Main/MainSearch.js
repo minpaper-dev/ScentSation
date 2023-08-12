@@ -2,6 +2,7 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
+import { Link } from 'react-router-dom'
 
 const MainSearch = () => {
   return (
@@ -11,13 +12,15 @@ const MainSearch = () => {
         content={'어떤 향수를 찾으세요?'}
         marginBt={20}
       />
-      <WrapInput>
-        <CustomFont
-          content={'제품명, 브랜드를 입력해보세요 : )'}
-          color={palette.Gray200}
-        />
-        <SearchButton>🔍</SearchButton>
-      </WrapInput>
+      <Link to={'/search'}>
+        <WrapInput>
+          <CustomFont
+            content={'제품명, 브랜드를 입력해보세요 : )'}
+            color={palette.Gray200}
+          />
+          <SearchButton>🔍</SearchButton>
+        </WrapInput>
+      </Link>
       <RecommendList>
         <RecommendItem>
           <CustomFont content={'딥디크'} />
