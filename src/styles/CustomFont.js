@@ -5,10 +5,10 @@ const Text = styled.span`
   font-weight: ${props => (props.weight ? props.weight : 400)};
   font-size: ${props => (props.size ? props.size : 1.0)}rem;
   color: ${props => (props.color ? props.color : '#292A2B')};
-  margin-right: ${props => (props.marginRi ? props.marginRi : 0)}px;
-  margin-left: ${props => (props.marginLf ? props.marginLf : 0)}px;
-  margin-bottom: ${props => (props.marginBt ? props.marginBt : 0)}px;
-  margin-top: ${props => (props.marginTop ? props.marginTop : 0)}px;
+  margin-right: ${props => (props.$marginRi ? props.$marginRi : 0)}rem;
+  margin-left: ${props => (props.$marginLf ? props.$marginLf : 0)}rem;
+  margin-bottom: ${props => (props.$marginBt ? props.$marginBt : 0)}rem;
+  margin-top: ${props => (props.$marginTop ? props.$marginTop : 0)}rem;
   text-align: ${props =>
     props.center ? 'center' : props.right ? 'right' : 'left'};
   opacity: ${props => (props.opacity ? props.opacity : 1)};
@@ -24,10 +24,10 @@ export default ({
   color,
   content,
   weight,
-  marginRi,
-  marginLf,
-  marginBt,
-  marginTop,
+  $marginRi,
+  $marginLf,
+  $marginBt,
+  $marginTop,
   center,
   right,
   opacity,
@@ -41,10 +41,10 @@ export default ({
         size={size}
         color={color}
         weight={weight}
-        marginRi={marginRi}
-        marginLf={marginLf}
-        marginBt={marginBt}
-        marginTop={marginTop}
+        $marginRi={$marginRi}
+        $marginLf={$marginLf}
+        $marginBt={$marginBt}
+        $marginTop={$marginTop}
         center={center}
         right={right}
         opacity={opacity}
