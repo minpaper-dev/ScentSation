@@ -4,13 +4,36 @@ import {
   doc,
   getDoc,
   getDocs,
+  query,
   setDoc,
+  where,
 } from 'firebase/firestore/lite'
 
 const useFirestore = () => {
   const getDataAll = async collectionName => {
     const ref = collection(db, collectionName)
     const snap = await getDocs(ref)
+    const data = snap.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id,
+    }))
+
+    return data
+  }
+
+  const getDataWithQuery = async (
+    collectionName,
+    requirement1,
+    requirement2,
+    requirement3
+  ) => {
+    const q = query(
+      collection(db, collectionName),
+      where(requirement1, requirement2, requirement3)
+    )
+
+    const snap = await getDocs(q)
+
     const data = snap.docs.map(doc => ({
       ...doc.data(),
       id: doc.id,
@@ -32,6 +55,7 @@ const useFirestore = () => {
 
   return {
     getDataAll,
+    getDataWithQuery,
     getDataOne,
     addData,
   }
