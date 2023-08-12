@@ -2,6 +2,7 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
+import ProductListItem from '../Product/ProductListItem'
 
 const SearchResult = () => {
   const brand = [
@@ -33,14 +34,13 @@ const SearchResult = () => {
         ))}
 
         {product.map(item => (
-          <SearchItem key={item.id}>
-            <ProductImage />
-            <ProductInfo>
-              <CustomFont content={item.name} />
-              <CustomFont content={item.rate} />
-              <CustomFont content={item.reviewCount} />
-            </ProductInfo>
-          </SearchItem>
+          <ProductListItem
+            key={item.id}
+            name={item.name}
+            image={item.image}
+            rate={item.rate}
+            reviewCount={item.reviewCount}
+          />
         ))}
       </div>
     </>
