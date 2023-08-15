@@ -10,7 +10,7 @@ const MainCategories = () => {
     return (
       <CategoryBox key={item.id}>
         <CustomFont size={1.5} content={item.icon} $marginBt={1} />
-        <CustomFont content={item.title} />
+        <CustomFont weight={800} content={item.title} />
       </CategoryBox>
     )
   }
@@ -28,7 +28,7 @@ const WrapCategoryBox = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
 `
 
 const CategoryBox = styled.div`
