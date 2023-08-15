@@ -49,8 +49,12 @@ const useFirestore = () => {
     return snap
   }
 
-  const addData = async (collection, id, data) => {
-    await setDoc(doc(db, collection, id), data)
+  const addData = async (collectionName, id, data) => {
+    if (id) {
+      await setDoc(doc(db, collectionName, id), data)
+    } else {
+      await setDoc(doc(collection(db, collectionName)), data)
+    }
   }
 
   return {
