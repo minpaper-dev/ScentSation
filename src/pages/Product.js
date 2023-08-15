@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import CustomFont from '../styles/CustomFont'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import CustomTags from '../styles/CustomTags'
 import useFirestore from '../hooks/useFirestore'
 import { REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
 import ReviewItem from '../components/Review/ReviewItem'
+import Header from '../components/Header'
 
 const Product = () => {
   const { id } = useParams()
-  const { getDataWithQuery } = useFirestore()
+  const navigate = useNavigate()
+  const { getDataWithQuery, getDataOne } = useFirestore()
 
   const [reviewCount, setReviewCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [reviews, setReviews] = useState([])
+  const [productInfo, setProductInfo] = useState({})
   const [reviewData, setReviewData] = useState({
     gender: {
       male: 0,
@@ -35,12 +38,19 @@ const Product = () => {
   })
 
   useEffect(() => {
+    getProduct()
     getData()
   }, [])
 
+  const getProduct = async () => {
+    const result = await getDataOne('product', id)
+    console.log(result.data())
+    setProductInfo(result.data())
+  }
+
   const getData = async () => {
     let obj = { ...reviewData }
-    const result = await getDataWithQuery('review', 'product.id', '==', 1)
+    const result = await getDataWithQuery('review', 'product.id', '==', id)
     setReviews(result)
     result.map(item => {
       obj.gender[item.gender]++
@@ -53,15 +63,21 @@ const Product = () => {
     setIsLoading(false)
   }
 
+  const goReviewWrite = () => {
+    navigate('/write', { state: productInfo })
+  }
+
   return (
     <>
       {!isLoading && (
         <Container>
-          <CustomFont content={'상품'} />
-          <ProductImage />
+          <Header pageName={''} />
+          <ProductImage src={productInfo.image} />
           <ProductInfo>
-            <CustomFont content={'브랜드'} />
-            <CustomFont content={'이름'} />
+            <CustomFont content={productInfo.brand} />
+            <CustomFont content={productInfo.name} />
+            <CustomFont content={productInfo.size} />
+            <CustomFont content={productInfo.price} />
             <Flex>
               <CustomFont content={'별점'} />
               <CustomFont content={'리뷰 개수'} />
@@ -106,6 +122,9 @@ const Product = () => {
               <ReviewItem key={review.id} />
             ))}
           </WrapReview>
+          <WrapFloatingButton>
+            <FloatingButton onClick={goReviewWrite}>리뷰쓰기</FloatingButton>
+          </WrapFloatingButton>
         </Container>
       )}
     </>
@@ -115,6 +134,7 @@ const Product = () => {
 const Container = styled.div`
   flex: 1;
   background-color: white;
+  position: relative;
 `
 
 const ProductImage = styled.img`
@@ -176,6 +196,24 @@ const GraphText = styled.div`
 const WrapReview = styled.div`
   width: 90%;
   margin: 2rem auto;
+`
+
+const WrapFloatingButton = styled.div`
+  width: 480px;
+  margin: 0 auto;
+  position: fixed;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  bottom: 4rem;
+  padding: 0 2rem;
+`
+
+const FloatingButton = styled.button`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 100%;
+  background-color: ${palette.Brown300};
 `
 
 export default Product
