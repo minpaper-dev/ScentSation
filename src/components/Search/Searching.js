@@ -1,15 +1,16 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import palette from '../../styles/CustomColor'
 
-const Searching = () => {
+const Searching = ({ onClickItem }) => {
   const data = ['딥티크', '조말론']
 
   return (
     <>
       <div>
         {data.map(item => (
-          <SearchItem key={item}>{item}</SearchItem>
+          <SearchItem key={item} onClick={() => onClickItem(item)}>
+            {item}
+          </SearchItem>
         ))}
       </div>
     </>

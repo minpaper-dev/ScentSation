@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import CustomLogo from '../components/Custom/CustomLogo'
 import { styled } from 'styled-components'
-import CustomFont from '../styles/CustomFont'
-import palette from '../styles/CustomColor'
-import BeforeSearch from '../components/Search/SearchPending'
 import Searching from '../components/Search/Searching'
 import SearchResult from '../components/Search/SearchResult'
+import Header from '../components/Header'
+import SearchPending from '../components/Search/SearchPending'
 
 const Search = () => {
   const [inputState, setInputState] = useState(0)
@@ -17,21 +15,30 @@ const Search = () => {
     else setInputState(0)
   }
 
+  const onClickItem = value => {
+    setInputValue(value)
+    setInpuStateResult()
+  }
+
+  const setInpuStateResult = () => {
+    setInputState(2)
+  }
+
   return (
     <Container>
-      {/* <CustomLogo /> */}
+      <Header pageName={'검색'} />
       <WrapInput>
         <Input
           value={inputValue}
           onChange={onChange}
           placeholder="제품명, 브랜드를 입력해보세요 : )"
         ></Input>
-        <SearchButton>🔍</SearchButton>
+        <SearchButton onClick={setInpuStateResult}>🔍</SearchButton>
       </WrapInput>
       {inputState === 0 ? (
-        <BeforeSearch />
+        <SearchPending onClickItem={onClickItem} />
       ) : inputState === 1 ? (
-        <Searching />
+        <Searching onClickItem={onClickItem} />
       ) : (
         <SearchResult />
       )}

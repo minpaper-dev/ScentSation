@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 
-const SearchPending = () => {
+const SearchPending = ({ onClickItem }) => {
   const data = [
     {
       id: 0,
@@ -26,7 +26,7 @@ const SearchPending = () => {
     <>
       <div>
         {data.map(item => (
-          <SearchItem key={item.id}>
+          <SearchItem onClick={() => onClickItem(item.content)} key={item.id}>
             <CustomFont content={item.content} />
             <CustomFont content={item.date} />
           </SearchItem>
