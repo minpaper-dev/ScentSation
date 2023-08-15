@@ -1,30 +1,57 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomLogo from '../components/Custom/CustomLogo'
 import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import Header from '../components/Header'
+import useFirestore from '../hooks/useFirestore'
 
 const MyPage = () => {
   const auth = getAuth()
   const navigate = useNavigate()
+  const { getDataOne } = useFirestore()
+
+  const MenuData = [
+    {
+      title: 'My ScentSation',
+      event: () => navigate('/'),
+    },
+    {
+      title: '향수 / 브랜드 제보',
+      event: () => navigate('/'),
+    },
+    {
+      title: '내 정보 수정',
+      event: () => navigate('/'),
+    },
+    {
+      title: '로그아웃',
+      event: () => onLogout(),
+    },
+    {
+      title: '탈퇴하기',
+      event: () => navigate('/'),
+    },
+  ]
+
+  const [userInfo, setUserInfo] = useState({})
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
       if (user) {
-        // User is signed in, see docs for a list of available properties
-        // https://firebase.google.com/docs/reference/js/auth.user
         const uid = user.uid
         console.log(user, uid)
-
-        // setUserId(uid)
-        // ...
-      } else {
-        // User is signed out
-        // ...
+        getUserInfo(uid)
       }
     })
   }, [])
+
+  const getUserInfo = async uid => {
+    const result = await getDataOne('user', uid)
+    console.log(result.data())
+    setUserInfo(result.data())
+  }
 
   const onLogout = () => {
     auth.signOut()
@@ -32,32 +59,29 @@ const MyPage = () => {
   }
 
   return (
-    <Container>
-      <CustomLogo />
-      <FlexColCenter>
-        <ProfileImage />
-        <CustomFont content={'닉네임뭐로하지'} />
-        <CustomFont content={'닉네임뭐로하지'} />
-        <CustomFont content={'닉네임뭐로하지'} />
-      </FlexColCenter>
-      <FlexCol>
-        <Link>
-          <CustomFont content={'My ScentSation'} />
-        </Link>
-        <Link>
-          <CustomFont content={'향수 / 브랜드 제보'} />
-        </Link>
-        <Link>
-          <CustomFont content={'내 정보 수정'} />
-        </Link>
-        <Button onClick={onLogout}>
-          <CustomFont content={'로그아웃'} />
-        </Button>
-        <Button>
-          <CustomFont content={'탈퇴하기'} />
-        </Button>
-      </FlexCol>
-    </Container>
+    <>
+      <Header pageName={'마이페이지'} />
+      <Container>
+        <FlexColCenter>
+          <ProfileImage />
+          <CustomFont content={userInfo.nickname} $marginTop={2} />
+          <CustomFont
+            content={`${userInfo.age}세 / ${userInfo.category} / ${
+              userInfo.gender === 'male' ? '남' : '여'
+            }`}
+            $marginTop={0.5}
+          />
+          {/* <CustomFont content={'닉네임뭐로하지'} $marginTop={0.5} /> */}
+        </FlexColCenter>
+        <FlexCol>
+          {MenuData.map(item => (
+            <Button onClick={item.event} key={item.title}>
+              <CustomFont content={item.title} />
+            </Button>
+          ))}
+        </FlexCol>
+      </Container>
+    </>
   )
 }
 
@@ -66,7 +90,6 @@ const Container = styled.div`
   background-color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
 `
 
 const ProfileImage = styled.div`
@@ -86,8 +109,11 @@ const FlexCol = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding: 2rem 3rem;
 `
 
-const Button = styled.button``
+const Button = styled.button`
+  margin: 0.5rem 0;
+`
 
 export default MyPage
