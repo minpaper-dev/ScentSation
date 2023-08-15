@@ -1,11 +1,17 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
+import CustomFont from '../../styles/CustomFont'
 
 const CustomLogo = ({ $marginTop, $marginBt }) => {
   return (
     <Logo $marginTop={$marginTop} $marginBt={$marginBt}>
-      ScentSation
+      <CustomFont
+        size={1.5}
+        content={'ScentSation'}
+        color={palette.Brown100}
+        weight={800}
+      />
     </Logo>
   )
 }

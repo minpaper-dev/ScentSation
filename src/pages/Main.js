@@ -6,6 +6,7 @@ import MainSearch from '../components/Main/MainSearch'
 import MainCategories from '../components/Main/MainCategories'
 import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
+import CustomLogo from '../components/Custom/CustomLogo'
 
 const Main = () => {
   const MainContent = [
@@ -29,6 +30,9 @@ const Main = () => {
   return (
     <>
       <Container>
+        <Header>
+          <CustomLogo />
+        </Header>
         <MainSearch />
         {MainContent.map(contents => (
           <MainComponent
@@ -42,12 +46,23 @@ const Main = () => {
   )
 }
 
+const Header = styled.div`
+  position: fixed;
+  top: 0;
+  width: 480px;
+  height: 5rem;
+  background-color: white;
+  padding: 2rem 1rem;
+  z-index: 999;
+`
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${palette.Brown100};
+  background-color: white;
+  padding-top: 5rem;
   padding-bottom: 100px;
 `
 

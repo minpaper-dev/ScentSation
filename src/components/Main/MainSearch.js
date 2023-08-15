@@ -8,9 +8,11 @@ const MainSearch = () => {
   return (
     <Container>
       <CustomFont
+        size={1.6}
         weight={800}
         content={'어떤 향수를 찾으세요?'}
-        marginBt={20}
+        $marginTop={2}
+        $marginBt={2}
       />
       <Link to={'/search'}>
         <WrapInput>
@@ -80,7 +82,7 @@ const SearchButton = styled.div`
 const RecommendList = styled.ul`
   display: flex;
   color: #4a4a4a;
-  margin: 20px 0px 30px 0px;
+  margin-top: 2rem;
 `
 
 const RecommendItem = styled.li`
