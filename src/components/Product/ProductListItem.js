@@ -4,16 +4,17 @@ import palette from '../../styles/CustomColor'
 import { styled } from 'styled-components'
 import { Link } from 'react-router-dom'
 
-const ProductListItem = ({ name, rate, reviewCount, image }) => {
+const ProductListItem = ({ item }) => {
   return (
     <>
-      <Link to={`/product/${1}`}>
+      <Link to={`/product/${item.id}`}>
         <Container>
-          <ProductImage src={image} />
+          <ProductImage src={item.image} />
           <ProductInfo>
-            <CustomFont content={name} />
-            <CustomFont content={rate} />
-            <CustomFont content={reviewCount} />
+            <CustomFont content={item.brand} />
+            <CustomFont content={item.name} />
+            <CustomFont content={`${item.size}ml`} />
+            <CustomFont content={`${item.price}원`} />
           </ProductInfo>
         </Container>
       </Link>

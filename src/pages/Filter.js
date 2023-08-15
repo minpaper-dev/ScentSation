@@ -1,31 +1,31 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomFont from '../styles/CustomFont'
 import CustomTags from '../styles/CustomTags'
 import { styled } from 'styled-components'
 import { FILTER_CATEGORY } from '../common/data'
 import palette from '../styles/CustomColor'
 import ProductListItem from '../components/Product/ProductListItem'
+import useFirestore from '../hooks/useFirestore'
+import Header from '../components/Header'
 
 const Filter = () => {
-  const product = [
-    {
-      id: 0,
-      name: '어저구저쩌구',
-      image: '',
-      rate: 5,
-      reviewCount: 12,
-    },
-    {
-      id: 1,
-      name: '어저구저쩌구',
-      image: '',
-      rate: 5,
-      reviewCount: 12,
-    },
-  ]
+  const { getDataAll } = useFirestore()
+
+  const [product, setProduct] = useState([])
+
+  useEffect(() => {
+    getProductList()
+  }, [])
+
+  const getProductList = async () => {
+    const data = await getDataAll('product')
+    console.log(data)
+    setProduct(data)
+  }
 
   return (
     <Container>
+      <Header pageName={'필터'} />
       <WrapTags>
         {FILTER_CATEGORY.map((item, index) => (
           <CustomTags
@@ -42,13 +42,7 @@ const Filter = () => {
       </Sort>
 
       {product.map(item => (
-        <ProductListItem
-          key={item.id}
-          name={item.name}
-          image={item.image}
-          rate={item.rate}
-          reviewCount={item.reviewCount}
-        />
+        <ProductListItem key={item.id} item={item} />
       ))}
     </Container>
   )
