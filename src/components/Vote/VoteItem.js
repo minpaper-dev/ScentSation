@@ -3,11 +3,10 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import ProfileItem from '../Profile/ProfileItem'
-import { MAIN_CATEGORY_WIDTH } from '../../common/size'
 
 const VoteItem = ({ data }) => {
   return (
-    <Container>
+    <>
       <ProfileItem />
       <CustomFont
         content={
@@ -24,22 +23,9 @@ const VoteItem = ({ data }) => {
           <CustomFont content={'어나더 13'} />
         </VoteBox>
       </VoteList>
-    </Container>
+    </>
   )
 }
-
-const Container = styled.div`
-  flex: none;
-  object-fit: contain;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow: hidden;
-  border-right: 2px solid colors.$WHITE;
-  border-left: 2px solid colors.$WHITE;
-  transition: border 300ms;
-  padding: 5%;
-`
 
 const VoteList = styled.div`
   display: grid;
