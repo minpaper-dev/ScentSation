@@ -7,20 +7,39 @@ import palette from '../styles/CustomColor'
 import ProductListItem from '../components/Product/ProductListItem'
 import useFirestore from '../hooks/useFirestore'
 import Header from '../components/Header'
+import { useLocation } from 'react-router-dom'
 
 const Filter = () => {
+  const { state } = useLocation()
   const { getDataAll } = useFirestore()
 
+  const [allProduct, setAllProduct] = useState([])
   const [product, setProduct] = useState([])
+  const [category, setCategory] = useState('')
 
   useEffect(() => {
     getProductList()
   }, [])
 
+  useEffect(() => {
+    filter()
+  }, [category])
+
   const getProductList = async () => {
     const data = await getDataAll('product')
-    console.log(data)
+    setAllProduct(data)
+    if (state.category) {
+      setCategory(state.category)
+    }
     setProduct(data)
+  }
+
+  const filter = () => {
+    if (category === '전체') {
+      setProduct(allProduct)
+    } else {
+      setProduct(allProduct.filter(item => item.category.includes(category)))
+    }
   }
 
   return (
@@ -31,8 +50,12 @@ const Filter = () => {
           <CustomTags
             key={item}
             content={item}
-            bgc={index ? palette.Brown200 : palette.Brown500}
+            bgc={category === item ? palette.Brown500 : palette.Brown200}
             $marginRi={1}
+            onClick={content => {
+              console.log(content)
+              setCategory(content)
+            }}
           />
         ))}
       </WrapTags>

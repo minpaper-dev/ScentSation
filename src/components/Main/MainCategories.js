@@ -8,19 +8,19 @@ import { Link } from 'react-router-dom'
 const MainCategories = () => {
   const renderCategory = item => {
     return (
-      <CategoryBox key={item.id}>
-        <CustomFont size={1.5} content={item.icon} $marginBt={1} />
-        <CustomFont weight={800} content={item.title} />
-      </CategoryBox>
+      <Link to={`/filter`} state={{ category: item.title }} key={item.title}>
+        <CategoryBox>
+          <CustomFont size={1.5} content={item.icon} $marginBt={1} />
+          <CustomFont weight={800} content={item.title} />
+        </CategoryBox>
+      </Link>
     )
   }
 
   return (
-    <Link to={'/filter'}>
-      <WrapCategoryBox>
-        {categories.map(category => renderCategory(category))}
-      </WrapCategoryBox>
-    </Link>
+    <WrapCategoryBox>
+      {categories.map(category => renderCategory(category))}
+    </WrapCategoryBox>
   )
 }
 
