@@ -1,15 +1,18 @@
 import React from 'react'
 import { styled } from 'styled-components'
 
-const Searching = ({ onClickItem }) => {
-  const data = ['딥티크', '조말론']
-
+const Searching = ({ onClickItem, filterProducts }) => {
   return (
     <>
       <div>
-        {data.map(item => (
-          <SearchItem key={item} onClick={() => onClickItem(item)}>
-            {item}
+        {/* {filterProducts.brand.map(item => (
+          <SearchItem key={item.id} onClick={() => onClickItem(item)}>
+            {item.brand}
+          </SearchItem>
+        ))} */}
+        {filterProducts.name.map(item => (
+          <SearchItem key={item.id} onClick={() => onClickItem(item.name)}>
+            {item.name}
           </SearchItem>
         ))}
       </div>

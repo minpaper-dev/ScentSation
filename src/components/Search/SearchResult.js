@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
-import CustomFont from '../../styles/CustomFont'
 import ProductListItem from '../Product/ProductListItem'
-import useFirestore from '../../hooks/useFirestore'
 
-const SearchResult = () => {
-  const [data, setData] = useState([])
-
-  const { getDataAll } = useFirestore()
-
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const getData = async () => {
-    const result = await getDataAll('product')
-    setData(result)
-  }
+const SearchResult = ({ filterProducts }) => {
   return (
     <>
       <div>
@@ -28,7 +14,7 @@ const SearchResult = () => {
           </SearchItem>
         ))} */}
 
-        {data.map(item => (
+        {filterProducts.name.map(item => (
           <ProductListItem key={item.id} item={item} />
         ))}
       </div>
