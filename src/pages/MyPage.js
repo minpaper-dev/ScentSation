@@ -6,6 +6,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Header from '../components/Header'
 import useFirestore from '../hooks/useFirestore'
+import palette from '../styles/CustomColor'
+import ProfileDetail from '../components/Profile/ProfileDetail'
 
 const MyPage = () => {
   const auth = getAuth()
@@ -62,17 +64,7 @@ const MyPage = () => {
     <>
       <Header pageName={'마이페이지'} />
       <Container>
-        <FlexColCenter>
-          <ProfileImage />
-          <CustomFont content={userInfo.nickname} $marginTop={2} />
-          <CustomFont
-            content={`${userInfo.age}세 / ${userInfo.category} / ${
-              userInfo.gender === 'male' ? '남' : '여'
-            }`}
-            $marginTop={0.5}
-          />
-          {/* <CustomFont content={'닉네임뭐로하지'} $marginTop={0.5} /> */}
-        </FlexColCenter>
+        <ProfileDetail userInfo={userInfo} />
         <FlexCol>
           {MenuData.map(item => (
             <Button onClick={item.event} key={item.title}>
@@ -92,11 +84,12 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const ProfileImage = styled.div`
+const ProfileImage = styled.img`
   width: 10rem;
   height: 10rem;
+  padding: 1rem;
   border-radius: 100%;
-  border: 1px solid black;
+  border: 1px solid ${palette.Gray300};
 `
 
 const FlexColCenter = styled.div`

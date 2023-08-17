@@ -2,16 +2,19 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
+import { Link } from 'react-router-dom'
 
 const ProfileItem = () => {
   return (
-    <Profile>
-      <ProfileImage />
-      <ProfileInfo>
-        <CustomFont content={'김땡땡'} />
-        <CustomFont content={'31세 / 우디 / 남'} />
-      </ProfileInfo>
-    </Profile>
+    <Link to={'/review/1'}>
+      <Profile>
+        <ProfileImage />
+        <ProfileInfo>
+          <CustomFont content={'김땡땡'} />
+          <CustomFont content={'31세 / 우디 / 남'} />
+        </ProfileInfo>
+      </Profile>
+    </Link>
   )
 }
 
