@@ -45,12 +45,14 @@ const Product = () => {
   const getProduct = async () => {
     const result = await getDataOne('product', id)
     console.log(result.data())
-    setProductInfo(result.data())
+
+    setProductInfo({ ...result.data(), id })
   }
 
   const getData = async () => {
     let obj = { ...reviewData }
     const result = await getDataWithQuery('review', 'product.id', '==', id)
+
     setReviews(result)
     result.map(item => {
       obj.gender[item.gender]++
@@ -94,7 +96,7 @@ const Product = () => {
               <BarGraph>
                 {Object.keys(reviewData[item]).map(category => (
                   <BarGraphItem
-                    $width={(reviewCount / reviewData[item][category]) * 100}
+                    $width={(reviewData[item][category] / reviews.length) * 100}
                     bgc={REVIEW_DATA_COLOR[category]}
                     key={`${item}-${category}`}
                   />
@@ -107,7 +109,10 @@ const Product = () => {
                   <CustomFont
                     content={`${
                       reviewData[item][category]
-                        ? (reviewCount / reviewData[item][category]) * 100
+                        ? (
+                            (reviewData[item][category] / reviews.length) *
+                            100
+                          ).toFixed()
                         : 0
                     }%`}
                     $marginBt={1}
