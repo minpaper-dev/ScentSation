@@ -60,6 +60,7 @@ const Login = () => {
       console.log(result)
 
       if (result.exists()) {
+        localStorage.setItem('uid', JSON.stringify(user.uid))
         navigate('/', { replace: true })
       } else {
         navigate('/signup', {

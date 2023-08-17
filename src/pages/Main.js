@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import MainComponent from '../components/Main/MainComponent'
@@ -7,8 +7,10 @@ import MainCategories from '../components/Main/MainCategories'
 import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
 import CustomLogo from '../components/Custom/CustomLogo'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const Main = () => {
+  const auth = getAuth()
   const MainContent = [
     {
       id: 0,
@@ -26,6 +28,14 @@ const Main = () => {
       component: <MainReview />,
     },
   ]
+
+  useEffect(() => {
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        localStorage.setItem('uid', JSON.stringify(user.uid))
+      }
+    })
+  }, [])
 
   return (
     <>
