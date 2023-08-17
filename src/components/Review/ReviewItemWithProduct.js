@@ -1,38 +1,38 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 import ReviewItem from './ReviewItem'
 
-const ReviewItemWithProduct = () => {
+const ReviewItemWithProduct = ({ data, isNoProfile }) => {
   return (
     <>
       <Product>
-        <ProductImage />
+        <ProductImage src={data.product.image} />
         <ProductInfo>
-          <CustomFont content={'르라보'} />
-          <CustomFont content={'어나더 13'} />
+          <CustomFont content={data.product.brand} />
+          <CustomFont content={data.product.name} />
         </ProductInfo>
       </Product>
-      <ReviewItem />
+      <ReviewItem data={data} isNoProfile={isNoProfile} />
     </>
   )
 }
 
 const Product = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
-  background-color: ${palette.Gray300};
-  /* padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 19px; */
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 2rem 0.5rem;
+  border-radius: 1rem;
+  margin-bottom: 19px;
 `
 
 const ProductImage = styled.img`
-  /* width: 50px;
-  height: 50px; */
-  background-color: ${palette.Gray100};
-  /* margin-right: 15px; */
+  width: 40%;
+  height: auto;
+  background-color: white;
 `
 
 const ProductInfo = styled.div`

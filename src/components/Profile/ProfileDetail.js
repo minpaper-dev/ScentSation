@@ -31,6 +31,7 @@ const ProfileImage = styled.img`
   padding: 1rem;
   border-radius: 100%;
   border: 1px solid ${palette.Gray300};
+  background-color: white;
 `
 
 export default ProfileDetail

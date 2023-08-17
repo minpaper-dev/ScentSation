@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import { useLocation } from 'react-router-dom'
 import { styled } from 'styled-components'
@@ -11,8 +11,9 @@ import useFirestore from '../hooks/useFirestore'
 
 const Write = () => {
   const { state } = useLocation()
-  const { addData } = useFirestore()
+  const { addData, getDataOne } = useFirestore()
 
+  const [userInfo, setUserInfo] = useState({})
   const [productInfo, setProductInfo] = useState(state)
   const [rate, setRate] = useState(0)
   const [reviewInfo, setReviewInfo] = useState({
@@ -23,6 +24,17 @@ const Write = () => {
     description: '',
   })
 
+  useEffect(() => {
+    getMyInfo()
+  }, [])
+
+  const id = JSON.parse(localStorage.getItem('uid'))
+
+  const getMyInfo = async () => {
+    const result = await getDataOne('user', id)
+    setUserInfo(result.data())
+  }
+
   const onChangeRadio = e => {
     let copy = reviewInfo
     copy = { ...copy, [e.target.name]: e.target.value }
@@ -30,7 +42,12 @@ const Write = () => {
   }
 
   const postReview = async () => {
-    await addData('review', '', { ...reviewInfo, product: state, rate: rate })
+    await addData('review', '', {
+      ...reviewInfo,
+      product: state,
+      user: { ...userInfo, id: id },
+      rate: rate,
+    })
   }
 
   return (

@@ -1,17 +1,18 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 import { Link } from 'react-router-dom'
 
-const ProfileItem = () => {
+const ProfileItem = ({ data }) => {
   return (
-    <Link to={'/review/1'}>
+    <Link to={`/review/${data?.id}`}>
       <Profile>
-        <ProfileImage />
+        <ProfileImage src={data?.image} />
         <ProfileInfo>
-          <CustomFont content={'김땡땡'} />
-          <CustomFont content={'31세 / 우디 / 남'} />
+          <CustomFont content={data?.nickname} $marginBt={0.5} />
+          <CustomFont
+            content={`${data?.age}세 / ${data?.category} / ${data?.gender}`}
+          />
         </ProfileInfo>
       </Profile>
     </Link>
@@ -27,7 +28,7 @@ const ProfileImage = styled.img`
   width: 60px;
   height: 60px;
   border-radius: 100%;
-  background-color: ${palette.Gray100};
+  background-color: white;
   margin-right: 15px;
 `
 

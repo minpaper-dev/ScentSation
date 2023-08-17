@@ -1,20 +1,21 @@
 import { styled } from 'styled-components'
 import ProfileItem from '../Profile/ProfileItem'
 import CustomFont from '../../styles/CustomFont'
+import CustomTags from '../../styles/CustomTags'
 
-const ReviewItem = () => {
+const ReviewItem = ({ data, isNoProfile }) => {
   return (
     <Container>
-      <ProfileItem />
+      {!isNoProfile && <ProfileItem data={data?.user} />}
+
       <TagList>
+        <CustomTags content={data.gender} />
+        <CustomTags content={data.season} />
+        <CustomTags content={data.vitality} />
         {/* <CustomTags />
         <CustomTags /> */}
       </TagList>
-      <CustomFont
-        content={
-          '리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...리뷰 내용입니다. 어쩌구 저쩌구 ...'
-        }
-      />
+      <CustomFont content={data?.description} />
     </Container>
   )
 }

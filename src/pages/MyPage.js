@@ -17,7 +17,7 @@ const MyPage = () => {
   const MenuData = [
     {
       title: 'My ScentSation',
-      event: () => navigate('/'),
+      event: () => navigate(`/review/${userInfo.id}`),
     },
     {
       title: '향수 / 브랜드 제보',
@@ -52,7 +52,7 @@ const MyPage = () => {
   const getUserInfo = async uid => {
     const result = await getDataOne('user', uid)
     console.log(result.data())
-    setUserInfo(result.data())
+    setUserInfo({ ...result.data(), id: uid })
   }
 
   const onLogout = () => {
