@@ -8,6 +8,12 @@ import CustomFont from '../styles/CustomFont'
 import CustomLogo from '../components/Custom/CustomLogo'
 import { genderList } from '../common/data'
 import useFirestore from '../hooks/useFirestore'
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage'
 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 
@@ -17,6 +23,9 @@ const Signup = () => {
   const navigate = useNavigate()
   const { state } = useLocation()
   const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
+
+  const [profileImage, setProfiletImage] = useState('')
+  const [profileImageUrl, setProfileImageUrl] = useState('')
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
@@ -110,34 +119,57 @@ const Signup = () => {
     setUserInfo(info)
   }
 
-  const renderRadio = category => {
-    return (
-      <Flex>
-        {genderList.map((gender, index) => (
-          <Label
-            key={gender.title}
-            $isActive={inputInfo.gender.value === gender.value}
-            style={{ marginLeft: index ? 10 : 0 }}
-          >
-            <Radio
-              type={'radio'}
-              name={category}
-              value={gender.value}
-              onChange={e => onChange(e.target.value, category)}
-            />
-            <CustomFont
-              color={
-                inputInfo.gender.value === gender.value
-                  ? 'white'
-                  : palette.Gray100
-              }
-              content={gender.title}
-              size={0.8}
-            />
-          </Label>
-        ))}
-      </Flex>
-    )
+  const renderInput = (item, category, index) => {
+    if (item.type === 'radio') {
+      return (
+        <Flex>
+          {genderList.map((gender, index) => (
+            <Label
+              key={gender.title}
+              $isActive={inputInfo.gender.value === gender.value}
+              style={{ marginLeft: index ? 10 : 0 }}
+            >
+              <Radio
+                type={'radio'}
+                name={category}
+                value={gender.value}
+                onChange={e => onChange(e.target.value, category)}
+              />
+              <CustomFont
+                color={
+                  inputInfo.gender.value === gender.value
+                    ? 'white'
+                    : palette.Gray100
+                }
+                content={gender.title}
+                size={0.8}
+              />
+            </Label>
+          ))}
+        </Flex>
+      )
+    } else {
+      return (
+        <FlexCol>
+          <Input
+            $bgc={item.readOnly}
+            type={item.type}
+            placeholder={item.placeholder}
+            onChange={e =>
+              onChange(e.target.value, Object.keys(inputInfo)[index])
+            }
+            readOnly={item.readOnly}
+            value={item.value}
+          />
+          <CustomFont
+            content={errorMsg[Object.keys(inputInfo)[index]]}
+            size={0.8}
+            $marginTop={1}
+            color={palette.Red200}
+          />
+        </FlexCol>
+      )
+    }
   }
 
   const onSignup = async () => {
@@ -176,17 +208,65 @@ const Signup = () => {
     })
   }
 
+  const handleImageChange = e => {
+    const file = e.target.files[0]
+    if (file) {
+      setProfiletImage(file)
+      const imageUrl = URL.createObjectURL(file)
+      setProfileImageUrl(imageUrl)
+    }
+  }
+
+  const handleUpload = () => {
+    const storage = getStorage()
+    const storageRef = ref(storage, 'image/image1.jpg')
+    if (profileImage) {
+      const uploadTask = uploadBytesResumable(storageRef, profileImage)
+
+      uploadTask.on(
+        'state_changed',
+        snapshot => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          console.log('Upload is ' + progress + '% done')
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused')
+              break
+            case 'running':
+              console.log('Upload is running')
+              break
+          }
+        },
+        error => {
+          console.log(error)
+          // Handle unsuccessful uploads
+        },
+        () => {
+          // Handle successful uploads on complete
+          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            console.log('File available at', downloadURL)
+          })
+        }
+      )
+    }
+  }
+
   return (
     <Container>
       <Wrap>
         <CustomLogo $marginTop={5} />
-        <ProfileImage />
+        <ProfileImage src={profileImageUrl} />
         <label>
-          <input type="file" />
+          <input type="file" onChange={handleImageChange} accept="image/*" />
         </label>
+        <button onClick={handleUpload}>클릭</button>
+
         <FormGrid>
           {Object.values(inputInfo).map(
             (item, index) =>
+              // Google 회원가입일 경우 비밀번호, 비밀번호 확인 보여지지 않도록 설정
               !item.hidden && (
                 <React.Fragment key={item.title}>
                   <Center>
@@ -197,31 +277,7 @@ const Signup = () => {
                       size={0.8}
                     />
                   </Center>
-                  {item.type === 'radio' ? (
-                    renderRadio(Object.keys(inputInfo)[index])
-                  ) : (
-                    <FlexCol>
-                      <Input
-                        $bgc={item.readOnly}
-                        type={item.type}
-                        placeholder={item.placeholder}
-                        onChange={e =>
-                          onChange(
-                            e.target.value,
-                            Object.keys(inputInfo)[index]
-                          )
-                        }
-                        readOnly={item.readOnly}
-                        value={item.value}
-                      />
-                      <CustomFont
-                        content={errorMsg[Object.keys(inputInfo)[index]]}
-                        size={0.8}
-                        $marginTop={10}
-                        color={palette.Red200}
-                      />
-                    </FlexCol>
-                  )}
+                  {renderInput(item, Object.keys(inputInfo)[index], index)}
                 </React.Fragment>
               )
           )}
@@ -314,7 +370,7 @@ const Radio = styled.input`
   display: none;
 `
 
-const ProfileImage = styled.button`
+const ProfileImage = styled.img`
   border: 1px solid black;
   width: 10rem;
   height: 10rem;
@@ -323,6 +379,11 @@ const ProfileImage = styled.button`
 `
 
 const FlexCol = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const Form = styled.form`
   display: flex;
   flex-direction: column;
 `
