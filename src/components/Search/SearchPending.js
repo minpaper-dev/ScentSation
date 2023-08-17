@@ -1,34 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 
-const SearchPending = ({ onClickItem }) => {
-  const data = [
-    {
-      id: 0,
-      content: '검색어1',
-      date: '08.10',
-    },
-    {
-      id: 1,
-      content: '검색어2',
-      date: '08.10',
-    },
-    {
-      id: 2,
-      content: '검색어3',
-      date: '08.10',
-    },
-  ]
+const SearchPending = ({ onClickItem, findProduct }) => {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    let searchData = JSON.parse(localStorage.getItem('search')) || []
+    setData(searchData)
+  }, [])
+
+  const deleteSearch = id => {
+    let filterData = data.filter(v => v.id !== id)
+    localStorage.setItem('search', JSON.stringify(filterData))
+    setData(filterData)
+  }
 
   return (
     <>
       <div>
-        {data.map(item => (
-          <SearchItem onClick={() => onClickItem(item.content)} key={item.id}>
-            <CustomFont content={item.content} />
-            <CustomFont content={item.date} />
+        {data.reverse().map((item, index) => (
+          <SearchItem key={item.id}>
+            <SearchButton
+              onClick={() => {
+                findProduct(item.text)
+                onClickItem(item.text)
+              }}
+              key={item.index}
+            >
+              <CustomFont size={0.8} content={item.text} />
+              <CustomFont size={0.8} content={item.date} $marginRi={0.5} />
+            </SearchButton>
+
+            <DeleteButton onClick={() => deleteSearch(item.id)}>
+              <CustomFont size={0.6} content={'X'} />
+            </DeleteButton>
           </SearchItem>
         ))}
       </div>
@@ -36,13 +43,25 @@ const SearchPending = ({ onClickItem }) => {
   )
 }
 
-const SearchItem = styled.button`
+const SearchItem = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 1rem 1rem 1rem 3rem;
+  border-bottom: 1px solid ${palette.Gray400};
+`
+
+const SearchButton = styled.button`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  padding: 1rem 3rem;
-  border-bottom: 1px solid ${palette.Gray400};
+`
+
+const DeleteButton = styled.button`
+  display: flex;
+  align-items: center;
+  margin: 0 1rem;
 `
 
 export default SearchPending
