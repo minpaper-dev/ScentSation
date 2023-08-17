@@ -91,7 +91,11 @@ const Write = () => {
             ))}
           </WrapRadio>
           <CustomFont content={'상세리뷰'} />
-          <Input />
+          <Input
+            name="description"
+            value={reviewInfo.description}
+            onChange={onChangeRadio}
+          />
         </Form>
         <SubmitButton onClick={postReview}>리뷰쓰기</SubmitButton>
       </Container>
