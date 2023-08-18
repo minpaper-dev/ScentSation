@@ -40,7 +40,6 @@ const Search = () => {
   }
 
   const onClickItem = value => {
-    console.log(value)
     setInputState(2)
     setInputValue(value)
     recordSearchValue(value)

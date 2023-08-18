@@ -68,7 +68,7 @@ const MyPage = () => {
         <FlexCol>
           {MenuData.map(item => (
             <Button onClick={item.event} key={item.title}>
-              <CustomFont content={item.title} />
+              <CustomFont content={item.title} weight={700} />
             </Button>
           ))}
         </FlexCol>
@@ -84,29 +84,25 @@ const Container = styled.div`
   flex-direction: column;
 `
 
-const ProfileImage = styled.img`
-  width: 10rem;
-  height: 10rem;
-  padding: 1rem;
-  border-radius: 100%;
-  border: 1px solid ${palette.Gray300};
-`
-
-const FlexColCenter = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
-
 const FlexCol = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 2rem 3rem;
+  margin: 2rem 0rem;
 `
 
 const Button = styled.button`
-  margin: 0.5rem 0;
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.8rem 2rem;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: ${palette.Gray300};
+  }
 `
 
 export default MyPage

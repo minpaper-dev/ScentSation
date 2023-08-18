@@ -42,6 +42,11 @@ const CategoryBox = styled.div`
   padding: 1.2rem;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 
+  &:hover {
+    /* opacity: 0.5; */
+    transform: scale(1.15);
+  }
+
   cursor: pointer;
 `
 

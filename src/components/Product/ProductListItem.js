@@ -2,32 +2,49 @@ import React from 'react'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import { styled } from 'styled-components'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const ProductListItem = ({ item }) => {
+  const navigate = useNavigate()
+
+  const goToProduct = () => {
+    navigate(`/product/${item.id}`)
+  }
+
   return (
     <>
-      <Link to={`/product/${item.id}`}>
-        <Container>
-          <ProductImage src={item.image} />
-          <ProductInfo>
-            <CustomFont content={item.brand} />
-            <CustomFont content={item.name} />
-            <CustomFont content={`${item.size}ml`} />
-            <CustomFont content={`${item.price}원`} />
-          </ProductInfo>
-        </Container>
-      </Link>
+      <Container onClick={goToProduct}>
+        <ProductImage src={item.image} />
+        <ProductInfo>
+          <CustomFont size={0.8} content={item.brand} $marginBt={0.2} />
+          <CustomFont
+            size={0.8}
+            content={item.name}
+            weight={800}
+            $marginBt={0.2}
+          />
+          <CustomFont size={0.8} content={`${item.size}ml`} $marginBt={0.2} />
+          <CustomFont size={0.8} content={`${item.price}원`} />
+        </ProductInfo>
+      </Container>
     </>
   )
 }
 
-const Container = styled.div`
+const Container = styled.button`
   display: flex;
   align-items: center;
   width: 100%;
   padding: 1rem 3rem;
   border-bottom: 1px solid ${palette.Gray400};
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline: none;
+    background-color: ${palette.Gray300};
+    opacity: 0.4;
+  }
 `
 
 const ProductImage = styled.img`

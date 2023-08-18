@@ -2,17 +2,20 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import ReviewItem from './ReviewItem'
+import { Link } from 'react-router-dom'
 
 const ReviewItemWithProduct = ({ data, isNoProfile }) => {
   return (
     <>
-      <Product>
-        <ProductImage src={data.product.image} />
-        <ProductInfo>
-          <CustomFont content={data.product.brand} />
-          <CustomFont content={data.product.name} />
-        </ProductInfo>
-      </Product>
+      <Link to={`/product/${data.product.id}`}>
+        <Product>
+          <ProductImage src={data.product.image} />
+          <ProductInfo>
+            <CustomFont content={data.product.brand} />
+            <CustomFont content={data.product.name} />
+          </ProductInfo>
+        </Product>
+      </Link>
       <ReviewItem data={data} isNoProfile={isNoProfile} />
     </>
   )
@@ -27,6 +30,10 @@ const Product = styled.div`
   padding: 2rem 0.5rem;
   border-radius: 1rem;
   margin-bottom: 19px;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const ProductImage = styled.img`

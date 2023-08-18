@@ -76,13 +76,22 @@ const Product = () => {
           <Header pageName={''} />
           <ProductImage src={productInfo.image} />
           <ProductInfo>
-            <CustomFont content={productInfo.brand} />
-            <CustomFont content={productInfo.name} />
-            <CustomFont content={productInfo.size} />
-            <CustomFont content={productInfo.price} />
+            <CustomFont size={0.8} content={productInfo.brand} $marginBt={1} />
+            <CustomFont content={productInfo.name} weight={800} $marginBt={1} />
             <Flex>
-              <CustomFont content={'별점'} />
-              <CustomFont content={'리뷰 개수'} />
+              <CustomFont
+                size={0.8}
+                content={`${productInfo.size}ml / ${productInfo.price}원`}
+              />
+
+              <Flex>
+                <CustomFont content={'⭐️⭐️⭐️⭐️⭐️'} />
+                <CustomFont
+                  size={0.6}
+                  content={`(${reviews.length})`}
+                  $marginLf={0.5}
+                />
+              </Flex>
             </Flex>
           </ProductInfo>
           <Divider />
@@ -124,7 +133,7 @@ const Product = () => {
           <Divider />
           <WrapReview>
             {reviews.map(review => (
-              <ReviewItem key={review.id} />
+              <ReviewItem key={review.id} data={review} />
             ))}
           </WrapReview>
           <WrapFloatingButton>
@@ -140,21 +149,26 @@ const Container = styled.div`
   flex: 1;
   background-color: white;
   position: relative;
+  padding-bottom: 5rem;
 `
 
 const ProductImage = styled.img`
   width: 100%;
   height: 100%;
-  background-color: ${palette.Gray100};
+  background-color: white;
+  padding: 3rem;
 `
 
 const ProductInfo = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 2rem;
 `
 
 const Flex = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 `
 const WrapTags = styled.div`
   width: 90%;
@@ -166,6 +180,7 @@ const Divider = styled.div`
   width: 100%;
   height: 1rem;
   background-color: ${palette.Gray300};
+  margin-top: 2rem;
 `
 
 const WrapGraph = styled.div`

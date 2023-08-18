@@ -123,6 +123,7 @@ const Write = () => {
 const Container = styled.div`
   flex: 1;
   background-color: white;
+  padding-bottom: 5rem;
 `
 
 const Product = styled.div`
@@ -167,8 +168,15 @@ const Input = styled.textarea`
 `
 
 const SubmitButton = styled.button`
-  background-color: ${palette.Brown200};
-  padding: 2rem;
-  width: 100%;
+  display: block;
+  background-color: ${palette.Brown100};
+  padding: 1rem;
+  width: 80%;
+  margin: 0 auto;
+  border-radius: 1rem;
+
+  &:hover {
+    opacity: 0.5;
+  }
 `
 export default Write

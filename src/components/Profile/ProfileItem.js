@@ -2,10 +2,11 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import { Link } from 'react-router-dom'
+import palette from '../../styles/CustomColor'
 
 const ProfileItem = ({ data }) => {
   return (
-    <Link to={`/review/${data?.id}`}>
+    <Container to={`/review/${data?.id}`}>
       <Profile>
         <ProfileImage src={data?.image} />
         <ProfileInfo>
@@ -15,13 +16,19 @@ const ProfileItem = ({ data }) => {
           />
         </ProfileInfo>
       </Profile>
-    </Link>
+    </Container>
   )
 }
+
+const Container = styled(Link)``
 
 const Profile = styled.div`
   display: flex;
   align-items: center;
+  background-color: transparent;
+  &:hover {
+    opacity: 0.5;
+  }
 `
 
 const ProfileImage = styled.img`
