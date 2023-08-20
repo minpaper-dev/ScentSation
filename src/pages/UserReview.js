@@ -13,37 +13,40 @@ const UserReview = () => {
 
   const [userInfo, setUserInfo] = useState({})
   const [myReview, setMyReview] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getUserInfo()
-    getMyReview()
+    getData()
   }, [])
 
-  const getUserInfo = async () => {
-    const result = await getDataOne('user', id)
-    setUserInfo(result.data())
-  }
+  const getData = async () => {
+    const user = await getDataOne('user', id)
+    console.log(id, user)
+    setUserInfo(user.data())
 
-  const getMyReview = async () => {
-    const result = await getDataWithQuery('review', 'user.id', '==', id)
-    setMyReview(result)
-    console.log(result)
+    const review = await getDataWithQuery('review', 'user.id', '==', id)
+    setMyReview(review)
+
+    setIsLoading(false)
   }
 
   return (
     <>
       <Header pageName={'사용자 리뷰'} />
-      <Container>
-        <ProfileDetail userInfo={userInfo} />
-        <WrapReview>
-          {myReview.map(data => (
-            <>
-              <ReviewItemWithProduct data={data} isNoProfile={true} />
-              {/* <Divider /> */}
-            </>
-          ))}
-        </WrapReview>
-      </Container>
+
+      {!isLoading && (
+        <Container>
+          <ProfileDetail userInfo={userInfo} />
+          <WrapReview>
+            {myReview.map(data => (
+              <>
+                <ReviewItemWithProduct data={data} isNoProfile={true} />
+                {/* <Divider /> */}
+              </>
+            ))}
+          </WrapReview>
+        </Container>
+      )}
     </>
   )
 }
