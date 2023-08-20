@@ -6,6 +6,8 @@ import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import ProfileItem from '../components/Profile/ProfileItem'
 import { useNavigate } from 'react-router-dom'
+import VoteProduct from '../components/Vote/VoteProduct'
+import VoteItem from '../components/Vote/VoteItem'
 
 const Vote = () => {
   const navigate = useNavigate()
@@ -27,33 +29,27 @@ const Vote = () => {
     navigate('/vote/register')
   }
 
+  const goToDetail = id => {
+    navigate(`${id}`)
+  }
+
   return (
     <>
       <Header pageName={'투표'} />
       <Container>
-        <Button onClick={registerVote}>
-          <CustomFont content={'나도 투표 올리기'} />
-        </Button>
+        <WrapFloatingButton>
+          <FloatingButton onClick={registerVote}>
+            <CustomFont content={'나도 투표 올리기'} />
+          </FloatingButton>
+        </WrapFloatingButton>
 
-        {votes.map(vote => (
-          <VoteItem key={vote.id}>
-            <ProfileItem data={vote.userInfo} />
-            <CustomFont
-              content={vote.description}
-              $marginTop={1}
-              $marginBt={1}
-            />
-            <WrapVoteButton>
-              <VoteButton>
-                <CustomFont content={vote.perfume[0].brand} />
-                <CustomFont content={vote.perfume[0].name} />
-              </VoteButton>
-              <VoteButton>
-                <CustomFont content={vote.perfume[0].brand} />
-                <CustomFont content={vote.perfume[1].name} />
-              </VoteButton>
-            </WrapVoteButton>
-          </VoteItem>
+        {votes.map(data => (
+          <>
+            <VoteItem key={data.id} data={data} />
+            <Comment onClick={() => goToDetail(data.id)}>
+              <CustomFont content={'댓글'} />
+            </Comment>
+          </>
         ))}
       </Container>
     </>
@@ -63,31 +59,27 @@ const Vote = () => {
 const Container = styled.div`
   flex: 1;
   background-color: ${palette.Brown100};
+  padding: 3rem 2rem;
 `
 
-const Button = styled.button`
-  background-color: ${palette.Brown200};
-  padding: 1rem;
-  border-radius: 1rem;
-`
-
-const VoteItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 80%;
+const WrapFloatingButton = styled.div`
+  width: 480px;
   margin: 0 auto;
-`
-
-const WrapVoteButton = styled.div`
+  position: fixed;
   display: flex;
-  justify-content: space-between;
+  align-items: flex-end;
+  justify-content: flex-end;
+  bottom: 4rem;
+  padding: 0 3rem;
 `
 
-const VoteButton = styled.button`
-  width: 45%;
-  border: 1px solid black;
-  padding: 1rem 0;
-  border-radius: 1rem;
+const FloatingButton = styled.button`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 100%;
+  background-color: ${palette.Brown300};
 `
+
+const Comment = styled.button``
 
 export default Vote
