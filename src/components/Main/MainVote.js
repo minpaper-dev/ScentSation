@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import VoteItem from '../Vote/VoteItem'
 import CustomCarousel from '../Custom/CustomCarousel'
+import useFirestore from '../../hooks/useFirestore'
 
 const MainVote = () => {
-  const carouselList = [
-    { id: 1, name: '어나더' },
-    { id: 2, name: '어나더2' },
-    { id: 3, name: '어나더3' },
-  ]
+  const { getDataAll } = useFirestore()
+
+  const [carouselList, setCarouselList] = useState([])
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const result = await getDataAll('vote')
+
+    setCarouselList(result)
+  }
 
   return (
     <CustomCarousel
