@@ -3,17 +3,25 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import { useSetRecoilState } from 'recoil'
+import { setMyVotePerfumeState } from '../../recoil/selectors'
 
-const ProductListItem = ({ item }) => {
+const ProductListItem = ({ item, isSelect }) => {
   const navigate = useNavigate()
+  const setVote = useSetRecoilState(setMyVotePerfumeState)
 
   const goToProduct = () => {
     navigate(`/product/${item.id}`)
   }
 
+  const selectProduct = () => {
+    setVote(item)
+    navigate(-1)
+  }
+
   return (
     <>
-      <Container onClick={goToProduct}>
+      <Container onClick={isSelect ? selectProduct : goToProduct}>
         <ProductImage src={item.image} />
         <ProductInfo>
           <CustomFont size={0.8} content={item.brand} $marginBt={0.2} />

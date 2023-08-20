@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import ProductListItem from '../Product/ProductListItem'
 
-const SearchResult = ({ filterProducts }) => {
+const SearchResult = ({ filterProducts, isSelect }) => {
   return (
     <>
       <div>
@@ -15,7 +15,7 @@ const SearchResult = ({ filterProducts }) => {
         ))} */}
 
         {filterProducts.name.map(item => (
-          <ProductListItem key={item.id} item={item} />
+          <ProductListItem key={item.id} item={item} isSelect={isSelect} />
         ))}
       </div>
     </>
