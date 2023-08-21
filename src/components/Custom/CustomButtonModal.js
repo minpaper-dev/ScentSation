@@ -63,13 +63,6 @@ const ExitBtn = styled.button`
   padding: 0.5rem;
   transition: background-color 0.1s ease-in-out;
   font-size: 0.8rem;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: ${palette.Brown200};
-    color: white;
-  }
 `
 
 export default CustomButtonModal

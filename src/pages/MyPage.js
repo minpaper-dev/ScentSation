@@ -125,12 +125,6 @@ const Button = styled.button`
   width: 100%;
   text-align: left;
   padding: 0.8rem 2rem;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: ${palette.Gray300};
-  }
 `
 
 export default MyPage

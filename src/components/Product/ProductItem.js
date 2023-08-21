@@ -22,10 +22,6 @@ const Product = styled.div`
   padding: 2rem 0.5rem;
   border-radius: 1rem;
   margin-bottom: 19px;
-
-  &:hover {
-    opacity: 0.7;
-  }
 `
 
 const ProductImage = styled.img`

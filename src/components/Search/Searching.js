@@ -27,14 +27,6 @@ const SearchItem = styled.button`
   align-items: center;
   width: 100%;
   padding: 1rem 3rem;
-
-  &:hover,
-  &:focus,
-  &:active {
-    outline: none;
-    background-color: ${palette.Gray300};
-    opacity: 0.9;
-  }
 `
 
 export default Searching

@@ -6,8 +6,8 @@ const VoteProduct = ({ data }) => {
     <>
       <ProductImage src={data.image} />
       <ProductInfo>
-        <CustomFont size={0.8} content={data.brand} $marginBt={0.5} />
-        <CustomFont size={0.8} content={data.name} />
+        <CustomFont content={data.brand} $marginBt={0.5} />
+        <CustomFont content={data.name} />
       </ProductInfo>
     </>
   )

@@ -33,13 +33,6 @@ const Label = styled.label`
   margin-right: 1rem;
 
   cursor: pointer;
-
-  &:hover,
-  &:active,
-  &:focus {
-    background-color: red;
-    opacity: 0.1;
-  }
 `
 
 const Input = styled.input`

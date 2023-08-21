@@ -1,10 +1,8 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
-import palette from '../../styles/CustomColor'
 import ProfileItem from '../Profile/ProfileItem'
 import VoteProduct from './VoteProduct'
-import { useNavigate } from 'react-router-dom'
 
 const VoteItem = ({ data }) => {
   return (
@@ -52,12 +50,6 @@ const VoteButton = styled.button`
   border-radius: 1rem;
   margin-bottom: 19px;
   cursor: pointer;
-
-  &:hover,
-  &:active,
-  &:focus {
-    transform: scale(1.05);
-  }
 `
 
 export default VoteItem

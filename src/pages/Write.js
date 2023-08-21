@@ -189,9 +189,5 @@ const SubmitButton = styled.button`
   width: 80%;
   margin: 0 auto;
   border-radius: 1rem;
-
-  &:hover {
-    opacity: 0.5;
-  }
 `
 export default Write

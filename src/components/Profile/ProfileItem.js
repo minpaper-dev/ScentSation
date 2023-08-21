@@ -29,9 +29,6 @@ const Profile = styled.div`
   display: flex;
   align-items: center;
   background-color: transparent;
-  &:hover {
-    opacity: 0.5;
-  }
 `
 
 const ProfileImage = styled.img`

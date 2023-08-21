@@ -45,14 +45,6 @@ const Container = styled.button`
   width: 100%;
   padding: 1rem 3rem;
   border-bottom: 1px solid ${palette.Gray400};
-
-  &:hover,
-  &:focus,
-  &:active {
-    outline: none;
-    background-color: ${palette.Gray300};
-    opacity: 0.4;
-  }
 `
 
 const ProductImage = styled.img`

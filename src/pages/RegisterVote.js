@@ -152,12 +152,6 @@ const Button = styled.button`
   padding: 1rem 0;
   border-radius: 1rem;
   margin-top: 1rem;
-
-  &:hover,
-  &:focus,
-  &:active {
-    background-color: ${palette.Brown200};
-  }
 `
 
 export default RegisterVote

@@ -3,10 +3,15 @@ import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import CustomFont from '../styles/CustomFont'
 
 const BottomNavi = () => {
   const auth = getAuth()
   const navigate = useNavigate()
+
+  const goToPage = page => {
+    navigate(page)
+  }
 
   const goProfile = () => {
     let userId = ''
@@ -22,13 +27,15 @@ const BottomNavi = () => {
 
   return (
     <Container>
-      <StyleLink to={'/'}>
-        <Icon>홈</Icon>
-      </StyleLink>
-      <StyleLink to={'/vote'}>
-        <Icon>투표</Icon>
-      </StyleLink>
-      <Button onClick={goProfile}>마이페이지</Button>
+      <Button onClick={() => goToPage('/')}>
+        <CustomFont size={1.6} weight={600} content={'홈'} />
+      </Button>
+      <Button onClick={() => goToPage('/vote')}>
+        <CustomFont size={1.6} weight={600} content={'투표'} />
+      </Button>
+      <Button onClick={goProfile}>
+        <CustomFont size={1.6} weight={600} content={'프로필'} />
+      </Button>
     </Container>
   )
 }
@@ -44,17 +51,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`
-
-const StyleLink = styled(Link)`
-  flex: 1;
-`
-
-const Icon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: calc(480 / 3) px;
 `
 
 const Button = styled.button`
