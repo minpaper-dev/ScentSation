@@ -36,8 +36,9 @@ const BottomNavi = () => {
 const Container = styled.div`
   position: fixed;
   bottom: 0;
-  width: 480px;
-  height: 3rem;
+  width: 100vw;
+  max-width: 48rem;
+  height: 6rem;
   background-color: white;
   border-top: 1px solid ${palette.Gray300};
   display: flex;
