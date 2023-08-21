@@ -1,6 +1,7 @@
 import { db } from '../Firebase'
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -57,11 +58,16 @@ const useFirestore = () => {
     }
   }
 
+  const deleteData = async (collectionName, id) => {
+    await deleteDoc(doc(db, collectionName, id))
+  }
+
   return {
     getDataAll,
     getDataWithQuery,
     getDataOne,
     addData,
+    deleteData,
   }
 }
 
