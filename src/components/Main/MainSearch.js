@@ -13,18 +13,21 @@ const MainSearch = () => {
   return (
     <Container>
       <CustomFont
-        size={1.6}
+        size={2.5}
         weight={800}
         content={'어떤 향수를 찾으세요?'}
-        $marginTop={2}
-        $marginBt={2}
+        $marginTop={4}
+        $marginBt={4}
       />
       <WrapInput onClick={navigateToSearch}>
         <CustomFont
+          size={1.5}
           content={'제품명, 브랜드를 입력해보세요 : )'}
           color={palette.Gray200}
         />
-        <SearchButton>🔍</SearchButton>
+        <SearchButton>
+          <CustomFont size={2} content={'🔍'} />
+        </SearchButton>
       </WrapInput>
       {/* <RecommendList>
         <RecommendItem>
@@ -65,7 +68,7 @@ const WrapInput = styled.button`
   width: 100%;
   border: 1px solid #f5f5f5;
   border-radius: 16px;
-  padding: 15px;
+  padding: 2rem;
   color: #a0a0a0;
 
   cursor: pointer;
@@ -77,8 +80,12 @@ const SearchButton = styled.div`
   top: 0;
   right: 0;
   border: 0;
-  border-radius: 16px;
-  padding: 15px 20px;
+  border-radius: 1.5rem;
+  height: 100%;
+  width: 16%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
 `

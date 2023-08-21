@@ -7,9 +7,9 @@ const CustomLogo = ({ $marginTop, $marginBt }) => {
   return (
     <Logo $marginTop={$marginTop} $marginBt={$marginBt}>
       <CustomFont
-        size={1.5}
+        size={2.5}
         content={'ScentSation'}
-        color={palette.Brown100}
+        color={palette.Brown200}
         weight={800}
       />
     </Logo>
