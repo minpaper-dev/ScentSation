@@ -6,7 +6,7 @@ import ProductListItem from '../Product/ProductListItem'
 const SearchResult = ({ filterProducts, isSelect }) => {
   return (
     <>
-      <div>
+      <Container>
         {/* {brand.map(item => (
           <SearchItem key={item.id}>
             <BrandImage src={item.image} />
@@ -17,10 +17,14 @@ const SearchResult = ({ filterProducts, isSelect }) => {
         {filterProducts.name.map(item => (
           <ProductListItem key={item.id} item={item} isSelect={isSelect} />
         ))}
-      </div>
+      </Container>
     </>
   )
 }
+
+const Container = styled.div`
+  padding-bottom: 10rem;
+`
 
 const SearchItem = styled.button`
   display: flex;

@@ -115,9 +115,9 @@ const WrapInput = styled.div`
   justify-content: space-between;
   width: 80%;
   border: 1px solid #f5f5f5;
-  border-radius: 1rem;
-  margin: 1rem auto;
-  padding-left: 1rem;
+  border-radius: 1.6rem;
+  margin: 1rem auto 2rem;
+  padding: 0.4rem 1rem;
   color: #a0a0a0;
 
   cursor: pointer;
@@ -127,15 +127,17 @@ const Input = styled.input`
   width: 100%;
   border: 0px;
   outline: none;
+  font-size: 1.2rem;
+  &::placeholder {
+    font-size: 1.2rem;
+  }
 `
 
 const SearchButton = styled.div`
   height: 100%;
-
+  font-size: 1.6rem;
   border: 0;
-  border-radius: 1rem;
   padding: 1rem;
-
   cursor: pointer;
 `
 

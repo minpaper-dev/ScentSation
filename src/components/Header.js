@@ -23,7 +23,7 @@ const Header = ({ pageName }) => {
       <Icon onClick={goBack}>
         <Image src={arrowIcon} />
       </Icon>
-      <CustomFont weight={600} size={2} content={pageName} />
+      <CustomFont weight={600} size={1.6} content={pageName} />
       <Icon onClick={goSearch}>
         <Image src={searchIcon} />
       </Icon>
@@ -37,13 +37,13 @@ const Container = styled.header`
   justify-content: space-between;
   background-color: white;
   min-height: 5rem;
-  padding: 3rem;
+  padding: 2.6rem;
 `
 
 const Icon = styled.button``
 
 const Image = styled.img`
-  width: 3rem;
+  width: 2.5rem;
 `
 
 export default Header

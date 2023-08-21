@@ -68,7 +68,7 @@ const WrapInput = styled.button`
   display: flex;
   width: 100%;
   border: 1px solid #f5f5f5;
-  border-radius: 16px;
+  border-radius: 1.6rem;
   padding: 1.6rem;
   color: #a0a0a0;
 

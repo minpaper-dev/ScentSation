@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
+import closeIcon from '../../assets/icon_close.png'
 
 const SearchPending = ({ onClickItem, findProduct }) => {
   const [data, setData] = useState([])
@@ -32,12 +33,12 @@ const SearchPending = ({ onClickItem, findProduct }) => {
               }}
               key={item.index}
             >
-              <CustomFont size={0.8} content={item.text} />
-              <CustomFont size={0.8} content={item.date} $marginRi={0.5} />
+              <CustomFont size={1.2} content={item.text} />
+              <CustomFont content={item.date} $marginRi={0.5} />
             </SearchButton>
 
             <DeleteButton onClick={() => deleteSearch(item.id)}>
-              <CustomFont size={0.6} content={'X'} />
+              <Icon src={closeIcon} />
             </DeleteButton>
           </SearchItem>
         ))}
@@ -65,6 +66,10 @@ const DeleteButton = styled.button`
   display: flex;
   align-items: center;
   margin: 0 1rem;
+`
+
+const Icon = styled.img`
+  width: 2rem;
 `
 
 export default SearchPending
