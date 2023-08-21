@@ -7,7 +7,8 @@ const SearchPending = ({ onClickItem, findProduct }) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
-    let searchData = JSON.parse(localStorage.getItem('search')) || []
+    let searchData = JSON.parse(localStorage.getItem('search')).reverse() || []
+
     setData(searchData)
   }, [])
 
@@ -20,7 +21,7 @@ const SearchPending = ({ onClickItem, findProduct }) => {
   return (
     <>
       <div>
-        {data.reverse().map((item, index) => (
+        {data.map((item, index) => (
           <SearchItem key={item.id}>
             <SearchButton
               onClick={() => {

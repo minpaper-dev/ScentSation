@@ -21,7 +21,6 @@ const UserReview = () => {
 
   const getData = async () => {
     const user = await getDataOne('user', id)
-    console.log(id, user)
     setUserInfo(user.data())
 
     const review = await getDataWithQuery('review', 'user.id', '==', id)

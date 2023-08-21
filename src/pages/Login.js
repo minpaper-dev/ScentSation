@@ -57,7 +57,6 @@ const Login = () => {
 
       // user DB에 해당 메일이 존재하는 지 검증.uid))
       const result = await getDataOne('user', user.uid)
-      console.log(result)
 
       if (result.exists()) {
         localStorage.setItem('uid', JSON.stringify(user.uid))

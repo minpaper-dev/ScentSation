@@ -23,7 +23,7 @@ const MainSearch = () => {
           <SearchButton>🔍</SearchButton>
         </WrapInput>
       </Link>
-      <RecommendList>
+      {/* <RecommendList>
         <RecommendItem>
           <CustomFont content={'딥디크'} />
         </RecommendItem>
@@ -42,7 +42,7 @@ const MainSearch = () => {
         <RecommendItem>
           <CustomFont content={'딥디크'} />
         </RecommendItem>
-      </RecommendList>
+      </RecommendList> */}
     </Container>
   )
 }

@@ -8,12 +8,14 @@ import ProfileItem from '../components/Profile/ProfileItem'
 import { useNavigate } from 'react-router-dom'
 import VoteProduct from '../components/Vote/VoteProduct'
 import VoteItem from '../components/Vote/VoteItem'
+import Loader from '../components/Loader'
 
 const Vote = () => {
   const navigate = useNavigate()
   const { getDataAll } = useFirestore()
 
   const [votes, setVotes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     getVotes()
@@ -22,7 +24,7 @@ const Vote = () => {
   const getVotes = async () => {
     const result = await getDataAll('vote')
     setVotes(result)
-    console.log(result)
+    setIsLoading(false)
   }
 
   const registerVote = () => {
@@ -36,22 +38,26 @@ const Vote = () => {
   return (
     <>
       <Header pageName={'투표'} />
-      <Container>
-        <WrapFloatingButton>
-          <FloatingButton onClick={registerVote}>
-            <CustomFont content={'나도 투표 올리기'} />
-          </FloatingButton>
-        </WrapFloatingButton>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Container>
+          <WrapFloatingButton>
+            <FloatingButton onClick={registerVote}>
+              <CustomFont content={'나도 투표 올리기'} />
+            </FloatingButton>
+          </WrapFloatingButton>
 
-        {votes.map(data => (
-          <>
-            <VoteItem key={data.id} data={data} />
-            <Comment onClick={() => goToDetail(data.id)}>
-              <CustomFont content={'댓글'} />
-            </Comment>
-          </>
-        ))}
-      </Container>
+          {votes.map(data => (
+            <>
+              <VoteItem key={data.id} data={data} />
+              <Comment onClick={() => goToDetail(data.id)}>
+                <CustomFont content={'댓글'} />
+              </Comment>
+            </>
+          ))}
+        </Container>
+      )}
     </>
   )
 }

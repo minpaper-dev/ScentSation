@@ -33,7 +33,6 @@ const VoteDetail = () => {
 
   const getComment = async voteId => {
     const result = await getDataWithQuery('comment', 'voteId', '==', voteId)
-    console.log(result)
     setComment(result.reverse())
   }
 

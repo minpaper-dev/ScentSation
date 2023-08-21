@@ -44,7 +44,6 @@ const Product = () => {
 
   const getProduct = async () => {
     const result = await getDataOne('product', id)
-    console.log(result.data())
 
     setProductInfo({ ...result.data(), id })
   }
@@ -61,7 +60,6 @@ const Product = () => {
       setReviewCount(reviewCount + 1)
     })
     setReviewData(obj)
-    console.log(obj)
     setIsLoading(false)
   }
 

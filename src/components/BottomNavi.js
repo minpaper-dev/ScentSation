@@ -11,7 +11,6 @@ const BottomNavi = () => {
   const goProfile = () => {
     let userId = ''
     onAuthStateChanged(auth, user => {
-      console.log(user)
       if (user) {
         userId = user.uid
         navigate('/mypage')
@@ -19,7 +18,6 @@ const BottomNavi = () => {
         navigate('/login')
       }
     })
-    console.log(userId)
   }
 
   return (
@@ -27,8 +25,8 @@ const BottomNavi = () => {
       <StyleLink to={'/'}>
         <Icon>홈</Icon>
       </StyleLink>
-      <StyleLink to={'/'}>
-        <Icon>리뷰</Icon>
+      <StyleLink to={'/vote'}>
+        <Icon>투표</Icon>
       </StyleLink>
       <Button onClick={goProfile}>마이페이지</Button>
     </Container>
