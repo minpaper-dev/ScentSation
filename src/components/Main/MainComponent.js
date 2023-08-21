@@ -13,7 +13,7 @@ const MainComponent = ({ title, component }) => {
 }
 
 const Container = styled.div`
-  width: 80%;
+  width: 85%;
   display: flex;
   flex-direction: column;
   align-items: center;

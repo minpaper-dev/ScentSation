@@ -74,18 +74,23 @@ const Product = () => {
           <Header pageName={''} />
           <ProductImage src={productInfo.image} />
           <ProductInfo>
-            <CustomFont size={0.8} content={productInfo.brand} $marginBt={1} />
-            <CustomFont content={productInfo.name} weight={800} $marginBt={1} />
+            <CustomFont size={1.2} content={productInfo.brand} $marginBt={1} />
+            <CustomFont
+              size={1.6}
+              content={productInfo.name}
+              weight={800}
+              $marginBt={1}
+            />
             <Flex>
               <CustomFont
-                size={0.8}
+                size={1.2}
                 content={`${productInfo.size}ml / ${productInfo.price}원`}
               />
 
               <Flex>
                 <CustomFont content={'⭐️⭐️⭐️⭐️⭐️'} />
                 <CustomFont
-                  size={0.6}
+                  size={1.2}
                   content={`(${reviews.length})`}
                   $marginLf={0.5}
                 />
@@ -94,9 +99,23 @@ const Product = () => {
           </ProductInfo>
           <Divider />
           <WrapTags>
-            <CustomTags size={0.8} content={'# 남성'} />
-            <CustomTags size={0.8} content={'# 봄'} />
-            <CustomTags size={0.8} content={'# 지속력 약함'} />
+            <CustomFont
+              color={palette.Gray200}
+              weight={600}
+              content={'# 남성'}
+              $marginRi={1}
+            />
+            <CustomFont
+              color={palette.Gray200}
+              weight={600}
+              content={'# 봄'}
+              $marginRi={1}
+            />
+            <CustomFont
+              color={palette.Gray200}
+              weight={600}
+              content={'# 1~2시간'}
+            />
           </WrapTags>
           {Object.keys(reviewData).map(item => (
             <WrapGraph key={item}>
@@ -112,8 +131,9 @@ const Product = () => {
 
               {Object.keys(reviewData[item]).map(category => (
                 <GraphText key={`${item}-${category}`}>
-                  <CustomFont content={REVIEW_DATA_TEXT[category]} />
+                  <CustomFont size={1.2} content={REVIEW_DATA_TEXT[category]} />
                   <CustomFont
+                    size={1.2}
                     content={`${
                       reviewData[item][category]
                         ? (
@@ -151,10 +171,11 @@ const Container = styled.div`
 `
 
 const ProductImage = styled.img`
-  width: 100%;
-  height: 100%;
+  display: block;
+  width: 60%;
+  height: 60%;
+  margin: 0 auto 2rem;
   background-color: white;
-  padding: 3rem;
 `
 
 const ProductInfo = styled.div`
@@ -171,7 +192,14 @@ const Flex = styled.div`
 const WrapTags = styled.div`
   width: 90%;
   display: flex;
-  margin: 1rem auto 0;
+  margin: 2rem auto 0;
+`
+
+const Tag = styled.div`
+  padding: 1rem;
+  background-color: ${props => props.$bgc};
+  border-radius: 1rem;
+  margin-right: 1rem;
 `
 
 const Divider = styled.div`
