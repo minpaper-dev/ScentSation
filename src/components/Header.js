@@ -3,6 +3,8 @@ import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import CustomFont from '../styles/CustomFont'
 import { NO_HEADER } from '../common/data'
+import arrowIcon from '../assets/icon_chevron_left.png'
+import searchIcon from '../assets/icon_search.png'
 
 const Header = ({ pageName }) => {
   const navigate = useNavigate()
@@ -18,9 +20,13 @@ const Header = ({ pageName }) => {
   if (NO_HEADER.includes(window.location.pathname)) return null
   return (
     <Container>
-      <Icon onClick={goBack}>뒤로</Icon>
-      <CustomFont content={pageName} weight={800} />
-      <Icon onClick={goSearch}>검색</Icon>
+      <Icon onClick={goBack}>
+        <Image src={arrowIcon} />
+      </Icon>
+      <CustomFont weight={600} size={2} content={pageName} />
+      <Icon onClick={goSearch}>
+        <Image src={searchIcon} />
+      </Icon>
     </Container>
   )
 }
@@ -31,9 +37,13 @@ const Container = styled.header`
   justify-content: space-between;
   background-color: white;
   min-height: 5rem;
-  padding: 2rem;
+  padding: 3rem;
 `
 
 const Icon = styled.button``
+
+const Image = styled.img`
+  width: 3rem;
+`
 
 export default Header
