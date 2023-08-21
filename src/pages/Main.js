@@ -71,7 +71,8 @@ const Main = () => {
 const Header = styled.div`
   position: fixed;
   top: 0;
-  width: 480px;
+  width: 100vw;
+  max-width: 48rem;
   height: 5rem;
   background-color: white;
   padding: 2rem 1rem;

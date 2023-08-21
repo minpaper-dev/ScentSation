@@ -2,9 +2,14 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const MainSearch = () => {
+  const navigate = useNavigate()
+  const navigateToSearch = () => {
+    navigate('/search')
+  }
+
   return (
     <Container>
       <CustomFont
@@ -14,15 +19,13 @@ const MainSearch = () => {
         $marginTop={2}
         $marginBt={2}
       />
-      <Link to={'/search'}>
-        <WrapInput>
-          <CustomFont
-            content={'제품명, 브랜드를 입력해보세요 : )'}
-            color={palette.Gray200}
-          />
-          <SearchButton>🔍</SearchButton>
-        </WrapInput>
-      </Link>
+      <WrapInput onClick={navigateToSearch}>
+        <CustomFont
+          content={'제품명, 브랜드를 입력해보세요 : )'}
+          color={palette.Gray200}
+        />
+        <SearchButton>🔍</SearchButton>
+      </WrapInput>
       {/* <RecommendList>
         <RecommendItem>
           <CustomFont content={'딥디크'} />
@@ -48,7 +51,7 @@ const MainSearch = () => {
 }
 
 const Container = styled.div`
-  width: 100%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,9 +59,10 @@ const Container = styled.div`
   background-color: white;
 `
 
-const WrapInput = styled.div`
+const WrapInput = styled.button`
   position: relative;
-  width: 400px;
+  display: flex;
+  width: 100%;
   border: 1px solid #f5f5f5;
   border-radius: 16px;
   padding: 15px;

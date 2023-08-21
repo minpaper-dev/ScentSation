@@ -14,7 +14,7 @@ const MainComponent = ({ title, component }) => {
 }
 
 const Container = styled.div`
-  max-width: ${`${MAIN_CATEGORY_WIDTH}rem`};
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;

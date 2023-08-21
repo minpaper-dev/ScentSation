@@ -217,7 +217,8 @@ function App() {
 }
 
 const Container = styled.div`
-  width: 480px;
+  width: 100vw;
+  max-width: 48rem;
   margin: 0 auto;
   overflow: hidden;
   display: flex;
