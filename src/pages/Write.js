@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
 import CustomRadio from '../components/Custom/CustomRadio'
@@ -8,11 +8,14 @@ import { REVIEW_FORM } from '../common/data'
 import CustomInput from '../components/Custom/CustomInput'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
+import CustomModal from '../components/Custom/CustomModal'
 
 const Write = () => {
+  const navigate = useNavigate()
   const { state } = useLocation()
   const { addData, getDataOne } = useFirestore()
 
+  const [isModal, setIsModal] = useState(false)
   const [userInfo, setUserInfo] = useState({})
   const [productInfo, setProductInfo] = useState(state)
   const [rate, setRate] = useState(0)
@@ -48,6 +51,15 @@ const Write = () => {
       user: { ...userInfo, id: id },
       rate: rate,
     })
+    onModalHandler()
+  }
+
+  const onModalHandler = () => {
+    setIsModal(true)
+    setTimeout(() => {
+      setIsModal(false)
+      navigate(-1)
+    }, 1500)
   }
 
   return (
@@ -115,6 +127,9 @@ const Write = () => {
           />
         </Form>
         <SubmitButton onClick={postReview}>리뷰쓰기</SubmitButton>
+        {isModal && (
+          <CustomModal content={'리뷰를 작성해주셔서 감사합니다 : )'} />
+        )}
       </Container>
     </>
   )
