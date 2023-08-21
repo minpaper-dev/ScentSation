@@ -5,12 +5,11 @@ import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
 import CustomRadio from '../components/Custom/CustomRadio'
 import { REVIEW_FORM } from '../common/data'
-import CustomInput from '../components/Custom/CustomInput'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import CustomModal from '../components/Custom/CustomModal'
 import { StarOutlined } from '@ant-design/icons'
-import { Divider, Rate } from 'antd'
+import { Rate } from 'antd'
 
 const Write = () => {
   const navigate = useNavigate()
@@ -154,7 +153,7 @@ const Container = styled.div`
 const Product = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
 `
 
@@ -166,7 +165,7 @@ const ProductImage = styled.img`
   background-color: white;
 `
 const Form = styled.form`
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   padding: 2rem 0;
   display: flex;
@@ -199,7 +198,7 @@ const SubmitButton = styled.button`
   display: block;
   background-color: ${palette.Brown100};
   padding: 2rem 0;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   border-radius: 1rem;
 `

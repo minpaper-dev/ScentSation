@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import profile from '../assets/profile.png'
 
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import CustomLogo from '../components/Custom/CustomLogo'
 import { genderList } from '../common/data'
 import useFirestore from '../hooks/useFirestore'
+import { v4 as uuidv4 } from 'uuid'
 import {
   getStorage,
   ref,
@@ -24,8 +26,8 @@ const Signup = () => {
   const { state } = useLocation()
   const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
 
-  const [profileImage, setProfiletImage] = useState('')
-  const [profileImageUrl, setProfileImageUrl] = useState('')
+  const [profileImage, setProfileImage] = useState('')
+  const [profileImageUrl, setProfileImageUrl] = useState(profile)
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
@@ -119,6 +121,10 @@ const Signup = () => {
     setUserInfo(info)
   }
 
+  const setProfileBase = () => {
+    setProfileImageUrl(profile)
+  }
+
   const renderInput = (item, category, index) => {
     if (item.type === 'radio') {
       return (
@@ -138,11 +144,11 @@ const Signup = () => {
               <CustomFont
                 color={
                   inputInfo.gender.value === gender.value
-                    ? 'white'
+                    ? 'black'
                     : palette.Gray100
                 }
+                weight={inputInfo.gender.value === gender.value ? 600 : 400}
                 content={gender.title}
-                size={0.8}
               />
             </Label>
           ))}
@@ -172,7 +178,9 @@ const Signup = () => {
     }
   }
 
-  const onSignup = async () => {
+  const onSignup = async url => {
+    console.log('url')
+    console.log(url)
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -193,6 +201,7 @@ const Signup = () => {
         gender: inputInfo.gender.value,
         category: inputInfo.category.value,
         major: inputInfo.perfume.value,
+        image: url,
       })
 
       navigate('/', { replace: true })
@@ -211,17 +220,28 @@ const Signup = () => {
   const handleImageChange = e => {
     const file = e.target.files[0]
     if (file) {
-      setProfiletImage(file)
+      setProfileImage(file)
       const imageUrl = URL.createObjectURL(file)
       setProfileImageUrl(imageUrl)
     }
   }
 
   const handleUpload = () => {
+    let url = ''
     const storage = getStorage()
-    const storageRef = ref(storage, 'image/image1.jpg')
+    const storageRef = ref(storage, `image/test.jpg`)
+
     if (profileImage) {
-      uploadBytesResumable(storageRef, profileImage)
+      const uploadTask = uploadBytesResumable(storageRef, profileImage)
+
+      uploadTask.on('state_changed', () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+          url = downloadURL
+          onSignup(url)
+        })
+      })
+    } else {
+      onSignup()
     }
   }
 
@@ -230,10 +250,15 @@ const Signup = () => {
       <Wrap>
         <CustomLogo $marginTop={5} />
         <ProfileImage src={profileImageUrl} />
-        <label>
-          <input type="file" onChange={handleImageChange} accept="image/*" />
-        </label>
-        <button onClick={handleUpload}>클릭</button>
+        <FileLabel>
+          <File type="file" onChange={handleImageChange} accept="image/*" />
+          <CustomFont content={'사진 선택'} textDecoLine={'underline'} />
+        </FileLabel>
+        {profileImageUrl !== profile && (
+          <Button onClick={setProfileBase}>
+            <CustomFont content={'기본 이미지로 변경'} />
+          </Button>
+        )}
 
         <FormGrid>
           {Object.values(inputInfo).map(
@@ -244,9 +269,9 @@ const Signup = () => {
                   <Center>
                     <CustomFont
                       color={palette.Brown500}
-                      weight={400}
+                      weight={600}
                       content={item.title}
-                      size={0.8}
+                      size={1.2}
                     />
                   </Center>
                   {renderInput(item, Object.keys(inputInfo)[index], index)}
@@ -255,7 +280,7 @@ const Signup = () => {
           )}
         </FormGrid>
       </Wrap>
-      <SignupButton onClick={onSignup}>
+      <SignupButton onClick={handleUpload}>
         <CustomFont size={0.8} content={'회원가입'} />
       </SignupButton>
     </Container>
@@ -275,8 +300,8 @@ const FormGrid = styled.div`
   width: 100%;
   display: grid;
   grid-template-columns: 8rem 1fr;
-  padding: 0px 3rem;
-  row-gap: 1rem;
+  padding: 2rem 3rem;
+  row-gap: 2rem;
 `
 
 const SignupButton = styled.button`
@@ -343,10 +368,10 @@ const Radio = styled.input`
 `
 
 const ProfileImage = styled.img`
-  border: 1px solid black;
+  border: 1px solid ${palette.Gray400};
   width: 10rem;
   height: 10rem;
-  margin: 2rem 0px;
+  margin: 2rem 0 0;
   border-radius: 100%;
 `
 
@@ -354,10 +379,22 @@ const FlexCol = styled.div`
   display: flex;
   flex-direction: column;
 `
-
-const Form = styled.form`
+const FileLabel = styled.label`
+  width: 30%;
+  border-radius: 1rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `
+
+const File = styled.input`
+  display: none;
+  width: 50%;
+  margin: 0 auto;
+`
+
+const Button = styled.button``
 
 export default Signup

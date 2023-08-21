@@ -22,7 +22,7 @@ const CustomInput = ({
 }
 
 const Input = styled.input`
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   border-radius: 8px;
   border: 1px solid ${palette.Brown200};
   padding: 15px 18px;

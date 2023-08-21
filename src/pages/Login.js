@@ -79,15 +79,11 @@ const Login = () => {
   return (
     <Container>
       <Wrap>
-        <CustomLogo $marginTop={3} $marginBt={3} />
+        <CustomLogo $marginTop={10} $marginBt={3} />
         <InputContainer>
           <CustomInput value={email} setValue={setEmail} placeholder="E-mail" />
           <ErrorMessage>
-            <CustomFont
-              size={0.8}
-              color={palette.Red100}
-              content={errorMessage.email}
-            />
+            <CustomFont color={palette.Red100} content={errorMessage.email} />
           </ErrorMessage>
         </InputContainer>
         <InputContainer>
@@ -99,7 +95,6 @@ const Login = () => {
           />
           <ErrorMessage>
             <CustomFont
-              size={0.8}
               color={palette.Red100}
               content={errorMessage.password}
             />
@@ -111,15 +106,17 @@ const Login = () => {
           bgc={palette.Brown100}
           $marginTop={2}
         >
-          <CustomFont size={0.8} content={'로그인'} />
+          <CustomFont size={1.2} weight={600} content={'로그인'} />
         </LoginButton>
         <LoginButton onClick={onLoginGoogle} $marginTop={1}>
-          <CustomFont size={0.8} content={'Google로 로그인'} />
+          <CustomFont size={1.2} weight={600} content={'Google로 로그인'} />
         </LoginButton>
       </Wrap>
 
       <Link to={'/signup'}>
-        <SignUpButton>회원가입</SignUpButton>
+        <SignUpButton>
+          <CustomFont size={1.4} content={'회원가입'} />
+        </SignUpButton>
       </Link>
     </Container>
   )
@@ -127,8 +124,8 @@ const Login = () => {
 
 const Container = styled.div`
   flex: 1;
-  height: 100%;
   background-color: white;
+  padding-bottom: 10rem;
   display: flex;
   flex-direction: column;
   align-items: center;
