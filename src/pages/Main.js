@@ -8,9 +8,15 @@ import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
 import CustomLogo from '../components/Custom/CustomLogo'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import useFirestore from '../hooks/useFirestore'
+import { useRecoilState } from 'recoil'
+import { myInfoState } from '../recoil/atoms'
 
 const Main = () => {
   const auth = getAuth()
+  const { getDataOne } = useFirestore()
+  const [, setMyInfo] = useRecoilState(myInfoState)
+
   const MainContent = [
     {
       id: 0,
@@ -33,9 +39,15 @@ const Main = () => {
     onAuthStateChanged(auth, user => {
       if (user) {
         localStorage.setItem('uid', JSON.stringify(user.uid))
+        setProfile(user.uid)
       }
     })
   }, [])
+
+  const setProfile = async uid => {
+    const result = await getDataOne('user', uid)
+    setMyInfo({ ...result.data(), id: uid })
+  }
 
   return (
     <>
