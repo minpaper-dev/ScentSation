@@ -6,8 +6,8 @@ const ProductItem = ({ data }) => {
     <Product>
       <ProductImage src={data.image} />
       <ProductInfo>
-        <CustomFont content={data.brand} />
-        <CustomFont content={data.name} />
+        <CustomFont size={1.2} content={data.brand} $marginBt={1} />
+        <CustomFont size={1.2} content={data.name} />
       </ProductInfo>
     </Product>
   )

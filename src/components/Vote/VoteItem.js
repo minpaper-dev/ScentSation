@@ -11,7 +11,12 @@ const VoteItem = ({ data }) => {
     <>
       <Container key={data.id}>
         <ProfileItem data={data.userInfo} />
-        <CustomFont content={data.description} $marginTop={1} $marginBt={1} />
+        <CustomFont
+          size={1.2}
+          content={data.description}
+          $marginTop={2}
+          $marginBt={2}
+        />
         <WrapVoteButton>
           <VoteButton>
             <VoteProduct data={data.perfume[0]} />
@@ -38,7 +43,7 @@ const WrapVoteButton = styled.div`
 `
 
 const VoteButton = styled.button`
-  width: 45%;
+  width: 48%;
   display: flex;
   align-items: center;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);

@@ -95,10 +95,7 @@ const CarouselContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: hidden;
-  border-right: 2px solid colors.$WHITE;
-  border-left: 2px solid colors.$WHITE;
-  transition: border 300ms;
-  padding: 5%;
+  padding: 1.5%;
 `
 
 export default CustomCarousel

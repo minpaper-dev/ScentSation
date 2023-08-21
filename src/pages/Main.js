@@ -82,10 +82,10 @@ const Container = styled.div`
 const Header = styled.div`
   width: 100vw;
   max-width: 48rem;
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   height: 6rem;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255);
   padding: 1.5rem 4rem;
   z-index: 999;
 `

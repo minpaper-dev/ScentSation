@@ -15,7 +15,7 @@ const ReviewItem = ({ data, isNoProfile }) => {
         {/* <CustomTags />
         <CustomTags /> */}
       </TagList>
-      <CustomFont content={data?.description} />
+      <CustomFont size={1.2} content={data?.description} />
     </Container>
   )
 }

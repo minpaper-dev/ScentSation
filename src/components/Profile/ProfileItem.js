@@ -10,9 +10,12 @@ const ProfileItem = ({ data }) => {
       <Profile>
         <ProfileImage src={data?.image} />
         <ProfileInfo>
-          <CustomFont content={data?.nickname} $marginBt={0.5} />
+          <CustomFont size={1.2} content={data?.nickname} $marginBt={0.5} />
           <CustomFont
-            content={`${data?.age}세 / ${data?.category} / ${data?.gender}`}
+            size={1.2}
+            content={`${data?.age}세 / ${data?.category} / ${
+              data?.gender === 'male' ? '남' : '여'
+            }`}
           />
         </ProfileInfo>
       </Profile>
@@ -36,7 +39,7 @@ const ProfileImage = styled.img`
   height: 60px;
   border-radius: 100%;
   background-color: white;
-  margin-right: 15px;
+  margin-right: 1.5rem;
 `
 
 const ProfileInfo = styled.div`

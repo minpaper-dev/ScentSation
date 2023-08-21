@@ -11,7 +11,7 @@ const MainCategories = () => {
       <Link to={`/filter`} state={{ category: item.title }} key={item.title}>
         <CategoryBox>
           <CustomFont size={2} content={item.icon} $marginBt={1} />
-          <CustomFont size={1.4} weight={400} content={item.title} />
+          <CustomFont size={1} weight={400} content={item.title} />
         </CategoryBox>
       </Link>
     )
