@@ -9,6 +9,15 @@ import useFirestore from '../hooks/useFirestore'
 import Header from '../components/Header'
 import { useLocation } from 'react-router-dom'
 
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/free-mode'
+import 'swiper/css/pagination'
+
+import { FreeMode, Pagination } from 'swiper/modules'
+
 const Filter = () => {
   const { state } = useLocation()
   const { getDataAll } = useFirestore()
@@ -46,18 +55,28 @@ const Filter = () => {
     <Container>
       <Header pageName={'필터'} />
       <WrapTags>
-        {FILTER_CATEGORY.map((item, index) => (
-          <CustomTags
-            key={item}
-            content={item}
-            bgc={category === item ? palette.Brown500 : palette.Brown200}
-            $marginRi={1}
-            onClick={content => {
-              console.log(content)
-              setCategory(content)
-            }}
-          />
-        ))}
+        <Swiper
+          slidesPerView={6}
+          spaceBetween={30}
+          freeMode={true}
+          modules={[FreeMode, Pagination]}
+          className="mySwiper"
+        >
+          {FILTER_CATEGORY.map((item, index) => (
+            <SwiperSlide>
+              <CustomTags
+                itemId={index}
+                key={item}
+                content={item}
+                bgc={category === item ? palette.Brown500 : palette.Brown200}
+                // $marginRi={1}
+                onClick={content => {
+                  setCategory(content)
+                }}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </WrapTags>
 
       <Sort>
