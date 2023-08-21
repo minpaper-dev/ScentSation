@@ -2,11 +2,12 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
+import loading from '../../assets/loading.gif'
 
 const ProfileDetail = ({ userInfo }) => {
   return (
     <Container>
-      <ProfileImage src={userInfo.image} />
+      <ProfileImage src={userInfo.image || loading} />
       <CustomFont content={userInfo.nickname} $marginTop={2} />
       <CustomFont
         content={`${userInfo.age}세 / ${userInfo.category} / ${
