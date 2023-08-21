@@ -10,8 +10,8 @@ const MainCategories = () => {
     return (
       <Link to={`/filter`} state={{ category: item.title }} key={item.title}>
         <CategoryBox>
-          <CustomFont size={1.5} content={item.icon} $marginBt={1} />
-          <CustomFont weight={800} content={item.title} />
+          <CustomFont size={2} content={item.icon} $marginBt={1} />
+          <CustomFont size={1.4} weight={400} content={item.title} />
         </CategoryBox>
       </Link>
     )
@@ -25,10 +25,11 @@ const MainCategories = () => {
 }
 
 const WrapCategoryBox = styled.div`
+  width: 100%;
   display: grid;
   grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 1.5rem;
+  gap: 2rem;
 `
 
 const CategoryBox = styled.div`

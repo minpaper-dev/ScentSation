@@ -2,7 +2,7 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const MainSearch = () => {
   const navigate = useNavigate()
@@ -76,7 +76,6 @@ const WrapInput = styled.button`
 `
 
 const SearchButton = styled.div`
-  background-color: #bdb1a6;
   position: absolute;
   top: 0;
   right: 0;
