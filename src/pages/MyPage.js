@@ -3,16 +3,17 @@ import CustomLogo from '../components/Custom/CustomLogo'
 import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
 import { Link, useNavigate } from 'react-router-dom'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { deleteUser, getAuth, onAuthStateChanged } from 'firebase/auth'
 import Header from '../components/Header'
 import useFirestore from '../hooks/useFirestore'
 import palette from '../styles/CustomColor'
 import ProfileDetail from '../components/Profile/ProfileDetail'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
 
 const MyPage = () => {
   const auth = getAuth()
   const navigate = useNavigate()
-  const { getDataOne } = useFirestore()
+  const { getDataOne, deleteData } = useFirestore()
 
   const MenuData = [
     {
@@ -20,30 +21,27 @@ const MyPage = () => {
       event: () => navigate(`/review/${userInfo.id}`),
     },
     {
-      title: '향수 / 브랜드 제보',
-      event: () => navigate('/'),
-    },
-    {
       title: '내 정보 수정',
       event: () => navigate('/'),
     },
     {
       title: '로그아웃',
-      event: () => onLogout(),
+      event: () => setIsOpenLogoutModal(true),
     },
     {
       title: '탈퇴하기',
-      event: () => navigate('/'),
+      event: () => setIsOpenWithdrawalModal(true),
     },
   ]
 
   const [userInfo, setUserInfo] = useState({})
+  const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false)
+  const [isOpenWithdrawalModal, setIsOpenWithdrawalModal] = useState(false)
 
   useEffect(() => {
     onAuthStateChanged(auth, user => {
       if (user) {
         const uid = user.uid
-        console.log(user, uid)
         getUserInfo(uid)
       }
     })
@@ -51,13 +49,29 @@ const MyPage = () => {
 
   const getUserInfo = async uid => {
     const result = await getDataOne('user', uid)
-    console.log(result.data())
     setUserInfo({ ...result.data(), id: uid })
   }
 
   const onLogout = () => {
+    setIsOpenLogoutModal(false)
     auth.signOut()
-    navigate('/', { replace: true })
+    navigate('/login', { replace: true })
+  }
+
+  const onWithdrawal = async () => {
+    setIsOpenLogoutModal(false)
+    const user = auth.currentUser
+
+    deleteUser(user)
+      .then(() => {
+        deleteData('user', userInfo.id)
+        navigate('/login', {
+          replace: true,
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
   return (
@@ -72,6 +86,20 @@ const MyPage = () => {
             </Button>
           ))}
         </FlexCol>
+        {isOpenLogoutModal && (
+          <CustomButtonModal
+            content={'정말로 로그아웃 하시겠습니까?'}
+            noEvent={() => setIsOpenLogoutModal(false)}
+            yesEvent={onLogout}
+          />
+        )}
+        {isOpenWithdrawalModal && (
+          <CustomButtonModal
+            content={`정말로 탈퇴 하시겠습니까?`}
+            noEvent={() => setIsOpenWithdrawalModal(false)}
+            yesEvent={onWithdrawal}
+          />
+        )}
       </Container>
     </>
   )
