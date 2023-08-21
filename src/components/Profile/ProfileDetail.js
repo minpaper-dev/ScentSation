@@ -28,10 +28,9 @@ const Container = styled.div`
 `
 
 const ProfileImage = styled.img`
-  width: 40%;
-  height: 40%;
+  width: 15rem;
+  height: 15rem;
   margin: 2rem 0;
-  padding: 1rem;
   border-radius: 100%;
   border: 1px solid ${palette.Gray300};
   background-color: white;
