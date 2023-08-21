@@ -74,3 +74,52 @@ export const REVIEW_DATA_TEXT = {
   perfume: '향이 5~6시간 지속돼요',
 }
 export const NO_HEADER = ['/signup', '/login']
+
+export const REVIEW_FORM = {
+  gender: [
+    {
+      value: 'male',
+      content: '남자',
+    },
+    {
+      value: 'female',
+      content: '여자',
+    },
+    {
+      value: 'neutral',
+      content: '중성',
+    },
+  ],
+  season: [
+    {
+      value: 'spring',
+      content: '봄',
+    },
+    {
+      value: 'summer',
+      content: '여름',
+    },
+    {
+      value: 'autumn',
+      content: '가을',
+    },
+    {
+      value: 'winter',
+      content: '겨울',
+    },
+  ],
+  vitality: [
+    {
+      value: 'cologne',
+      content: '1~2 시간',
+    },
+    {
+      value: 'toilette',
+      content: '3~4 시간',
+    },
+    {
+      value: 'perfume',
+      content: '5~6 시간',
+    },
+  ],
+}
