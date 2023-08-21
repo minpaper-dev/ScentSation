@@ -62,16 +62,20 @@ const Search = () => {
 
     const data = { id: uuidv4(), text, date }
 
-    let local = localStorage.getItem('search')
+    let localSearch = JSON.parse(localStorage.getItem('search'))
 
-    if (local) {
-      localStorage.setItem(
-        'search',
-        JSON.stringify([...JSON.parse(local), data])
-      )
-    } else {
-      localStorage.setItem('search', JSON.stringify([data]))
-    }
+    localSearch.map((item, index) => {
+      if (item.text === text) {
+        localSearch.splice(index, 1)
+      }
+    })
+
+    localStorage.setItem(
+      'search',
+      localSearch
+        ? JSON.stringify([...localSearch, data])
+        : JSON.stringify([data])
+    )
   }
 
   return (
