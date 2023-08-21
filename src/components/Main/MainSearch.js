@@ -60,6 +60,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: white;
+  margin-bottom: 3rem;
 `
 
 const WrapInput = styled.button`
@@ -68,7 +69,7 @@ const WrapInput = styled.button`
   width: 100%;
   border: 1px solid #f5f5f5;
   border-radius: 16px;
-  padding: 2rem;
+  padding: 1.6rem;
   color: #a0a0a0;
 
   cursor: pointer;
