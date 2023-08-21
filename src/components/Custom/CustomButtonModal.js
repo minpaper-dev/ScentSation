@@ -6,13 +6,19 @@ import CustomFont from '../../styles/CustomFont'
 const CustomButtonModal = ({ content, yesEvent, noEvent }) => {
   return (
     <ModalBackdrop onClick={noEvent}>
-      <ModalView onClick={e => e.stopPropagation()}>
-        <CustomFont content={content} />
-        <WrapButton>
-          <ExitBtn onClick={yesEvent}>YES</ExitBtn>
-          <ExitBtn onClick={noEvent}>NO</ExitBtn>
-        </WrapButton>
-      </ModalView>
+      <Container>
+        <ModalView onClick={e => e.stopPropagation()}>
+          <CustomFont size={1.4} content={content} />
+          <WrapButton>
+            <ExitBtn onClick={yesEvent}>
+              <CustomFont size={1.2} content={'YES'} />
+            </ExitBtn>
+            <ExitBtn onClick={noEvent}>
+              <CustomFont size={1.2} content={'NO'} />
+            </ExitBtn>
+          </WrapButton>
+        </ModalView>
+      </Container>
     </ModalBackdrop>
   )
 }
@@ -30,6 +36,14 @@ const ModalBackdrop = styled.div`
   bottom: 0;
 `
 
+const Container = styled.div`
+  width: 100vw;
+  max-width: 48rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const ModalView = styled.div.attrs(props => ({
   // attrs 메소드를 이용해서 아래와 같이 div 엘리먼트에 속성을 추가할 수 있다.
   role: 'dialog',
@@ -39,10 +53,10 @@ const ModalView = styled.div.attrs(props => ({
   align-items: center;
   flex-direction: column;
   border-radius: 2rem;
-  width: 40%;
+  width: 80%;
   height: auto;
   background-color: white;
-  padding: 2rem 0;
+  padding: 5rem 0;
 `
 
 const WrapButton = styled.div`

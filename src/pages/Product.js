@@ -155,7 +155,9 @@ const Product = () => {
             ))}
           </WrapReview>
           <WrapFloatingButton>
-            <FloatingButton onClick={goReviewWrite}>리뷰쓰기</FloatingButton>
+            <FloatingButton onClick={goReviewWrite}>
+              <CustomFont content={'리뷰쓰기'} />
+            </FloatingButton>
           </WrapFloatingButton>
         </Container>
       )}

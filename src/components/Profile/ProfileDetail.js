@@ -8,14 +8,15 @@ const ProfileDetail = ({ userInfo }) => {
   return (
     <Container>
       <ProfileImage src={userInfo.image || loading} />
-      <CustomFont content={userInfo.nickname} $marginTop={2} />
+      <CustomFont size={1.4} weight={600} content={userInfo.nickname} />
       <CustomFont
+        size={1.4}
         content={`${userInfo.age}세 / ${userInfo.category} / ${
           userInfo.gender === 'male' ? '남' : '여'
         }`}
-        $marginTop={0.5}
+        $marginTop={1}
       />
-      {/* <CustomFont content={'닉네임뭐로하지'} $marginTop={0.5} /> */}
+      <CustomFont size={1.4} content={'닉네임뭐로하지'} $marginTop={1} />
     </Container>
   )
 }
@@ -27,8 +28,9 @@ const Container = styled.div`
 `
 
 const ProfileImage = styled.img`
-  width: 10rem;
-  height: 10rem;
+  width: 40%;
+  height: 40%;
+  margin: 2rem 0;
   padding: 1rem;
   border-radius: 100%;
   border: 1px solid ${palette.Gray300};

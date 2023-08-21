@@ -82,7 +82,7 @@ const MyPage = () => {
         <FlexCol>
           {MenuData.map(item => (
             <Button onClick={item.event} key={item.title}>
-              <CustomFont content={item.title} weight={700} />
+              <CustomFont size={1.2} content={item.title} weight={700} />
             </Button>
           ))}
         </FlexCol>

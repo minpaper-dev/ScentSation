@@ -14,11 +14,7 @@ const CustomRadio = ({
   return (
     <Label key={'gender'} checked={checked} $isActive={$isActive}>
       <Input type="radio" name={name} value={value} onChange={onChange} />
-      <CustomFont
-        content={content}
-        color={$isActive ? 'white' : 'black'}
-        weight={$isActive ? 800 : 400}
-      />
+      <CustomFont size={1.2} content={content} weight={$isActive ? 800 : 400} />
     </Label>
   )
 }
@@ -36,9 +32,7 @@ const Label = styled.label`
 `
 
 const Input = styled.input`
-  opacity: 0;
-
-  /* display: hidden; */
+  display: none;
 `
 
 export default CustomRadio

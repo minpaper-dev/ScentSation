@@ -9,6 +9,8 @@ import CustomInput from '../components/Custom/CustomInput'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import CustomModal from '../components/Custom/CustomModal'
+import { StarOutlined } from '@ant-design/icons'
+import { Divider, Rate } from 'antd'
 
 const Write = () => {
   const navigate = useNavigate()
@@ -68,16 +70,22 @@ const Write = () => {
       <Container>
         <Product>
           <ProductImage src={productInfo.image} />
-          <CustomFont content={productInfo.brand} />
-          <CustomFont content={productInfo.name} />
+          <CustomFont size={1.4} content={productInfo.brand} $marginBt={1} />
+          <CustomFont size={1.8} weight={800} content={productInfo.name} />
         </Product>
         <Form>
           <Rate
+            character={<StarOutlined style={{ fontSize: '5rem' }} />}
             value={rate}
-            onChange={e => setRate(e.target.value)}
-            type="number"
+            onChange={value => setRate(value)}
+            allowHalf
           />
-          <CustomFont content={'어울리는 성별'} />
+          <CustomFont
+            size={1.2}
+            weight={500}
+            content={'어울리는 성별'}
+            $marginTop={2}
+          />
           <WrapRadio>
             {REVIEW_FORM.gender.map(item => (
               <CustomRadio
@@ -91,7 +99,7 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont content={'어울리는 계절'} />
+          <CustomFont size={1.2} weight={500} content={'어울리는 계절'} />
           <WrapRadio>
             {REVIEW_FORM.season.map(item => (
               <CustomRadio
@@ -105,7 +113,7 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont content={'지속력'} />
+          <CustomFont size={1.2} weight={500} content={'지속력'} />
           <WrapRadio>
             {REVIEW_FORM.vitality.map(item => (
               <CustomRadio
@@ -119,14 +127,16 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont content={'상세리뷰'} />
+          <CustomFont size={1.2} weight={500} content={'상세리뷰'} />
           <Input
             name="description"
             value={reviewInfo.description}
             onChange={onChangeRadio}
           />
         </Form>
-        <SubmitButton onClick={postReview}>리뷰쓰기</SubmitButton>
+        <SubmitButton onClick={postReview}>
+          <CustomFont size={1.4} weight={800} content={'리뷰쓰기'} />
+        </SubmitButton>
         {isModal && (
           <CustomModal content={'리뷰를 작성해주셔서 감사합니다 : )'} />
         )}
@@ -138,7 +148,7 @@ const Write = () => {
 const Container = styled.div`
   flex: 1;
   background-color: white;
-  padding-bottom: 5rem;
+  padding-bottom: 10rem;
 `
 
 const Product = styled.div`
@@ -149,18 +159,21 @@ const Product = styled.div`
 `
 
 const ProductImage = styled.img`
-  width: 100%;
-  padding: 3rem;
+  display: block;
+  width: 60%;
+  height: 60%;
+  margin: 0 auto 2rem;
+  background-color: white;
 `
 const Form = styled.form`
   width: 80%;
   margin: 0 auto;
-  padding: 3rem 0;
+  padding: 2rem 0;
   display: flex;
   flex-direction: column;
 `
 
-const Rate = styled.input``
+// const Rate = styled.input``
 
 const WrapRadio = styled.div`
   margin: 1rem 0 2rem;
@@ -185,9 +198,10 @@ const Input = styled.textarea`
 const SubmitButton = styled.button`
   display: block;
   background-color: ${palette.Brown100};
-  padding: 1rem;
+  padding: 2rem 0;
   width: 80%;
   margin: 0 auto;
   border-radius: 1rem;
 `
+
 export default Write

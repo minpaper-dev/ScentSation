@@ -49,12 +49,12 @@ const Vote = () => {
           </WrapFloatingButton>
 
           {votes.map(data => (
-            <>
+            <WrapVoteItem>
               <VoteItem key={data.id} data={data} />
               <Comment onClick={() => goToDetail(data.id)}>
-                <CustomFont content={'댓글'} />
+                <CustomFont size={1.2} content={'댓글'} />
               </Comment>
-            </>
+            </WrapVoteItem>
           ))}
         </Container>
       )}
@@ -64,8 +64,9 @@ const Vote = () => {
 
 const Container = styled.div`
   flex: 1;
-  background-color: ${palette.Brown100};
-  padding: 3rem 2rem;
+  /* background-color: ${palette.Brown100}; */
+  background-color: white;
+  padding: 3rem 2rem 10rem;
 `
 
 const WrapFloatingButton = styled.div`
@@ -87,5 +88,14 @@ const FloatingButton = styled.button`
 `
 
 const Comment = styled.button``
+
+const WrapVoteItem = styled.div`
+  background-color: ${palette.Brown100};
+  /* border: 1px solid ${palette.Brown200}; */
+  margin-bottom: 2rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+`
 
 export default Vote
