@@ -16,6 +16,7 @@ const Text = styled.span`
     props.$textDecoLine ? props.$textDecoLine : 'none'};
   text-decoration-color: ${props =>
     props.textDecoColor ? props.textDecoColor : '#292A2B'};
+  white-space: pre-wrap;
 `
 
 export default ({
