@@ -15,7 +15,7 @@ const ProductListItem = ({ item, isSelect }) => {
   }
 
   const selectProduct = () => {
-    setVote(item)
+    setVote({ ...item, count: 0, voteUser: [] })
     navigate(-1)
   }
 

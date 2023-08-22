@@ -1,19 +1,69 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import ProfileItem from '../Profile/ProfileItem'
 import VoteProduct from './VoteProduct'
 import palette from '../../styles/CustomColor'
+import useFirestore from '../../hooks/useFirestore'
 
 const VoteItem = ({ data }) => {
-  const [isVote, setIsVote] = useState(false)
-  const [selectedItem, setSelectedItem] = useState('')
+  const { updateData } = useFirestore()
 
-  const onVote = perfume => {
-    console.log(perfume)
+  const uid = JSON.parse(localStorage.getItem('uid'))
+
+  const [isVote, setIsVote] = useState(false)
+  const [selectedIndex, setSelectedIndex] = useState('')
+  const [voteCount, setVoteCount] = useState(0)
+
+  useEffect(() => {
+    let count = 0
+    data.perfume.map((item, index) => {
+      count += item.count
+      console.log(count)
+      if (item.voteUser.includes(uid)) {
+        setIsVote(true)
+        setSelectedIndex(index)
+      }
+    })
+    setVoteCount(count)
+  }, [isVote])
+
+  const onVote = async index => {
+    if (isVote) return
+
+    let updateValue = [...data.perfume]
+    updateValue[index].count++
+    updateValue[index].voteUser.push(uid)
+
     setIsVote(true)
-    setSelectedItem(perfume.id)
+    setSelectedIndex(index)
+    await updateData('vote', data.id, { perfume: updateValue })
   }
+
+  const voteContainer = (perfume, index) => {
+    let percent = ((perfume.count / voteCount) * 100).toFixed()
+
+    return (
+      <VoteButton
+        onClick={() => onVote(index)}
+        isSelected={selectedIndex === index}
+      >
+        <VoteProduct data={perfume} />
+        <VoteResult isVote={isVote} percent={percent} />
+        {isVote && (
+          <>
+            <CustomFont
+              size={1.6}
+              color={palette.Brown200}
+              content={`${percent}%`}
+              weight={800}
+            />
+          </>
+        )}
+      </VoteButton>
+    )
+  }
+
   return (
     <>
       <Container key={data.id}>
@@ -25,30 +75,7 @@ const VoteItem = ({ data }) => {
           $marginBt={2}
         />
         <WrapVoteButton>
-          <VoteButton
-            onClick={() => onVote(data.perfume[0])}
-            isSelected={selectedItem === data.perfume[0].id}
-          >
-            <VoteProduct data={data.perfume[0]} />
-
-            <VoteResult isVote={isVote} />
-            {isVote && (
-              <>
-                <CustomFont
-                  size={1.6}
-                  color={palette.Brown200}
-                  content={'50%'}
-                  weight={800}
-                />
-              </>
-            )}
-          </VoteButton>
-          <VoteButton
-            onClick={() => onVote(data.perfume[1])}
-            isSelected={selectedItem === data.perfume[1].id}
-          >
-            <VoteProduct data={data.perfume[1]} />
-          </VoteButton>
+          {data.perfume.map((item, index) => voteContainer(item, index))}
         </WrapVoteButton>
       </Container>
     </>
@@ -92,7 +119,7 @@ const VoteResult = styled.div`
   background-color: ${palette.Brown200};
   opacity: 0.3;
   border-radius: inherit;
-  width: ${props => (props.isVote ? '50%' : '0')};
+  width: ${props => (props.isVote ? `${props.percent}%` : '0')};
   transition: width 0.5s ease; /* 애니메이션 효과 설정 */
 `
 

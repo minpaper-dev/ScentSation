@@ -42,6 +42,7 @@ const RegisterVote = () => {
       perfume: perfume,
       userInfo: myInfo,
     })
+    reset()
   }
 
   return (
@@ -91,6 +92,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: space-between;
   padding: 3rem;
+  padding-bottom: 10rem;
 `
 
 const FlexRowBetween = styled.div`
