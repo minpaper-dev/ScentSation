@@ -7,13 +7,17 @@ import useFirestore from '../hooks/useFirestore'
 import { useNavigate } from 'react-router-dom'
 import VoteItem from '../components/Vote/VoteItem'
 import Loader from '../components/Loader'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
 
 const Vote = () => {
   const navigate = useNavigate()
   const { getDataAll } = useFirestore()
 
+  const uid = JSON.parse(localStorage.getItem('uid'))
+
   const [votes, setVotes] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoginModal, setIsLoginModal] = useState(false)
 
   useEffect(() => {
     getVotes()
@@ -26,7 +30,11 @@ const Vote = () => {
   }
 
   const registerVote = () => {
-    navigate('/vote/register')
+    if (!uid) {
+      setIsLoginModal(true)
+    } else {
+      navigate('/vote/register')
+    }
   }
 
   const goToDetail = id => {
@@ -46,20 +54,32 @@ const Vote = () => {
             </FloatingButton>
           </WrapFloatingButton>
 
-          {votes.map(data => {
-            console.log(data)
-            return (
-              <WrapVoteItem>
-                <VoteItem key={data.id} data={data} />
-                <Comment onClick={() => goToDetail(data.id)}>
-                  <CustomFont
-                    size={1.2}
-                    content={`댓글 (${data.commentCount})`}
-                  />
-                </Comment>
-              </WrapVoteItem>
-            )
-          })}
+          {votes.map(data => (
+            <WrapVoteItem>
+              <VoteItem
+                key={data.id}
+                data={data}
+                setIsLoginModal={setIsLoginModal}
+              />
+              <Comment onClick={() => goToDetail(data.id)}>
+                <CustomFont
+                  size={1.2}
+                  content={`댓글 (${data.commentCount})`}
+                />
+              </Comment>
+            </WrapVoteItem>
+          ))}
+          {isLoginModal && (
+            <CustomButtonModal
+              content={`로그인 한 유저만 사용가능한 기능입니다.
+        로그인 하러 이동하시겠습니까?`}
+              yesEvent={() => {
+                setIsLoginModal(false)
+                navigate('/login')
+              }}
+              noEvent={() => setIsLoginModal(false)}
+            />
+          )}
         </Container>
       )}
     </>

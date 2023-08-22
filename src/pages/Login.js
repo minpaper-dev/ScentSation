@@ -30,7 +30,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
 
-      navigate('/', { replace: true })
+      navigate(-1, { replace: true })
     } catch (error) {
       console.log(error)
 
@@ -60,7 +60,7 @@ const Login = () => {
 
       if (result.exists()) {
         localStorage.setItem('uid', JSON.stringify(user.uid))
-        navigate('/', { replace: true })
+        navigate(-1, { replace: true })
       } else {
         navigate('/signup', {
           state: {

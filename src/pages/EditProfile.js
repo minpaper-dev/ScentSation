@@ -70,7 +70,6 @@ const EditProfile = () => {
     })
     setProfileImageUrl(result.data().image)
     setIsLoading(false)
-    console.log(result.data())
   }
 
   const onChange = (e, category) => {

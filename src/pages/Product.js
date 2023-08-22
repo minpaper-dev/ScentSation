@@ -8,12 +8,15 @@ import useFirestore from '../hooks/useFirestore'
 import { REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
 import ReviewItem from '../components/Review/ReviewItem'
 import Header from '../components/Header'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
 
 const Product = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const { getDataWithQuery, getDataOne } = useFirestore()
+  const uid = JSON.parse(localStorage.getItem('uid'))
 
+  const [isLoginModal, setIsLoginModal] = useState(false)
   const [reviewCount, setReviewCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [reviews, setReviews] = useState([])
@@ -64,7 +67,11 @@ const Product = () => {
   }
 
   const goReviewWrite = () => {
-    navigate('/write', { state: productInfo })
+    if (uid) {
+      navigate('/write', { state: productInfo })
+    } else {
+      setIsLoginModal(true)
+    }
   }
 
   return (
@@ -159,6 +166,17 @@ const Product = () => {
               <CustomFont content={'리뷰쓰기'} />
             </FloatingButton>
           </WrapFloatingButton>
+          {isLoginModal && (
+            <CustomButtonModal
+              content={`로그인 한 유저만 사용가능한 기능입니다.
+        로그인 하러 이동하시겠습니까?`}
+              yesEvent={() => {
+                setIsLoginModal(false)
+                navigate('/login')
+              }}
+              noEvent={() => setIsLoginModal(false)}
+            />
+          )}
         </Container>
       )}
     </>

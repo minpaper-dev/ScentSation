@@ -55,6 +55,7 @@ const MyPage = () => {
   const onLogout = () => {
     setIsOpenLogoutModal(false)
     auth.signOut()
+    localStorage.removeItem('uid')
     navigate('/login', { replace: true })
   }
 

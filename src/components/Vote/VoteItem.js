@@ -6,7 +6,7 @@ import VoteProduct from './VoteProduct'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 
-const VoteItem = ({ data }) => {
+const VoteItem = ({ data, setIsLoginModal }) => {
   const { updateData } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
@@ -17,9 +17,9 @@ const VoteItem = ({ data }) => {
 
   useEffect(() => {
     let count = 0
+    console.log(data)
     data.perfume.map((item, index) => {
       count += item.count
-      console.log(count)
       if (item.voteUser.includes(uid)) {
         setIsVote(true)
         setSelectedIndex(index)
@@ -30,6 +30,10 @@ const VoteItem = ({ data }) => {
 
   const onVote = async index => {
     if (isVote) return
+    if (!uid) {
+      setIsLoginModal(true)
+      return
+    }
 
     let updateValue = [...data.perfume]
     updateValue[index].count++

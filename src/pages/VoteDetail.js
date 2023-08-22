@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Header from '../components/Header'
 import useFirestore from '../hooks/useFirestore'
 import VoteItem from '../components/Vote/VoteItem'
@@ -11,16 +11,21 @@ import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import { CommentOutlined } from '@ant-design/icons'
 import { increment } from 'firebase/firestore/lite'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
 
 const VoteDetail = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
   const { getDataWithQuery, getDataOne, addData, updateData } = useFirestore()
+
+  const uid = JSON.parse(localStorage.getItem('uid'))
 
   const [myInfo] = useRecoilState(myInfoState)
   const [voteData, setVoteData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [content, setContent] = useState('')
   const [comment, setComment] = useState([])
+  const [isLoginModal, setIsLoginModal] = useState(false)
 
   useEffect(() => {
     getData()
@@ -40,13 +45,18 @@ const VoteDetail = () => {
   }
 
   const postComment = async () => {
-    await addData('comment', '', {
-      voteId: voteData.id,
-      userInfo: myInfo,
-      content: content,
-    })
-    await updateData('vote', id, { commentCount: increment(1) })
-    getComment(voteData.id)
+    if (uid) {
+      await addData('comment', '', {
+        voteId: voteData.id,
+        userInfo: myInfo,
+        content: content,
+      })
+      await updateData('vote', id, { commentCount: increment(1) })
+      getComment(voteData.id)
+      setContent('')
+    } else {
+      setIsLoginModal(true)
+    }
   }
 
   return (
@@ -54,7 +64,7 @@ const VoteDetail = () => {
       <Header pageName={'댓글'} />
       {!isLoading && (
         <Container>
-          <VoteItem data={voteData} />
+          <VoteItem data={voteData} setIsLoginModal={setIsLoginModal} />
           <Flex>
             <CommentOutlined style={{ fontSize: '3rem' }} />
             <CustomFont content={comment.length} $marginLf={0.5} />
@@ -88,6 +98,17 @@ const VoteDetail = () => {
               <Divider />
             </>
           ))}
+          {isLoginModal && (
+            <CustomButtonModal
+              content={`로그인 한 유저만 사용가능한 기능입니다.
+        로그인 하러 이동하시겠습니까?`}
+              yesEvent={() => {
+                setIsLoginModal(false)
+                navigate('/login')
+              }}
+              noEvent={() => setIsLoginModal(false)}
+            />
+          )}
         </Container>
       )}
     </>

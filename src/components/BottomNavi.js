@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,18 +9,26 @@ const BottomNavi = () => {
   const auth = getAuth()
   const navigate = useNavigate()
 
+  const [isLogin, setIsLogin] = useState(false)
+
+  useEffect(() => {
+    checkLogin()
+  }, [])
+
   const goToPage = page => {
     navigate(page)
   }
 
   const goProfile = () => {
-    let userId = ''
+    isLogin ? navigate('/mypage') : navigate('/login')
+  }
+
+  const checkLogin = () => {
     onAuthStateChanged(auth, user => {
       if (user) {
-        userId = user.uid
-        navigate('/mypage')
+        setIsLogin(true)
       } else {
-        navigate('/login')
+        setIsLogin(false)
       }
     })
   }
@@ -34,7 +42,11 @@ const BottomNavi = () => {
         <CustomFont size={1.6} weight={600} content={'투표'} />
       </Button>
       <Button onClick={goProfile}>
-        <CustomFont size={1.6} weight={600} content={'프로필'} />
+        <CustomFont
+          size={1.6}
+          weight={600}
+          content={isLogin ? '프로필' : '로그인'}
+        />
       </Button>
     </Container>
   )
