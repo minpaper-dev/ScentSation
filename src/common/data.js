@@ -3,13 +3,13 @@ import palette from '../styles/CustomColor'
 export const categories = [
   {
     id: 0,
-    icon: '🍊',
-    title: '시트러스',
+    icon: '🌷',
+    title: '플로럴',
   },
   {
     id: 1,
-    icon: '🌷',
-    title: '플로럴',
+    icon: '🍊',
+    title: '시트러스',
   },
   {
     id: 2,

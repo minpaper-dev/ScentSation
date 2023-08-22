@@ -48,7 +48,7 @@ const VoteButton = styled.button`
   background-color: white;
   padding: 2rem 0.5rem;
   border-radius: 1rem;
-  margin-bottom: 19px;
+  margin-bottom: 2rem;
   cursor: pointer;
 `
 

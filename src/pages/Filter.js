@@ -13,6 +13,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 
 // Import Swiper styles
 import 'swiper/css'
+import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 
@@ -57,31 +58,30 @@ const Filter = () => {
       <WrapTags>
         <Swiper
           slidesPerView={6}
-          spaceBetween={30}
+          spaceBetween={10}
           freeMode={true}
           modules={[FreeMode, Pagination]}
           className="mySwiper"
+          style={{ paddingRight: 15 }}
         >
           {FILTER_CATEGORY.map((item, index) => (
-            <SwiperSlide>
-              <CustomTags
-                itemId={index}
-                key={item}
-                content={item}
-                bgc={category === item ? palette.Brown500 : palette.Brown200}
-                // $marginRi={1}
-                onClick={content => {
-                  setCategory(content)
+            <SwiperSlide key={item}>
+              <Tag
+                $bgc={category === item ? palette.Brown500 : palette.Brown200}
+                onClick={() => {
+                  setCategory(item)
                 }}
-              />
+              >
+                <CustomFont
+                  color={'white'}
+                  weight={category === item ? 600 : 400}
+                  content={item}
+                />
+              </Tag>
             </SwiperSlide>
           ))}
         </Swiper>
       </WrapTags>
-
-      <Sort>
-        <CustomFont content={'리뷰 많은 순'} size={0.8} />
-      </Sort>
 
       {product.map(item => (
         <ProductListItem key={item.id} item={item} />
@@ -93,6 +93,7 @@ const Filter = () => {
 const Container = styled.div`
   flex: 1;
   background-color: white;
+  padding-bottom: 10rem;
 `
 
 const WrapTags = styled.div`
@@ -102,16 +103,18 @@ const WrapTags = styled.div`
   width: 100%;
   align-items: center;
   padding-left: 1rem;
+  margin-bottom: 2rem;
+`
+const EmptyView = styled.div`
+  width: 40rem;
+  height: 1rem;
 `
 
-const Sort = styled.div`
-  margin: 2rem 1rem 1rem;
-
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-
-  /* border: 1px solid ${palette.Gray400}; */
+const Tag = styled.button`
+  background-color: ${props => props.$bgc};
+  border-radius: 1rem;
+  width: 5rem;
+  padding: 0.6rem 0;
 `
 
 export default Filter

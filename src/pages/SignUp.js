@@ -7,9 +7,10 @@ import profile from '../assets/profile.png'
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import CustomLogo from '../components/Custom/CustomLogo'
-import { genderList } from '../common/data'
-import useFirestore from '../hooks/useFirestore'
 import { v4 as uuidv4 } from 'uuid'
+
+import useFirestore from '../hooks/useFirestore'
+
 import {
   getStorage,
   ref,
@@ -18,6 +19,9 @@ import {
 } from 'firebase/storage'
 
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
+import ProfileGender from '../components/Profile/ProfileGender'
+import ProfileForm from '../components/Profile/ProfileForm'
+import ProfileImage from '../components/Profile/ProfileImage'
 
 const Signup = () => {
   const { addData, getDataAll } = useFirestore()
@@ -121,66 +125,29 @@ const Signup = () => {
     setUserInfo(info)
   }
 
-  const setProfileBase = () => {
-    setProfileImageUrl(profile)
-  }
-
   const renderInput = (item, category, index) => {
-    if (item.type === 'radio') {
-      return (
-        <Flex>
-          {genderList.map((gender, index) => (
-            <Label
-              key={gender.title}
-              $isActive={inputInfo.gender.value === gender.value}
-              style={{ marginLeft: index ? 10 : 0 }}
-            >
-              <Radio
-                type={'radio'}
-                name={category}
-                value={gender.value}
-                onChange={e => onChange(e.target.value, category)}
-              />
-              <CustomFont
-                color={
-                  inputInfo.gender.value === gender.value
-                    ? 'black'
-                    : palette.Gray100
-                }
-                weight={inputInfo.gender.value === gender.value ? 600 : 400}
-                content={gender.title}
-              />
-            </Label>
-          ))}
-        </Flex>
-      )
-    } else {
-      return (
-        <FlexCol>
-          <Input
-            $bgc={item.readOnly}
-            type={item.type}
-            placeholder={item.placeholder}
-            onChange={e =>
-              onChange(e.target.value, Object.keys(inputInfo)[index])
-            }
-            readOnly={item.readOnly}
-            value={item.value}
+    return (
+      <>
+        {item.type === 'radio' ? (
+          <ProfileGender
+            category={category}
+            inputInfo={inputInfo}
+            onChange={onChange}
           />
-          <CustomFont
-            content={errorMsg[Object.keys(inputInfo)[index]]}
-            size={0.8}
-            $marginTop={1}
-            color={palette.Red200}
+        ) : (
+          <ProfileForm
+            item={item}
+            inputInfo={inputInfo}
+            onChange={onChange}
+            index={index}
+            errorMsg={errorMsg}
           />
-        </FlexCol>
-      )
-    }
+        )}
+      </>
+    )
   }
 
   const onSignup = async url => {
-    console.log('url')
-    console.log(url)
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -217,29 +184,24 @@ const Signup = () => {
     })
   }
 
-  const handleImageChange = e => {
-    const file = e.target.files[0]
-    if (file) {
-      setProfileImage(file)
-      const imageUrl = URL.createObjectURL(file)
-      setProfileImageUrl(imageUrl)
-    }
-  }
-
   const handleUpload = () => {
     let url = ''
     const storage = getStorage()
-    const storageRef = ref(storage, `image/test.jpg`)
+    const storageRef = ref(storage, `image/${uuidv4()}.jpg`)
 
     if (profileImage) {
       const uploadTask = uploadBytesResumable(storageRef, profileImage)
 
-      uploadTask.on('state_changed', () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-          url = downloadURL
-          onSignup(url)
+      uploadTask
+        .then(() => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+            url = downloadURL
+            onSignup(url)
+          })
         })
-      })
+        .catch(error => {
+          console.log(error)
+        })
     } else {
       onSignup()
     }
@@ -249,16 +211,11 @@ const Signup = () => {
     <Container>
       <Wrap>
         <CustomLogo $marginTop={5} />
-        <ProfileImage src={profileImageUrl} />
-        <FileLabel>
-          <File type="file" onChange={handleImageChange} accept="image/*" />
-          <CustomFont content={'사진 선택'} textDecoLine={'underline'} />
-        </FileLabel>
-        {profileImageUrl !== profile && (
-          <Button onClick={setProfileBase}>
-            <CustomFont content={'기본 이미지로 변경'} />
-          </Button>
-        )}
+        <ProfileImage
+          src={profileImageUrl}
+          setProfileImageUrl={setProfileImageUrl}
+          setProfileImage={setProfileImage}
+        />
 
         <FormGrid>
           {Object.values(inputInfo).map(
@@ -320,65 +277,19 @@ const Wrap = styled.div`
   align-items: center;
 `
 
-const Label = styled.label`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${props => (props.$isActive ? palette.Brown200 : 'white')};
-  border: 1px solid ${palette.Gray100};
-  border-radius: 0.5rem;
-  padding: 0.8rem 0px;
-
-  cursor: pointer;
-`
-
-const Flex = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-`
-
 const Center = styled.div`
   display: flex;
   align-items: center;
 `
 
-const Input = styled.input`
-  width: 100%;
-  border-radius: 8px;
-  border: 1px solid ${palette.Gray100};
-  padding: 0.8rem 1rem;
-  font-size: 0.8rem;
-  background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
+// const ProfileImage = styled.img`
+//   border: 1px solid ${palette.Gray400};
+//   width: 10rem;
+//   height: 10rem;
+//   margin: 2rem 0 0;
+//   border-radius: 100%;
+// `
 
-  &::placeholder {
-    color: ${palette.Gray100};
-    font-size: 0.8rem;
-  }
-
-  &:focus {
-    outline: none;
-    border: 1.5px solid ${palette.Brown500};
-  }
-`
-
-const Radio = styled.input`
-  display: none;
-`
-
-const ProfileImage = styled.img`
-  border: 1px solid ${palette.Gray400};
-  width: 10rem;
-  height: 10rem;
-  margin: 2rem 0 0;
-  border-radius: 100%;
-`
-
-const FlexCol = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 const FileLabel = styled.label`
   width: 30%;
   border-radius: 1rem;

@@ -22,7 +22,7 @@ const MyPage = () => {
     },
     {
       title: '내 정보 수정',
-      event: () => navigate('/'),
+      event: () => navigate('edit'),
     },
     {
       title: '로그아웃',
@@ -82,7 +82,7 @@ const MyPage = () => {
         <FlexCol>
           {MenuData.map(item => (
             <Button onClick={item.event} key={item.title}>
-              <CustomFont size={1.2} content={item.title} weight={700} />
+              <CustomFont size={1.4} content={item.title} weight={600} />
             </Button>
           ))}
         </FlexCol>
@@ -124,7 +124,7 @@ const Button = styled.button`
   display: block;
   width: 100%;
   text-align: left;
-  padding: 0.8rem 2rem;
+  padding: 1rem 2rem;
 `
 
 export default MyPage

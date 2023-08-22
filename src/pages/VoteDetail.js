@@ -8,6 +8,8 @@ import { styled } from 'styled-components'
 import { useRecoilState } from 'recoil'
 import { myInfoState } from '../recoil/atoms'
 import CustomFont from '../styles/CustomFont'
+import palette from '../styles/CustomColor'
+import { CommentOutlined } from '@ant-design/icons'
 
 const VoteDetail = () => {
   const { id } = useParams()
@@ -47,23 +49,45 @@ const VoteDetail = () => {
 
   return (
     <>
-      <Header pageName={''} />
+      <Header pageName={'댓글'} />
       {!isLoading && (
         <Container>
           <VoteItem data={voteData} />
+          <Flex>
+            <CommentOutlined style={{ fontSize: '3rem' }} />
+            <CustomFont content={comment.length} $marginLf={0.5} />
+          </Flex>
+          <WrapInput>
+            <Input
+              type="text"
+              value={content}
+              onChange={e => setContent(e.target.value)}
+            />
+            <Button onClick={postComment}>
+              <CustomFont content={'등록하기'} />
+            </Button>
+          </WrapInput>
           {comment.map(item => (
-            <Comment key={item.id}>
-              <CustomFont content={item.content} />
-            </Comment>
+            <>
+              <Comment key={item.id}>
+                <WrapProfile>
+                  <ProfileImage src={item.userInfo.image} />
+                  <CustomFont
+                    size={1.2}
+                    content={item.userInfo.nickname}
+                    $marginRi={1}
+                    $marginLf={1}
+                  />
+                  <CustomFont
+                    size={1.2}
+                    content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
+                  />
+                </WrapProfile>
+                <CustomFont size={1.4} content={item.content} $marginLf={1} />
+              </Comment>
+              <Divider />
+            </>
           ))}
-          <Input
-            type="text"
-            value={content}
-            onChange={e => setContent(e.target.value)}
-          />
-          <Button onClick={postComment}>
-            <CustomFont content={'등록하기'} />
-          </Button>
         </Container>
       )}
     </>
@@ -73,13 +97,56 @@ const VoteDetail = () => {
 const Container = styled.div`
   flex: 1;
   background-color: white;
-  padding: 3rem;
+  padding: 0px 2rem 10rem;
 `
 
-const Input = styled.input``
+const WrapInput = styled.div`
+  background-color: ${palette.Gray400};
+  border: 1px solid ${palette.Gray300};
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+`
 
-const Button = styled.button``
+const Input = styled.input`
+  background-color: ${palette.Gray400};
+  width: 80%;
+  border: 0px;
+  outline: none;
+`
 
-const Comment = styled.div``
+const Button = styled.button`
+  width: 20%;
+`
+
+const Comment = styled.div`
+  padding: 1rem 0;
+`
+
+const WrapProfile = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+`
+
+const ProfileImage = styled.img`
+  width: 4rem;
+  height: 4rem;
+`
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${palette.Gray300};
+`
+
+const Flex = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+`
 
 export default VoteDetail

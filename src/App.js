@@ -20,6 +20,7 @@ import UserReview from './pages/UserReview'
 import RegisterVote from './pages/RegisterVote'
 import Vote from './pages/Vote'
 import VoteDetail from './pages/VoteDetail'
+import EditProfile from './pages/EditProfile'
 
 function App() {
   const { addData } = useFirestore()
@@ -208,6 +209,7 @@ function App() {
             <Route path="/vote" element={<Vote />} />
             <Route path="/vote/register" element={<RegisterVote />} />
             <Route path="/vote/:id" element={<VoteDetail />} />
+            <Route path="/mypage/edit" element={<EditProfile />} />
           </Routes>
           <BottomNavi />
         </BrowserRouter>

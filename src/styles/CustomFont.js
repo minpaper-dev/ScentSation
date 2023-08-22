@@ -13,7 +13,7 @@ const Text = styled.span`
     props.center ? 'center' : props.right ? 'right' : 'left'};
   opacity: ${props => (props.opacity ? props.opacity : 1)};
   text-decoration-line: ${props =>
-    props.textDecoLine ? props.textDecoLine : 'none'};
+    props.$textDecoLine ? props.$textDecoLine : 'none'};
   text-decoration-color: ${props =>
     props.textDecoColor ? props.textDecoColor : '#292A2B'};
 `
@@ -31,7 +31,7 @@ export default ({
   center,
   right,
   opacity,
-  textDecoLine,
+  $textDecoLine,
   textDecoColor,
   style,
 }) => {
@@ -48,7 +48,7 @@ export default ({
         center={center}
         right={right}
         opacity={opacity}
-        textDecoLine={textDecoLine}
+        $textDecoLine={$textDecoLine}
         textDecoColor={textDecoColor}
         style={{ ...style }}
       >
