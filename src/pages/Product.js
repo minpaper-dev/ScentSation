@@ -74,6 +74,12 @@ const Product = () => {
     }
   }
 
+  const deleteReview = index => {
+    // 새로운 배열 생성 후 해당 요소 제외
+    const newReviews = reviews.filter((_, i) => i !== index)
+    setReviews(newReviews)
+  }
+
   return (
     <>
       {!isLoading && (
@@ -157,8 +163,13 @@ const Product = () => {
           ))}
           <Divider />
           <WrapReview>
-            {reviews.map(review => (
-              <ReviewItem key={review.id} data={review} />
+            {reviews.map((review, index) => (
+              <ReviewItem
+                key={review.id}
+                data={review}
+                deleteReview={deleteReview}
+                index={index}
+              />
             ))}
           </WrapReview>
           <WrapFloatingButton>

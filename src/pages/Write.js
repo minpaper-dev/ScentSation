@@ -183,9 +183,9 @@ const Input = styled.textarea`
   height: 8rem;
   border-radius: 1rem;
   margin: 1rem 0 2rem;
-  padding: 1rem;
+  padding: 1.5rem;
   resize: none;
-  font-size: 1rem;
+  font-size: 1.2rem;
   border: 1px solid ${palette.Brown100};
 
   &:focus {
