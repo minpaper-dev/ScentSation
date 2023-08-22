@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { styled } from 'styled-components'
-import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
 const CustomModal = ({ content }) => {
   return (
     <ModalBackdrop>
       <ModalView onClick={e => e.stopPropagation()}>
-        <CustomFont content={content} />
+        <CustomFont size={1.2} content={content} />
       </ModalView>
     </ModalBackdrop>
   )
@@ -35,10 +34,10 @@ const ModalView = styled.div.attrs(props => ({
   align-items: center;
   flex-direction: column;
   border-radius: 2rem;
-  width: 40%;
+  width: 60%;
   height: auto;
   background-color: white;
-  padding: 2rem 0;
+  padding: 4rem 2rem;
 `
 
 export default CustomModal
