@@ -14,12 +14,12 @@ const ProfileForm = ({ item, inputInfo, onChange, index, errorMsg }) => {
         readOnly={item.readOnly}
         value={item.value}
       />
-      <CustomFont
+      {/* <CustomFont
         content={errorMsg[Object.keys(inputInfo)[index]]}
         size={0.8}
         $marginTop={1}
         color={palette.Red200}
-      />
+      /> */}
     </Container>
   )
 }

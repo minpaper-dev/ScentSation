@@ -185,7 +185,6 @@ const Signup = () => {
   }
 
   const handleUpload = () => {
-    let url = ''
     const storage = getStorage()
     const storageRef = ref(storage, `image/${uuidv4()}.jpg`)
 
@@ -193,14 +192,12 @@ const Signup = () => {
       const uploadTask = uploadBytesResumable(storageRef, profileImage)
 
       uploadTask
-        .then(() => {
-          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-            url = downloadURL
-            onSignup(url)
-          })
+        .then(() => getDownloadURL(uploadTask.snapshot.ref))
+        .then(downloadURL => {
+          onSignup(downloadURL)
         })
         .catch(error => {
-          console.log(error)
+          console.error(error)
         })
     } else {
       onSignup()

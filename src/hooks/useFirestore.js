@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore/lite'
 
@@ -62,12 +63,19 @@ const useFirestore = () => {
     await deleteDoc(doc(db, collectionName, id))
   }
 
+  const updateData = async (collectionName, id, data) => {
+    const ref = doc(db, collectionName, id)
+
+    await updateDoc(ref, data, { merge: true })
+  }
+
   return {
     getDataAll,
     getDataWithQuery,
     getDataOne,
     addData,
     deleteData,
+    updateData,
   }
 }
 

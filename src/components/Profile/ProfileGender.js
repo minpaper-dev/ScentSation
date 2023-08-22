@@ -5,6 +5,7 @@ import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
 const ProfileGender = ({ category, inputInfo, onChange }) => {
+  console.log(inputInfo)
   return (
     <Container>
       {genderList.map((gender, index) => (
