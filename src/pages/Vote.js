@@ -44,7 +44,7 @@ const Vote = () => {
         <Container>
           <WrapFloatingButton>
             <FloatingButton onClick={registerVote}>
-              <CustomFont content={'나도 투표 올리기'} />
+              <CustomFont content={'투표 올리기'} />
             </FloatingButton>
           </WrapFloatingButton>
 
@@ -64,20 +64,21 @@ const Vote = () => {
 
 const Container = styled.div`
   flex: 1;
-  /* background-color: ${palette.Brown100}; */
   background-color: white;
   padding: 3rem 2rem 10rem;
 `
 
 const WrapFloatingButton = styled.div`
-  width: 480px;
+  width: 100vw;
+  max-width: 48rem;
   margin: 0 auto;
   position: fixed;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
-  bottom: 4rem;
-  padding: 0 3rem;
+  bottom: 7rem;
+  padding: 0 4rem;
+  z-index: 999;
 `
 
 const FloatingButton = styled.button`
@@ -85,13 +86,13 @@ const FloatingButton = styled.button`
   height: 5rem;
   border-radius: 100%;
   background-color: ${palette.Brown300};
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 `
 
 const Comment = styled.button``
 
 const WrapVoteItem = styled.div`
   background-color: ${palette.Brown100};
-  /* border: 1px solid ${palette.Brown200}; */
   margin-bottom: 2rem;
   padding: 2rem;
   border-radius: 1rem;

@@ -263,6 +263,7 @@ const FloatingButton = styled.button`
   height: 5rem;
   border-radius: 100%;
   background-color: ${palette.Brown300};
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 `
 
 export default Product
