@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import Header from '../components/Header'
 import CustomFont from '../styles/CustomFont'
 import { useNavigate } from 'react-router-dom'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import { myInfoState, myVotePerfumeState } from '../recoil/atoms'
 import useFirestore from '../hooks/useFirestore'
 import VoteProduct from '../components/Vote/VoteProduct'
@@ -19,6 +19,12 @@ const RegisterVote = () => {
   const resetPerfume = useSetRecoilState(myVotePerfumeState)
 
   const [description, setDescription] = useState('')
+
+  useEffect(() => {
+    return () => {
+      reset()
+    }
+  }, [])
 
   const goToSearch = () => {
     navigate('/search', { state: { isSelect: true } })
@@ -50,34 +56,45 @@ const RegisterVote = () => {
     <>
       <Header pageName={'투표 등록'} />
       <Container>
-        <CustomFont size={1.2} weight={800} content={'향수를 선택해주세요 !'} />
+        <Flex>
+          <CustomFont
+            size={1.2}
+            weight={800}
+            content={'향수를 선택해주세요 !'}
+            $marginBt={2}
+          />
 
-        <FlexRowBetween>
-          {perfume.length ? (
-            <Product>
-              <VoteProduct data={perfume[0]} />
-            </Product>
-          ) : (
-            emptyBox()
-          )}
-          {perfume.length > 1 ? (
-            <Product>
-              <VoteProduct data={perfume[1]} />
-            </Product>
-          ) : (
-            emptyBox()
-          )}
-        </FlexRowBetween>
-        <Form>
-          <Label htmlFor="description">
-            <CustomFont content={'어떤 점이 고민되시나요?'} />
-          </Label>
-          <TextArea
-            id="description"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-          ></TextArea>
-        </Form>
+          <FlexRowBetween>
+            {perfume.length ? (
+              <Product>
+                <VoteProduct data={perfume[0]} />
+              </Product>
+            ) : (
+              emptyBox()
+            )}
+            {perfume.length > 1 ? (
+              <Product>
+                <VoteProduct data={perfume[1]} />
+              </Product>
+            ) : (
+              emptyBox()
+            )}
+          </FlexRowBetween>
+          <Form>
+            <Label htmlFor="description">
+              <CustomFont
+                size={1.2}
+                weight={800}
+                content={'어떤 점이 고민되시나요?'}
+              />
+            </Label>
+            <TextArea
+              id="description"
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+            ></TextArea>
+          </Form>
+        </Flex>
         <Button onClick={postVote}>
           <CustomFont content={'투표 올리기'} />
         </Button>
@@ -100,18 +117,19 @@ const FlexRowBetween = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 2rem 0;
 `
 
 const SelectPerfume = styled.div`
-  border: 1px solid black;
   width: 45%;
   height: 8rem;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   border-radius: 1rem;
   background-color: ${palette.Gray300};
+  border: 1px solid ${palette.Gray400};
 `
 
 const Form = styled.form``
@@ -138,13 +156,14 @@ const TextArea = styled.textarea`
 
 const Product = styled.div`
   width: 45%;
+  height: 8rem;
   display: flex;
   align-items: center;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   background-color: white;
   padding: 2rem 0.5rem;
   border-radius: 1rem;
-  margin-bottom: 19px;
+  border: 1px solid ${palette.Gray400};
 `
 
 const Button = styled.button`
@@ -156,5 +175,7 @@ const Button = styled.button`
   border-radius: 1rem;
   margin-top: 1rem;
 `
+
+const Flex = styled.div``
 
 export default RegisterVote
