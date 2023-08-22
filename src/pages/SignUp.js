@@ -22,6 +22,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import ProfileGender from '../components/Profile/ProfileGender'
 import ProfileForm from '../components/Profile/ProfileForm'
 import ProfileImage from '../components/Profile/ProfileImage'
+import SelectCategory from '../components/Profile/SelectCategory'
 
 const Signup = () => {
   const { addData, getDataAll } = useFirestore()
@@ -32,6 +33,7 @@ const Signup = () => {
 
   const [profileImage, setProfileImage] = useState('')
   const [profileImageUrl, setProfileImageUrl] = useState(profile)
+  const [isCategoryModal, setIsCategoryModal] = useState(false)
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
@@ -59,7 +61,7 @@ const Signup = () => {
       type: 'password',
       title: '비밀번호 확인',
       value: '',
-      placeholder: '',
+      placeholder: '비밀번호를 한번 더 입력해주세요',
       hidden: oauth ? true : false,
     },
     age: { type: 'text', title: '나이', value: '', placeholder: '' },
@@ -67,9 +69,10 @@ const Signup = () => {
       type: 'text',
       title: '대표 향료',
       value: '',
-      placeholder: '',
+      placeholder: '대표 향료를 선택해주세요',
+      readOnly: true,
     },
-    perfume: { type: 'text', title: '대표 향수', value: '', placeholder: '' },
+    // perfume: { type: 'text', title: '대표 향수', value: '', placeholder: '' },
   })
 
   const [errorMsg, setErrorMsg] = useState({
@@ -128,11 +131,20 @@ const Signup = () => {
   const renderInput = (item, category, index) => {
     return (
       <>
-        {item.type === 'radio' ? (
+        {item.title === '성별' ? (
           <ProfileGender
             category={category}
             inputInfo={inputInfo}
             onChange={onChange}
+          />
+        ) : item.title === '대표 향료' ? (
+          <Input
+            $bgc={item.readOnly}
+            type={item.type}
+            placeholder={item.placeholder}
+            readOnly={item.readOnly}
+            value={item.value}
+            onClick={() => setIsCategoryModal(true)}
           />
         ) : (
           <ProfileForm
@@ -237,6 +249,12 @@ const Signup = () => {
       <SignupButton onClick={handleUpload}>
         <CustomFont size={0.8} content={'회원가입'} />
       </SignupButton>
+      {isCategoryModal && (
+        <SelectCategory
+          setIsCategoryModal={setIsCategoryModal}
+          onChange={onChange}
+        />
+      )}
     </Container>
   )
 }
@@ -248,6 +266,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  padding-bottom: 10rem;
 `
 
 const FormGrid = styled.div`
@@ -279,30 +298,23 @@ const Center = styled.div`
   align-items: center;
 `
 
-// const ProfileImage = styled.img`
-//   border: 1px solid ${palette.Gray400};
-//   width: 10rem;
-//   height: 10rem;
-//   margin: 2rem 0 0;
-//   border-radius: 100%;
-// `
+const Input = styled.input`
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid ${palette.Gray100};
+  padding: 0.8rem 1rem;
+  font-size: 0.8rem;
+  background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
 
-const FileLabel = styled.label`
-  width: 30%;
-  border-radius: 1rem;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  &::placeholder {
+    color: ${palette.Gray100};
+    font-size: 0.8rem;
+  }
+
+  &:focus {
+    outline: none;
+    border: 1.5px solid ${palette.Brown500};
+  }
 `
-
-const File = styled.input`
-  display: none;
-  width: 50%;
-  margin: 0 auto;
-`
-
-const Button = styled.button``
 
 export default Signup
