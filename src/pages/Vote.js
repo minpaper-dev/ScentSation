@@ -4,9 +4,7 @@ import Header from '../components/Header'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
-import ProfileItem from '../components/Profile/ProfileItem'
 import { useNavigate } from 'react-router-dom'
-import VoteProduct from '../components/Vote/VoteProduct'
 import VoteItem from '../components/Vote/VoteItem'
 import Loader from '../components/Loader'
 
@@ -48,14 +46,20 @@ const Vote = () => {
             </FloatingButton>
           </WrapFloatingButton>
 
-          {votes.map(data => (
-            <WrapVoteItem>
-              <VoteItem key={data.id} data={data} />
-              <Comment onClick={() => goToDetail(data.id)}>
-                <CustomFont size={1.2} content={'댓글'} />
-              </Comment>
-            </WrapVoteItem>
-          ))}
+          {votes.map(data => {
+            console.log(data)
+            return (
+              <WrapVoteItem>
+                <VoteItem key={data.id} data={data} />
+                <Comment onClick={() => goToDetail(data.id)}>
+                  <CustomFont
+                    size={1.2}
+                    content={`댓글 (${data.commentCount})`}
+                  />
+                </Comment>
+              </WrapVoteItem>
+            )
+          })}
         </Container>
       )}
     </>

@@ -41,6 +41,7 @@ const RegisterVote = () => {
       description: description,
       perfume: perfume,
       userInfo: myInfo,
+      commentCount: 0,
     })
     reset()
   }

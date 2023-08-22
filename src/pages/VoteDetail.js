@@ -10,10 +10,11 @@ import { myInfoState } from '../recoil/atoms'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import { CommentOutlined } from '@ant-design/icons'
+import { increment } from 'firebase/firestore/lite'
 
 const VoteDetail = () => {
   const { id } = useParams()
-  const { getDataWithQuery, getDataOne, addData } = useFirestore()
+  const { getDataWithQuery, getDataOne, addData, updateData } = useFirestore()
 
   const [myInfo] = useRecoilState(myInfoState)
   const [voteData, setVoteData] = useState([])
@@ -44,6 +45,7 @@ const VoteDetail = () => {
       userInfo: myInfo,
       content: content,
     })
+    await updateData('vote', id, { commentCount: increment(1) })
     getComment(voteData.id)
   }
 
@@ -73,17 +75,15 @@ const VoteDetail = () => {
                 <WrapProfile>
                   <ProfileImage src={item.userInfo.image} />
                   <CustomFont
-                    size={1.2}
                     content={item.userInfo.nickname}
                     $marginRi={1}
                     $marginLf={1}
                   />
                   <CustomFont
-                    size={1.2}
                     content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
                   />
                 </WrapProfile>
-                <CustomFont size={1.4} content={item.content} $marginLf={1} />
+                <CustomFont size={1.2} content={item.content} $marginLf={1} />
               </Comment>
               <Divider />
             </>
@@ -135,6 +135,7 @@ const WrapProfile = styled.div`
 const ProfileImage = styled.img`
   width: 4rem;
   height: 4rem;
+  border-radius: 100%;
 `
 
 const Divider = styled.div`
