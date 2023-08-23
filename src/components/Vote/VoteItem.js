@@ -78,14 +78,17 @@ const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
   return (
     <>
       <Container key={data.id}>
-        <WrapButton>
-          <Button>
-            <CustomFont content={'수정'} />
-          </Button>
-          <Button onClick={() => setIsDeleteModal(true)}>
-            <CustomFont content={'삭제'} />
-          </Button>
-        </WrapButton>
+        {uid === data.userInfo.id && (
+          <WrapButton>
+            <Button>
+              <CustomFont content={'수정'} />
+            </Button>
+            <Button onClick={() => setIsDeleteModal(true)}>
+              <CustomFont content={'삭제'} />
+            </Button>
+          </WrapButton>
+        )}
+
         <ProfileItem data={data.userInfo} />
         <CustomFont
           size={1.2}
