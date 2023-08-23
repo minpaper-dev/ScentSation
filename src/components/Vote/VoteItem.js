@@ -5,19 +5,20 @@ import ProfileItem from '../Profile/ProfileItem'
 import VoteProduct from './VoteProduct'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
+import CustomButtonModal from '../Custom/CustomButtonModal'
 
-const VoteItem = ({ data, setIsLoginModal }) => {
-  const { updateData } = useFirestore()
+const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
+  const { updateData, deleteData } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
 
+  const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isVote, setIsVote] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState('')
   const [voteCount, setVoteCount] = useState(0)
 
   useEffect(() => {
     let count = 0
-    console.log(data)
     data.perfume.map((item, index) => {
       count += item.count
       if (item.voteUser.includes(uid)) {
@@ -42,6 +43,12 @@ const VoteItem = ({ data, setIsLoginModal }) => {
     setIsVote(true)
     setSelectedIndex(index)
     await updateData('vote', data.id, { perfume: updateValue })
+  }
+
+  const onDeletevote = async () => {
+    await deleteData('vote', data.id)
+    deleteVote(index)
+    setIsDeleteModal(false)
   }
 
   const voteContainer = (perfume, index) => {
@@ -71,6 +78,14 @@ const VoteItem = ({ data, setIsLoginModal }) => {
   return (
     <>
       <Container key={data.id}>
+        <WrapButton>
+          <Button>
+            <CustomFont content={'수정'} />
+          </Button>
+          <Button onClick={() => setIsDeleteModal(true)}>
+            <CustomFont content={'삭제'} />
+          </Button>
+        </WrapButton>
         <ProfileItem data={data.userInfo} />
         <CustomFont
           size={1.2}
@@ -81,6 +96,13 @@ const VoteItem = ({ data, setIsLoginModal }) => {
         <WrapVoteButton>
           {data.perfume.map((item, index) => voteContainer(item, index))}
         </WrapVoteButton>
+        {isDeleteModal && (
+          <CustomButtonModal
+            content={'정말로 투표를 삭제하시겠습니까?'}
+            yesEvent={onDeletevote}
+            noEvent={() => setIsDeleteModal(false)}
+          />
+        )}
       </Container>
     </>
   )
@@ -125,6 +147,17 @@ const VoteResult = styled.div`
   border-radius: inherit;
   width: ${props => (props.isVote ? `${props.percent}%` : '0')};
   transition: width 0.5s ease; /* 애니메이션 효과 설정 */
+`
+
+const WrapButton = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`
+
+const Button = styled.button`
+  margin: 0 0.5rem;
 `
 
 export default VoteItem

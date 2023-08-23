@@ -41,6 +41,12 @@ const Vote = () => {
     navigate(`${id}`)
   }
 
+  const deleteVote = index => {
+    // 새로운 배열 생성 후 해당 요소 제외
+    const newReviews = votes.filter((_, i) => i !== index)
+    setVotes(newReviews)
+  }
+
   return (
     <>
       <Header pageName={'투표'} />
@@ -54,11 +60,13 @@ const Vote = () => {
             </FloatingButton>
           </WrapFloatingButton>
 
-          {votes.map(data => (
+          {votes.map((data, index) => (
             <WrapVoteItem>
               <VoteItem
                 key={data.id}
                 data={data}
+                index={index}
+                deleteVote={deleteVote}
                 setIsLoginModal={setIsLoginModal}
               />
               <Comment onClick={() => goToDetail(data.id)}>

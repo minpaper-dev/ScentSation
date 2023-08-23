@@ -20,11 +20,11 @@ const RegisterVote = () => {
 
   const [description, setDescription] = useState('')
 
-  useEffect(() => {
-    return () => {
-      reset()
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     reset()
+  //   }
+  // }, [])
 
   const goToSearch = () => {
     navigate('/search', { state: { isSelect: true } })
