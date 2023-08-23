@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Main from './pages/Main'
 import { styled } from 'styled-components'
 import app from './Firebase'
@@ -21,6 +21,7 @@ import RegisterVote from './pages/RegisterVote'
 import Vote from './pages/Vote'
 import VoteDetail from './pages/VoteDetail'
 import EditProfile from './pages/EditProfile'
+import { motion, AnimatePresence } from 'framer-motion'
 
 function App() {
   const { addData } = useFirestore()
@@ -191,28 +192,83 @@ function App() {
     console.log(v)
   }
 
+  const AnimatedPage = ({ element }) => {
+    const location = useLocation()
+
+    return (
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        style={{ display: 'flex', flex: 1, flexDirection: 'column' }}
+      >
+        {element}
+      </motion.div>
+    )
+  }
+
   return (
     <RecoilRoot>
       <Container className="App">
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<Main />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/filter" element={<Filter />} />
-            <Route path="/product/:id" element={<Product />} />
-            <Route path="/write" element={<Write />} />
-            <Route path="/review/:id" element={<UserReview />} />
-            <Route path="/vote" element={<Vote />} />
-            <Route path="/vote/register" element={<RegisterVote />} />
-            <Route path="/vote/:id" element={<VoteDetail />} />
-            <Route path="/mypage/edit" element={<EditProfile />} />
-          </Routes>
-          <BottomNavi />
-        </BrowserRouter>
+        <AnimatePresence>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<AnimatedPage element={<Main />} />} />
+              <Route
+                path="/login"
+                element={<AnimatedPage element={<Login />} />}
+              />
+              <Route
+                path="/signup"
+                element={<AnimatedPage element={<Signup />} />}
+              />
+              <Route
+                path="/mypage"
+                element={<AnimatedPage element={<MyPage />} />}
+              />
+              <Route
+                path="/search"
+                element={<AnimatedPage element={<Search />} />}
+              />
+              <Route
+                path="/filter"
+                element={<AnimatedPage element={<Filter />} />}
+              />
+              <Route
+                path="/product/:id"
+                element={<AnimatedPage element={<Product />} />}
+              />
+              <Route
+                path="/write"
+                element={<AnimatedPage element={<Write />} />}
+              />
+              <Route
+                path="/review/:id"
+                element={<AnimatedPage element={<UserReview />} />}
+              />
+              <Route
+                path="/vote"
+                element={<AnimatedPage element={<Vote />} />}
+              />
+              <Route
+                path="/vote/register"
+                element={<AnimatedPage element={<RegisterVote />} />}
+              />
+              <Route
+                path="/vote/:id"
+                element={<AnimatedPage element={<VoteDetail />} />}
+              />
+              <Route
+                path="/mypage/edit"
+                element={<AnimatedPage element={<EditProfile />} />}
+              />
+            </Routes>
+            <BottomNavi />
+          </BrowserRouter>
+        </AnimatePresence>
       </Container>
     </RecoilRoot>
   )
