@@ -4,7 +4,12 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 
-const CommentItem = ({ item, uid, setDeleteCommentId, setIsCommentModal }) => {
+const CommentItem = ({
+  item,
+  uid,
+  setDeleteCommentId,
+  setIsDeleteCommentModal,
+}) => {
   const inputRef = useRef()
   const { updateData } = useFirestore()
 
@@ -13,7 +18,7 @@ const CommentItem = ({ item, uid, setDeleteCommentId, setIsCommentModal }) => {
 
   const onClickDeleteBtn = () => {
     setDeleteCommentId(item.id)
-    setIsCommentModal(true)
+    setIsDeleteCommentModal(true)
   }
 
   const onClickEditBtn = async () => {

@@ -1,106 +1,122 @@
-import React, { useEffect, useState } from 'react'
-
-import { useNavigate, useParams } from 'react-router-dom'
-import Header from '../components/Header'
-import useFirestore from '../hooks/useFirestore'
-import VoteItem from '../components/Vote/VoteItem'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import { increment } from 'firebase/firestore/lite'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useRecoilState } from 'recoil'
 import { myInfoState } from '../recoil/atoms'
-import CustomFont from '../styles/CustomFont'
-import palette from '../styles/CustomColor'
 import { CommentOutlined } from '@ant-design/icons'
-import { increment } from 'firebase/firestore/lite'
+
+import Header from '../components/Header'
+import VoteItem from '../components/Vote/VoteItem'
 import CustomButtonModal from '../components/Custom/CustomButtonModal'
 import CommentItem from '../components/Vote/CommentItem'
+import CustomFont from '../styles/CustomFont'
+import palette from '../styles/CustomColor'
+import useFirestore from '../hooks/useFirestore'
 
 const VoteDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { getDataWithQuery, getDataOne, addData, updateData, deleteData } =
+  const queryClient = useQueryClient()
+
+  const { getDataWithQuery, addData, updateData, deleteData, getDataWithId } =
     useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
 
   const [myInfo] = useRecoilState(myInfoState)
-  const [voteData, setVoteData] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [content, setContent] = useState('')
-  const [comment, setComment] = useState([])
+
+  // 해당 투표 정보 조회
+  const { data: voteData, isLoading: isVoteLoading } = useQuery({
+    queryKey: 'vote',
+    queryFn: () => getDataWithId('vote', id),
+  })
+
+  // 해당 투표의 댓글 조회
+  const { data: commentData, isLoading: isCommentLoading } = useQuery({
+    queryKey: ['comment', id],
+    queryFn: () => getDataWithQuery('comment', 'voteId', '==', id),
+  })
+
+  // 댓글 삭제
+  const onDeleteComment = useMutation({
+    mutationFn: () => deleteData('comment', deleteCommentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment', id] })
+    },
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
+    },
+  })
+
+  // 댓글 추가
+  const onPostComment = useMutation({
+    mutationFn: () =>
+      addData('comment', '', {
+        voteId: voteData.id,
+        userInfo: myInfo,
+        content: commentInputValue,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comment', id] })
+    },
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
+    },
+  })
+
+  const [commentInputValue, setCommentInputValue] = useState('')
   const [isLoginModal, setIsLoginModal] = useState(false)
-  const [isCommentModal, setIsCommentModal] = useState(false)
+  const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false)
   const [deleteCommentId, setDeleteCommentId] = useState('')
-
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const getData = async () => {
-    const result = await getDataOne('vote', id)
-    setVoteData({ ...result.data(), id: result.id })
-    getComment(result.id)
-
-    setIsLoading(false)
-  }
-
-  const getComment = async voteId => {
-    const result = await getDataWithQuery('comment', 'voteId', '==', voteId)
-    console.log(result)
-    setComment(result.reverse())
-  }
 
   const postComment = async () => {
     if (uid) {
-      await addData('comment', '', {
-        voteId: voteData.id,
-        userInfo: myInfo,
-        content: content,
-      })
+      onPostComment.mutate()
       await updateData('vote', id, { commentCount: increment(1) })
-      getComment(voteData.id)
-      setContent('')
+      setCommentInputValue('')
     } else {
       setIsLoginModal(true)
     }
   }
 
-  // 댓글 삭제 함수
   const deleteComment = async () => {
-    await deleteData('comment', deleteCommentId)
+    onDeleteComment.mutate()
     await updateData('vote', id, { commentCount: increment(-1) })
-    getComment(voteData.id)
-    setIsCommentModal(false)
+
+    setIsDeleteCommentModal(false)
     setDeleteCommentId('')
   }
 
   return (
     <>
       <Header pageName={'댓글'} />
-      {!isLoading && (
+      {!isVoteLoading && !isCommentLoading && (
         <Container>
           <VoteItem data={voteData} setIsLoginModal={setIsLoginModal} />
           <Flex>
             <CommentOutlined style={{ fontSize: '3rem' }} />
-            <CustomFont content={comment.length} $marginLf={0.5} />
+            <CustomFont content={commentData.length} $marginLf={0.5} />
           </Flex>
           <WrapInput>
             <Input
               type="text"
-              value={content}
-              onChange={e => setContent(e.target.value)}
+              value={commentInputValue}
+              onChange={e => setCommentInputValue(e.target.value)}
             />
             <AddButton onClick={postComment}>
               <CustomFont content={'등록하기'} />
             </AddButton>
           </WrapInput>
-          {comment.map(item => (
+          {commentData.map(item => (
             <>
               <CommentItem
                 key={item.id}
                 item={item}
                 uid={uid}
                 setDeleteCommentId={setDeleteCommentId}
-                setIsCommentModal={setIsCommentModal}
+                setIsDeleteCommentModal={setIsDeleteCommentModal}
               />
               <Divider />
             </>
@@ -116,11 +132,11 @@ const VoteDetail = () => {
               noEvent={() => setIsLoginModal(false)}
             />
           )}
-          {isCommentModal && (
+          {isDeleteCommentModal && (
             <CustomButtonModal
               content={'정말로 댓글을 삭제하시겠습니까?'}
               yesEvent={deleteComment}
-              noEvent={() => setIsCommentModal(false)}
+              noEvent={() => setIsDeleteCommentModal(false)}
             />
           )}
         </Container>

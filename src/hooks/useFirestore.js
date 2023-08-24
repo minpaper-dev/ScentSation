@@ -51,6 +51,12 @@ const useFirestore = () => {
     return snap
   }
 
+  const getDataWithId = async (collectionName, id) => {
+    const ref = doc(db, collectionName, id)
+    const snap = await getDoc(ref)
+    return { id: snap.id, ...snap.data() }
+  }
+
   const addData = async (collectionName, id, data) => {
     if (id) {
       await setDoc(doc(db, collectionName, id), data)
@@ -76,6 +82,7 @@ const useFirestore = () => {
     addData,
     deleteData,
     updateData,
+    getDataWithId,
   }
 }
 
