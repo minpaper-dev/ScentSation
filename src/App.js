@@ -23,8 +23,10 @@ import VoteDetail from './pages/VoteDetail'
 import EditProfile from './pages/EditProfile'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReviewEdit from './pages/ReviewEdit'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 function App() {
+  const queryClient = new QueryClient()
   const { addData } = useFirestore()
 
   const data = [
@@ -211,71 +213,73 @@ function App() {
   }
 
   return (
-    <RecoilRoot>
-      <Container className="App">
-        <AnimatePresence>
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<AnimatedPage element={<Main />} />} />
-              <Route
-                path="/login"
-                element={<AnimatedPage element={<Login />} />}
-              />
-              <Route
-                path="/signup"
-                element={<AnimatedPage element={<Signup />} />}
-              />
-              <Route
-                path="/mypage"
-                element={<AnimatedPage element={<MyPage />} />}
-              />
-              <Route
-                path="/search"
-                element={<AnimatedPage element={<Search />} />}
-              />
-              <Route
-                path="/filter"
-                element={<AnimatedPage element={<Filter />} />}
-              />
-              <Route
-                path="/product/:id"
-                element={<AnimatedPage element={<Product />} />}
-              />
-              <Route
-                path="/write"
-                element={<AnimatedPage element={<Write />} />}
-              />
-              <Route
-                path="/review/:id"
-                element={<AnimatedPage element={<UserReview />} />}
-              />
-              <Route
-                path="/vote"
-                element={<AnimatedPage element={<Vote />} />}
-              />
-              <Route
-                path="/vote/register"
-                element={<AnimatedPage element={<RegisterVote />} />}
-              />
-              <Route
-                path="/vote/:id"
-                element={<AnimatedPage element={<VoteDetail />} />}
-              />
-              <Route
-                path="/mypage/edit"
-                element={<AnimatedPage element={<EditProfile />} />}
-              />
-              <Route
-                path="/review/edit"
-                element={<AnimatedPage element={<ReviewEdit />} />}
-              />
-            </Routes>
-            <BottomNavi />
-          </BrowserRouter>
-        </AnimatePresence>
-      </Container>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <Container className="App">
+          <AnimatePresence>
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<AnimatedPage element={<Main />} />} />
+                <Route
+                  path="/login"
+                  element={<AnimatedPage element={<Login />} />}
+                />
+                <Route
+                  path="/signup"
+                  element={<AnimatedPage element={<Signup />} />}
+                />
+                <Route
+                  path="/mypage"
+                  element={<AnimatedPage element={<MyPage />} />}
+                />
+                <Route
+                  path="/search"
+                  element={<AnimatedPage element={<Search />} />}
+                />
+                <Route
+                  path="/filter"
+                  element={<AnimatedPage element={<Filter />} />}
+                />
+                <Route
+                  path="/product/:id"
+                  element={<AnimatedPage element={<Product />} />}
+                />
+                <Route
+                  path="/write"
+                  element={<AnimatedPage element={<Write />} />}
+                />
+                <Route
+                  path="/review/:id"
+                  element={<AnimatedPage element={<UserReview />} />}
+                />
+                <Route
+                  path="/vote"
+                  element={<AnimatedPage element={<Vote />} />}
+                />
+                <Route
+                  path="/vote/register"
+                  element={<AnimatedPage element={<RegisterVote />} />}
+                />
+                <Route
+                  path="/vote/:id"
+                  element={<AnimatedPage element={<VoteDetail />} />}
+                />
+                <Route
+                  path="/mypage/edit"
+                  element={<AnimatedPage element={<EditProfile />} />}
+                />
+                <Route
+                  path="/review/edit"
+                  element={<AnimatedPage element={<ReviewEdit />} />}
+                />
+              </Routes>
+              <BottomNavi />
+            </BrowserRouter>
+          </AnimatePresence>
+        </Container>
+      </RecoilRoot>
+    </QueryClientProvider>
   )
 }
 
