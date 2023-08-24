@@ -46,6 +46,7 @@ const ModalView = styled.div.attrs(props => ({
   flex-direction: column;
   border-radius: 2rem;
   width: 80%;
+  max-width: 40rem;
   height: auto;
   background-color: white;
   padding: 2rem 0;

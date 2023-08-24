@@ -6,11 +6,9 @@ import Header from '../components/Header'
 import SearchPending from '../components/Search/SearchPending'
 import useFirestore from '../hooks/useFirestore'
 import { v4 as uuidv4 } from 'uuid'
-import { useLocation } from 'react-router-dom'
 
 const Search = () => {
   const { getDataAll } = useFirestore()
-  const { state } = useLocation()
 
   const [inputState, setInputState] = useState(0)
   const [inputValue, setInputValue] = useState('')
@@ -95,10 +93,7 @@ const Search = () => {
       ) : inputState === 1 ? (
         <Searching onClickItem={onClickItem} filterProducts={filterProducts} />
       ) : (
-        <SearchResult
-          filterProducts={filterProducts}
-          isSelect={state?.isSelect || false}
-        />
+        <SearchResult filterProducts={filterProducts} />
       )}
     </Container>
   )

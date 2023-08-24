@@ -3,12 +3,14 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { useSetRecoilState } from 'recoil'
+import { useSetRecoilState, useRecoilState } from 'recoil'
 import { setMyVotePerfumeState } from '../../recoil/selectors'
+import { isSelectModal } from '../../recoil/atoms'
 
 const ProductListItem = ({ item, isSelect }) => {
   const navigate = useNavigate()
   const setVote = useSetRecoilState(setMyVotePerfumeState)
+  const [, setIsSelectModal] = useRecoilState(isSelectModal)
 
   const goToProduct = () => {
     navigate(`/product/${item.id}`)
@@ -16,7 +18,7 @@ const ProductListItem = ({ item, isSelect }) => {
 
   const selectProduct = () => {
     setVote({ ...item, count: 0, voteUser: [] })
-    navigate(-1)
+    setIsSelectModal(false)
   }
 
   return (

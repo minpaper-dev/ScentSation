@@ -3,32 +3,28 @@ import { styled } from 'styled-components'
 import palette from '../styles/CustomColor'
 import Header from '../components/Header'
 import CustomFont from '../styles/CustomFont'
-import { useNavigate } from 'react-router-dom'
 import { useRecoilState, useSetRecoilState } from 'recoil'
-import { myInfoState, myVotePerfumeState } from '../recoil/atoms'
+import { isSelectModal, myInfoState, myVotePerfumeState } from '../recoil/atoms'
 import useFirestore from '../hooks/useFirestore'
 import VoteProduct from '../components/Vote/VoteProduct'
+import SelectPerfume from '../components/Profile/SelectPerfume'
 
 const RegisterVote = () => {
-  const navigate = useNavigate()
   const { addData } = useFirestore()
 
   const [perfume] = useRecoilState(myVotePerfumeState)
   const [myInfo] = useRecoilState(myInfoState)
+  const [isSelect, setIsSelect] = useRecoilState(isSelectModal)
 
   const resetPerfume = useSetRecoilState(myVotePerfumeState)
 
   const [description, setDescription] = useState('')
 
-  // useEffect(() => {
-  //   return () => {
-  //     reset()
-  //   }
-  // }, [])
-
-  const goToSearch = () => {
-    navigate('/search', { state: { isSelect: true } })
-  }
+  useEffect(() => {
+    return () => {
+      reset()
+    }
+  }, [])
 
   const reset = () => {
     resetPerfume([])
@@ -36,9 +32,9 @@ const RegisterVote = () => {
 
   const emptyBox = () => {
     return (
-      <SelectPerfume onClick={goToSearch}>
+      <SelectPerfumeBox onClick={() => setIsSelect(true)}>
         <CustomFont content={'향수를 선택해주세요'} />
-      </SelectPerfume>
+      </SelectPerfumeBox>
     )
   }
 
@@ -98,6 +94,7 @@ const RegisterVote = () => {
         <Button onClick={postVote}>
           <CustomFont content={'투표 올리기'} />
         </Button>
+        {isSelect && <SelectPerfume />}
       </Container>
     </>
   )
@@ -120,7 +117,7 @@ const FlexRowBetween = styled.div`
   margin: 2rem 0;
 `
 
-const SelectPerfume = styled.div`
+const SelectPerfumeBox = styled.div`
   width: 45%;
   height: 8rem;
   display: flex;
