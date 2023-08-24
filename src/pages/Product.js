@@ -9,6 +9,7 @@ import { REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
 import ReviewItem from '../components/Review/ReviewItem'
 import Header from '../components/Header'
 import CustomButtonModal from '../components/Custom/CustomButtonModal'
+import { FrownOutlined } from '@ant-design/icons'
 
 const Product = () => {
   const { id } = useParams()
@@ -17,7 +18,6 @@ const Product = () => {
   const uid = JSON.parse(localStorage.getItem('uid'))
 
   const [isLoginModal, setIsLoginModal] = useState(false)
-  const [reviewCount, setReviewCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const [reviews, setReviews] = useState([])
   const [productInfo, setProductInfo] = useState({})
@@ -60,7 +60,6 @@ const Product = () => {
       obj.gender[item.gender]++
       obj.season[item.season]++
       obj.vitality[item.vitality]++
-      setReviewCount(reviewCount + 1)
     })
     setReviewData(obj)
     setIsLoading(false)
@@ -111,67 +110,87 @@ const Product = () => {
             </Flex>
           </ProductInfo>
           <Divider />
-          <WrapTags>
-            <CustomFont
-              color={palette.Gray200}
-              weight={600}
-              content={'# 남성'}
-              $marginRi={1}
-            />
-            <CustomFont
-              color={palette.Gray200}
-              weight={600}
-              content={'# 봄'}
-              $marginRi={1}
-            />
-            <CustomFont
-              color={palette.Gray200}
-              weight={600}
-              content={'# 1~2시간'}
-            />
-          </WrapTags>
-          {Object.keys(reviewData).map(item => (
-            <WrapGraph key={item}>
-              <BarGraph>
-                {Object.keys(reviewData[item]).map(category => (
-                  <BarGraphItem
-                    $width={(reviewData[item][category] / reviews.length) * 100}
-                    bgc={REVIEW_DATA_COLOR[category]}
-                    key={`${item}-${category}`}
+          {reviews.length === 0 ? (
+            <NoReview>
+              <FrownOutlined style={{ fontSize: '5rem' }} />
+              <CustomFont
+                size={1.2}
+                weight={600}
+                content={'아직 작성된 리뷰가 없습니다.'}
+                $marginTop={1.5}
+              />
+            </NoReview>
+          ) : (
+            <>
+              <WrapTags>
+                <CustomFont
+                  color={palette.Gray200}
+                  weight={600}
+                  content={'# 남성'}
+                  $marginRi={1}
+                />
+                <CustomFont
+                  color={palette.Gray200}
+                  weight={600}
+                  content={'# 봄'}
+                  $marginRi={1}
+                />
+                <CustomFont
+                  color={palette.Gray200}
+                  weight={600}
+                  content={'# 1~2시간'}
+                />
+              </WrapTags>
+              {Object.keys(reviewData).map(item => (
+                <WrapGraph key={item}>
+                  <BarGraph>
+                    {Object.keys(reviewData[item]).map(category => (
+                      <BarGraphItem
+                        $width={
+                          (reviewData[item][category] / reviews.length) * 100
+                        }
+                        bgc={REVIEW_DATA_COLOR[category]}
+                        key={`${item}-${category}`}
+                      />
+                    ))}
+                  </BarGraph>
+
+                  {Object.keys(reviewData[item]).map(category => (
+                    <GraphText key={`${item}-${category}`}>
+                      <CustomFont
+                        size={1.2}
+                        content={REVIEW_DATA_TEXT[category]}
+                      />
+                      <CustomFont
+                        size={1.2}
+                        content={`${
+                          reviewData[item][category]
+                            ? (
+                                (reviewData[item][category] / reviews.length) *
+                                100
+                              ).toFixed()
+                            : 0
+                        }%`}
+                        $marginBt={1}
+                      />
+                    </GraphText>
+                  ))}
+                </WrapGraph>
+              ))}
+              <Divider />
+              <WrapReview>
+                {reviews.map((review, index) => (
+                  <ReviewItem
+                    key={review.id}
+                    data={review}
+                    deleteReview={deleteReview}
+                    index={index}
                   />
                 ))}
-              </BarGraph>
+              </WrapReview>
+            </>
+          )}
 
-              {Object.keys(reviewData[item]).map(category => (
-                <GraphText key={`${item}-${category}`}>
-                  <CustomFont size={1.2} content={REVIEW_DATA_TEXT[category]} />
-                  <CustomFont
-                    size={1.2}
-                    content={`${
-                      reviewData[item][category]
-                        ? (
-                            (reviewData[item][category] / reviews.length) *
-                            100
-                          ).toFixed()
-                        : 0
-                    }%`}
-                    $marginBt={1}
-                  />
-                </GraphText>
-              ))}
-            </WrapGraph>
-          ))}
-          <Divider />
-          <WrapReview>
-            {reviews.map((review, index) => (
-              <ReviewItem
-                key={review.id}
-                data={review}
-                deleteReview={deleteReview}
-                index={index}
-              />
-            ))}
-          </WrapReview>
           <WrapFloatingButton>
             <FloatingButton onClick={goReviewWrite}>
               <CustomFont content={'리뷰쓰기'} />
@@ -293,6 +312,14 @@ const FloatingButton = styled.button`
   border-radius: 100%;
   background-color: ${palette.Brown300};
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+`
+
+const NoReview = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 5rem 0;
 `
 
 export default Product

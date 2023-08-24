@@ -2,8 +2,17 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import ProductListItem from '../Product/ProductListItem'
+import CustomFont from '../../styles/CustomFont'
 
 const SearchResult = ({ filterProducts, isSelect }) => {
+  const brand = []
+  if (brand.length + filterProducts.name.length === 0) {
+    return (
+      <NoSearch>
+        <CustomFont size={1.2} content={'검색 결과가 없습니다.'} />
+      </NoSearch>
+    )
+  }
   return (
     <>
       <Container>
@@ -24,6 +33,12 @@ const SearchResult = ({ filterProducts, isSelect }) => {
 
 const Container = styled.div`
   padding-bottom: 10rem;
+`
+
+const NoSearch = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const SearchItem = styled.button`
