@@ -12,6 +12,7 @@ import palette from '../styles/CustomColor'
 import { CommentOutlined } from '@ant-design/icons'
 import { increment } from 'firebase/firestore/lite'
 import CustomButtonModal from '../components/Custom/CustomButtonModal'
+import CommentItem from '../components/Vote/CommentItem'
 
 const VoteDetail = () => {
   const { id } = useParams()
@@ -94,37 +95,13 @@ const VoteDetail = () => {
           </WrapInput>
           {comment.map(item => (
             <>
-              <Comment key={item.id}>
-                <WrapProfile>
-                  <Wrap>
-                    <ProfileImage src={item.userInfo.image} />
-                    <CustomFont
-                      content={item.userInfo.nickname}
-                      $marginRi={1}
-                      $marginLf={1}
-                    />
-                    <CustomFont
-                      content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
-                    />
-                  </Wrap>
-                  {uid === item.userInfo.id && (
-                    <WrapButton>
-                      <Button>
-                        <CustomFont content={'수정'} />
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          setDeleteCommentId(item.id)
-                          setIsCommentModal(true)
-                        }}
-                      >
-                        <CustomFont content={'삭제'} />
-                      </Button>
-                    </WrapButton>
-                  )}
-                </WrapProfile>
-                <CustomFont size={1.2} content={item.content} $marginLf={1} />
-              </Comment>
+              <CommentItem
+                key={item.id}
+                item={item}
+                uid={uid}
+                setDeleteCommentId={setDeleteCommentId}
+                setIsCommentModal={setIsCommentModal}
+              />
               <Divider />
             </>
           ))}
@@ -180,23 +157,6 @@ const AddButton = styled.button`
   width: 20%;
 `
 
-const Comment = styled.div`
-  padding: 1rem 0;
-`
-
-const WrapProfile = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-`
-
-const ProfileImage = styled.img`
-  width: 4rem;
-  height: 4rem;
-  border-radius: 100%;
-`
-
 const Divider = styled.div`
   width: 100%;
   height: 1px;
@@ -207,20 +167,6 @@ const Flex = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
-`
-
-const WrapButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-`
-
-const Button = styled.button`
-  margin: 0 0.5rem;
-`
-const Wrap = styled.div`
-  display: flex;
-  align-items: center;
 `
 
 export default VoteDetail

@@ -80,9 +80,6 @@ const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
       <Container key={data.id}>
         {uid === data.userInfo.id && (
           <WrapButton>
-            <Button>
-              <CustomFont content={'수정'} />
-            </Button>
             <Button onClick={() => setIsDeleteModal(true)}>
               <CustomFont content={'삭제'} />
             </Button>
