@@ -22,6 +22,7 @@ import Vote from './pages/Vote'
 import VoteDetail from './pages/VoteDetail'
 import EditProfile from './pages/EditProfile'
 import { motion, AnimatePresence } from 'framer-motion'
+import ReviewEdit from './pages/ReviewEdit'
 
 function App() {
   const { addData } = useFirestore()
@@ -264,6 +265,10 @@ function App() {
               <Route
                 path="/mypage/edit"
                 element={<AnimatedPage element={<EditProfile />} />}
+              />
+              <Route
+                path="/review/edit"
+                element={<AnimatedPage element={<ReviewEdit />} />}
               />
             </Routes>
             <BottomNavi />

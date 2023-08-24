@@ -6,8 +6,10 @@ import palette from '../../styles/CustomColor'
 import { useState } from 'react'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import useFirestore from '../../hooks/useFirestore'
+import { useNavigate } from 'react-router-dom'
 
 const ReviewItem = ({ data, index, deleteReview, isNoProfile }) => {
+  const navigate = useNavigate()
   const { deleteData } = useFirestore()
   const uid = JSON.parse(localStorage.getItem('uid'))
 
@@ -19,11 +21,15 @@ const ReviewItem = ({ data, index, deleteReview, isNoProfile }) => {
     setIsDeleteModal(false)
   }
 
+  const goToEdit = () => {
+    navigate('/review/edit', { state: data })
+  }
+
   return (
     <Container>
       {uid === data.user.id && (
         <WrapButton>
-          <Button>
+          <Button onClick={goToEdit}>
             <CustomFont content={'수정'} />
           </Button>
           <Button onClick={() => setIsDeleteModal(true)}>
