@@ -16,7 +16,8 @@ import CustomButtonModal from '../components/Custom/CustomButtonModal'
 const VoteDetail = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const { getDataWithQuery, getDataOne, addData, updateData } = useFirestore()
+  const { getDataWithQuery, getDataOne, addData, updateData, deleteData } =
+    useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
 
@@ -26,6 +27,8 @@ const VoteDetail = () => {
   const [content, setContent] = useState('')
   const [comment, setComment] = useState([])
   const [isLoginModal, setIsLoginModal] = useState(false)
+  const [isCommentModal, setIsCommentModal] = useState(false)
+  const [deleteCommentId, setDeleteCommentId] = useState('')
 
   useEffect(() => {
     getData()
@@ -41,6 +44,7 @@ const VoteDetail = () => {
 
   const getComment = async voteId => {
     const result = await getDataWithQuery('comment', 'voteId', '==', voteId)
+    console.log(result)
     setComment(result.reverse())
   }
 
@@ -59,6 +63,15 @@ const VoteDetail = () => {
     }
   }
 
+  // 댓글 삭제 함수
+  const deleteComment = async () => {
+    await deleteData('comment', deleteCommentId)
+    await updateData('vote', id, { commentCount: increment(-1) })
+    getComment(voteData.id)
+    setIsCommentModal(false)
+    setDeleteCommentId('')
+  }
+
   return (
     <>
       <Header pageName={'댓글'} />
@@ -75,23 +88,40 @@ const VoteDetail = () => {
               value={content}
               onChange={e => setContent(e.target.value)}
             />
-            <Button onClick={postComment}>
+            <AddButton onClick={postComment}>
               <CustomFont content={'등록하기'} />
-            </Button>
+            </AddButton>
           </WrapInput>
           {comment.map(item => (
             <>
               <Comment key={item.id}>
                 <WrapProfile>
-                  <ProfileImage src={item.userInfo.image} />
-                  <CustomFont
-                    content={item.userInfo.nickname}
-                    $marginRi={1}
-                    $marginLf={1}
-                  />
-                  <CustomFont
-                    content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
-                  />
+                  <Wrap>
+                    <ProfileImage src={item.userInfo.image} />
+                    <CustomFont
+                      content={item.userInfo.nickname}
+                      $marginRi={1}
+                      $marginLf={1}
+                    />
+                    <CustomFont
+                      content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
+                    />
+                  </Wrap>
+                  {uid === item.userInfo.id && (
+                    <WrapButton>
+                      <Button>
+                        <CustomFont content={'수정'} />
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          setDeleteCommentId(item.id)
+                          setIsCommentModal(true)
+                        }}
+                      >
+                        <CustomFont content={'삭제'} />
+                      </Button>
+                    </WrapButton>
+                  )}
                 </WrapProfile>
                 <CustomFont size={1.2} content={item.content} $marginLf={1} />
               </Comment>
@@ -107,6 +137,13 @@ const VoteDetail = () => {
                 navigate('/login')
               }}
               noEvent={() => setIsLoginModal(false)}
+            />
+          )}
+          {isCommentModal && (
+            <CustomButtonModal
+              content={'정말로 댓글을 삭제하시겠습니까?'}
+              yesEvent={deleteComment}
+              noEvent={() => setIsCommentModal(false)}
             />
           )}
         </Container>
@@ -139,7 +176,7 @@ const Input = styled.input`
   outline: none;
 `
 
-const Button = styled.button`
+const AddButton = styled.button`
   width: 20%;
 `
 
@@ -150,6 +187,7 @@ const Comment = styled.div`
 const WrapProfile = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 1rem;
 `
 
@@ -169,6 +207,20 @@ const Flex = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
+`
+
+const WrapButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`
+
+const Button = styled.button`
+  margin: 0 0.5rem;
+`
+const Wrap = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 export default VoteDetail
