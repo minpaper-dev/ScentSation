@@ -16,6 +16,13 @@ const Search = () => {
   const { data: productData } = useQuery({
     queryKey: 'product',
     queryFn: () => getDataAll('product'),
+    initialData: [],
+  })
+
+  const { data: brandData } = useQuery({
+    queryKey: 'brand',
+    queryFn: () => getDataAll('brand'),
+    initialData: [],
   })
 
   // 0 : 검색 전, 1 : 검색 중, 2 : 검색 결과
@@ -25,10 +32,9 @@ const Search = () => {
   const [filterProducts, setFilterProducts] = useState([])
 
   const findProduct = text => {
-    console.log(text)
     const name = productData.filter(v => v.name.includes(text))
-    // const brand = products.filter(v => v.brand.includes(text))
-    setFilterProducts({ name })
+    const brand = brandData.filter(v => v.name.includes(text))
+    setFilterProducts({ name, brand })
   }
 
   const onChange = e => {

@@ -5,8 +5,7 @@ import ProductListItem from '../Product/ProductListItem'
 import CustomFont from '../../styles/CustomFont'
 
 const SearchResult = ({ filterProducts, isSelect }) => {
-  const brand = []
-  if (brand.length + filterProducts.name.length === 0) {
+  if (filterProducts.brand.length + filterProducts.name.length === 0) {
     return (
       <NoSearch>
         <CustomFont size={1.2} content={'검색 결과가 없습니다.'} />
@@ -16,12 +15,12 @@ const SearchResult = ({ filterProducts, isSelect }) => {
   return (
     <>
       <Container>
-        {/* {brand.map(item => (
+        {filterProducts?.brand?.map(item => (
           <SearchItem key={item.id}>
             <BrandImage src={item.image} />
-            <CustomFont content={item.title} $marginLf={1} />
+            <CustomFont content={item.name} $marginLf={1} />
           </SearchItem>
-        ))} */}
+        ))}
 
         {filterProducts?.name?.map(item => (
           <ProductListItem key={item.id} item={item} isSelect={isSelect} />

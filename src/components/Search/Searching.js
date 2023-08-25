@@ -6,11 +6,11 @@ const Searching = ({ onClickItem, filterProducts }) => {
   return (
     <>
       <Container>
-        {/* {filterProducts.brand.map(item => (
-          <SearchItem key={item.id} onClick={() => onClickItem(item)}>
-            {item.brand}
+        {filterProducts.brand.map(item => (
+          <SearchItem key={item.id} onClick={() => onClickItem(item.name)}>
+            {item.name}
           </SearchItem>
-        ))} */}
+        ))}
         {filterProducts?.name?.map(item => (
           <SearchItem key={item.id} onClick={() => onClickItem(item.name)}>
             <CustomFont size={1.2} content={item.name} />
