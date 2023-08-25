@@ -8,8 +8,11 @@ import { isSelectModal, myInfoState, myVotePerfumeState } from '../recoil/atoms'
 import useFirestore from '../hooks/useFirestore'
 import VoteProduct from '../components/Vote/VoteProduct'
 import SelectPerfume from '../components/Profile/SelectPerfume'
+import CustomModal from '../components/Custom/CustomModal'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterVote = () => {
+  const navigate = useNavigate()
   const { addData } = useFirestore()
 
   const [perfume] = useRecoilState(myVotePerfumeState)
@@ -19,6 +22,7 @@ const RegisterVote = () => {
   const resetPerfume = useSetRecoilState(myVotePerfumeState)
 
   const [description, setDescription] = useState('')
+  const [isCompleteModal, setIsCompleteModal] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -38,6 +42,15 @@ const RegisterVote = () => {
     )
   }
 
+  const onModalHandler = () => {
+    setIsCompleteModal(true)
+    setTimeout(() => {
+      setIsCompleteModal(false)
+      navigate(-1)
+      reset()
+    }, 1500)
+  }
+
   const postVote = async () => {
     await addData('vote', '', {
       description: description,
@@ -45,7 +58,7 @@ const RegisterVote = () => {
       userInfo: myInfo,
       commentCount: 0,
     })
-    reset()
+    onModalHandler()
   }
 
   return (
@@ -94,6 +107,9 @@ const RegisterVote = () => {
         <Button onClick={postVote}>
           <CustomFont content={'투표 올리기'} />
         </Button>
+        {isCompleteModal && (
+          <CustomModal content={'투표 작성이 완료되었습니다.'} />
+        )}
         {isSelect && <SelectPerfume />}
       </Container>
     </>

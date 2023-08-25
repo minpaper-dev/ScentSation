@@ -7,12 +7,9 @@ import MainCategories from '../components/Main/MainCategories'
 import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
 import CustomLogo from '../components/Custom/CustomLogo'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import useFirestore from '../hooks/useFirestore'
-import { useRecoilState } from 'recoil'
-import { myInfoState } from '../recoil/atoms'
+
 import { useQuery } from 'react-query'
-import CustomFont from '../styles/CustomFont'
 import Loader from '../components/Loader'
 
 const Main = () => {
@@ -21,6 +18,7 @@ const Main = () => {
   const { data: voteData, isLoading: isVoteLoading } = useQuery({
     queryKey: 'vote',
     queryFn: () => getDataAll('vote'),
+    initialData: [],
   })
 
   const { data: reviewData, isLoading: isReviewLoading } = useQuery({
