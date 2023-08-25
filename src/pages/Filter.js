@@ -1,57 +1,52 @@
 import React, { useEffect, useState } from 'react'
 import CustomFont from '../styles/CustomFont'
-import CustomTags from '../styles/CustomTags'
 import { styled } from 'styled-components'
 import { FILTER_CATEGORY } from '../common/data'
 import palette from '../styles/CustomColor'
 import ProductListItem from '../components/Product/ProductListItem'
 import useFirestore from '../hooks/useFirestore'
 import Header from '../components/Header'
+import Loader from '../components/Loader'
 import { useLocation } from 'react-router-dom'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-// Import Swiper styles
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 
 import { FreeMode, Pagination } from 'swiper/modules'
+import { useQuery } from 'react-query'
 
 const Filter = () => {
   const { state } = useLocation()
   const { getDataAll } = useFirestore()
 
-  const [allProduct, setAllProduct] = useState([])
-  const [product, setProduct] = useState([])
-  const [category, setCategory] = useState('')
+  const { data: productData, isLoading } = useQuery({
+    queryKey: 'product',
+    queryFn: () => getDataAll('product'),
+  })
+
+  const [filterProduct, setFilterProduct] = useState([])
+  const [category, setCategory] = useState(state.category || '')
 
   useEffect(() => {
-    getProductList()
-  }, [])
-
-  useEffect(() => {
-    filter()
-  }, [category])
-
-  const getProductList = async () => {
-    const data = await getDataAll('product')
-    setAllProduct(data)
-    if (state.category) {
-      setCategory(state.category)
+    if (!isLoading) {
+      filter()
     }
-    setProduct(data)
-  }
+  }, [category, isLoading])
 
   const filter = () => {
     if (category === '전체') {
-      setProduct(allProduct)
+      setFilterProduct(productData)
     } else {
-      setProduct(allProduct.filter(item => item.category.includes(category)))
+      setFilterProduct(
+        productData?.filter(item => item.category.includes(category))
+      )
     }
   }
-
+  if (isLoading) return <Loader />
   return (
     <Container>
       <Header pageName={'필터'} />
@@ -64,7 +59,7 @@ const Filter = () => {
           className="mySwiper"
           style={{ paddingRight: 15 }}
         >
-          {FILTER_CATEGORY.map((item, index) => (
+          {FILTER_CATEGORY.map(item => (
             <SwiperSlide key={item}>
               <Tag
                 $bgc={category === item ? palette.Brown500 : palette.Brown200}
@@ -83,7 +78,7 @@ const Filter = () => {
         </Swiper>
       </WrapTags>
 
-      {product.map(item => (
+      {filterProduct.map(item => (
         <ProductListItem key={item.id} item={item} />
       ))}
     </Container>
@@ -105,15 +100,11 @@ const WrapTags = styled.div`
   padding-left: 1rem;
   margin-bottom: 2rem;
 `
-const EmptyView = styled.div`
-  width: 40rem;
-  height: 1rem;
-`
 
 const Tag = styled.button`
   background-color: ${props => props.$bgc};
   border-radius: 1rem;
-  width: 5rem;
+  width: 100%;
   padding: 0.6rem 0;
 `
 
