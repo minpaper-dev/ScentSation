@@ -14,7 +14,6 @@ import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
 import { MY_UID } from '../common/localstorage'
 import { Rate } from 'antd'
-import { StarOutline } from '@mui/icons-material'
 
 const Product = () => {
   const navigate = useNavigate()
@@ -174,9 +173,8 @@ const Product = () => {
                 <ReviewItem
                   key={review.id}
                   data={review}
-                  deleteReview={onDeleteVote}
                   onDeleteVote={onDeleteVote}
-                  index={index}
+                  isNoProduct={true}
                 />
               ))}
             </WrapReview>

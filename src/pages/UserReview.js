@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useParams } from 'react-router-dom'
-import { useQuery } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 
 import Header from '../components/Header'
 import ProfileDetail from '../components/Profile/ProfileDetail'
-import ReviewItemWithProduct from '../components/Review/ReviewItemWithProduct'
 import useFirestore from '../hooks/useFirestore'
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import Loader from '../components/Loader'
+import ReviewItem from '../components/Review/ReviewItem'
 
 const UserReview = () => {
   const { id } = useParams()
-  const { getDataWithId, getDataWithQuery } = useFirestore()
+  const queryClient = useQueryClient()
+  const { getDataWithId, getDataWithQuery, deleteData } = useFirestore()
 
   // 사용자 리뷰 조회
   const { data: userData, isLoading: isUserLoading } = useQuery({
@@ -27,6 +28,16 @@ const UserReview = () => {
     queryKey: ['review', id],
     queryFn: () => getDataWithQuery('review', 'user.id', '==', id),
     initialData: [],
+  })
+
+  // 리뷰 삭제
+  const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['review'] })
+    },
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
+    },
   })
 
   // 페이지네이션 관련 상태
@@ -61,19 +72,14 @@ const UserReview = () => {
         <ProfileDetail userInfo={userData} />
         <WrapReview>
           {reviewsToShow.map(data => (
-            <ReviewItemWithProduct
-              key={data.id}
-              data={data}
-              isNoProfile={true}
-            />
-          ))}
-          {/* {reviewData.map(data => (
-              <ReviewItemWithProduct
-                key={data.id}
+            <Review key={data.id}>
+              <ReviewItem
                 data={data}
+                onDeleteVote={onDeleteVote}
                 isNoProfile={true}
               />
-            ))} */}
+            </Review>
+          ))}
         </WrapReview>
         <Pagination>
           <PageButton
@@ -117,14 +123,22 @@ const UserReview = () => {
 
 const Container = styled.div`
   flex: 1;
-  background-color: ${palette.Brown100};
+  /* background-color: ${palette.Brown100}; */
+  background-color: white;
   padding-top: 2rem;
   padding-bottom: 10rem;
 `
 
 const WrapReview = styled.div`
-  width: 80%;
+  width: 90%;
   margin: 2rem auto;
+`
+
+const Review = styled.div`
+  background-color: ${palette.Brown100};
+  padding: 5%;
+  margin: 2rem 0;
+  border-radius: 1rem;
 `
 
 const Pagination = styled.div`

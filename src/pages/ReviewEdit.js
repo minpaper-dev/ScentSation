@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { REVIEW_FORM } from '../common/data'
 import CustomRadio from '../components/Custom/CustomRadio'
 import { Rate } from 'antd'
-import { StarOutlined } from '@ant-design/icons'
+import { StarFilled, StarOutlined } from '@ant-design/icons'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import CustomModal from '../components/Custom/CustomModal'
@@ -60,7 +60,7 @@ const ReviewEdit = () => {
         </Product>
         <Form>
           <Rate
-            character={<StarOutlined style={{ fontSize: '5rem' }} />}
+            character={<StarFilled style={{ fontSize: '5rem' }} />}
             value={rate}
             onChange={value => setRate(value)}
             allowHalf

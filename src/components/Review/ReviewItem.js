@@ -6,13 +6,14 @@ import palette from '../../styles/CustomColor'
 import { useState } from 'react'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { MY_UID } from '../../common/localstorage'
 import { Rate } from 'antd'
 import { StarFilled } from '@ant-design/icons'
 import { REVIEW_TAG } from '../../common/data'
+import ProductItem from '../Product/ProductItem'
 
-const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
+const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
   const navigate = useNavigate()
   const uid = JSON.parse(localStorage.getItem(MY_UID))
 
@@ -40,6 +41,12 @@ const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
         </WrapButton>
       )}
 
+      {!isNoProduct && (
+        <Link to={`/product/${data.product.id}`}>
+          <ProductItem data={data.product} />
+        </Link>
+      )}
+
       {!isNoProfile && <ProfileItem data={data?.user} />}
       <Rate
         character={<StarFilled style={{ fontSize: '2rem', width: '0.6rem' }} />}
@@ -49,17 +56,17 @@ const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
       />
       <TagList>
         <CustomFont
-          color={palette.Gray200}
+          color={palette.Brown500}
           content={`# ${REVIEW_TAG[data.gender]}`}
           $marginRi={1}
         />
         <CustomFont
-          color={palette.Gray200}
+          color={palette.Brown500}
           content={`# ${REVIEW_TAG[data.season]}`}
           $marginRi={1}
         />
         <CustomFont
-          color={palette.Gray200}
+          color={palette.Brown500}
           content={`# ${REVIEW_TAG[data.vitality]}`}
         />
       </TagList>
@@ -88,6 +95,7 @@ const TagList = styled.div`
 const WrapButton = styled.div`
   display: flex;
   justify-content: flex-end;
+  margin-bottom: 1.5rem;
 `
 
 const Button = styled.button`
