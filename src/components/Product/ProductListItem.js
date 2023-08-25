@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSetRecoilState, useRecoilState } from 'recoil'
 import { setMyVotePerfumeState } from '../../recoil/selectors'
 import { isSelectModal } from '../../recoil/atoms'
+import { formatAmountWithCommas } from '../../utils/format'
 
 const ProductListItem = ({ item, isSelect }) => {
   const navigate = useNavigate()
@@ -34,7 +35,10 @@ const ProductListItem = ({ item, isSelect }) => {
             $marginBt={0.5}
           />
           <CustomFont size={1.2} content={`${item.size}ml`} $marginBt={0.5} />
-          <CustomFont size={1.2} content={`${item.price}원`} />
+          <CustomFont
+            size={1.2}
+            content={`${formatAmountWithCommas(item.price)}원`}
+          />
         </ProductInfo>
       </Container>
     </>

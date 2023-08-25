@@ -14,6 +14,7 @@ import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
 import { MY_UID } from '../common/localstorage'
 import { Rate } from 'antd'
+import { formatAmountWithCommas } from '../utils/format'
 
 const Product = () => {
   const navigate = useNavigate()
@@ -94,7 +95,9 @@ const Product = () => {
           <Flex>
             <CustomFont
               size={1.2}
-              content={`${productData.size}ml / ${productData.price}원`}
+              content={`${productData.size}ml / ${formatAmountWithCommas(
+                productData.price
+              )}원`}
             />
           </Flex>
           <WrapRate>
