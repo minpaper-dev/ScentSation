@@ -142,3 +142,16 @@ export const REVIEW = {
     perfume: 0,
   },
 }
+
+export const REVIEW_TAG = {
+  female: '여성',
+  male: '남성',
+  neutral: '중성',
+  spring: '봄',
+  summer: '여름',
+  autumn: '가을',
+  winter: '겨울',
+  cologne: '1~2시간',
+  toilette: '3~4시간',
+  perfume: '5~6시간',
+}

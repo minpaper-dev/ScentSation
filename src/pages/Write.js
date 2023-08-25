@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from 'react-query'
 import { Rate } from 'antd'
-import { StarOutlined } from '@ant-design/icons'
+import { StarFilled, StarOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
 
 import { myInfoState } from '../recoil/atoms'
@@ -83,7 +83,7 @@ const Write = () => {
         </Product>
         <Form>
           <Rate
-            character={<StarOutlined style={{ fontSize: '5rem' }} />}
+            character={<StarFilled style={{ fontSize: '5rem' }} />}
             value={rate}
             onChange={value => setRate(value)}
             allowHalf

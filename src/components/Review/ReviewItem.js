@@ -8,6 +8,9 @@ import CustomButtonModal from '../Custom/CustomButtonModal'
 
 import { useNavigate } from 'react-router-dom'
 import { MY_UID } from '../../common/localstorage'
+import { Rate } from 'antd'
+import { StarFilled } from '@ant-design/icons'
+import { REVIEW_TAG } from '../../common/data'
 
 const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
   const navigate = useNavigate()
@@ -38,18 +41,27 @@ const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
       )}
 
       {!isNoProfile && <ProfileItem data={data?.user} />}
+      <Rate
+        character={<StarFilled style={{ fontSize: '2rem', width: '0.6rem' }} />}
+        value={data.rate}
+        allowHalf
+        disabled
+      />
       <TagList>
         <CustomFont
           color={palette.Gray200}
-          content={`# ${data.gender}`}
+          content={`# ${REVIEW_TAG[data.gender]}`}
           $marginRi={1}
         />
         <CustomFont
           color={palette.Gray200}
-          content={`# ${data.season}`}
+          content={`# ${REVIEW_TAG[data.season]}`}
           $marginRi={1}
         />
-        <CustomFont color={palette.Gray200} content={`# ${data.vitality}`} />
+        <CustomFont
+          color={palette.Gray200}
+          content={`# ${REVIEW_TAG[data.vitality]}`}
+        />
       </TagList>
       <CustomFont size={1.2} content={data?.description} />
       {isDeleteModal && (

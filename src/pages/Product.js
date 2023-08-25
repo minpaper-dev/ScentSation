@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { FrownOutlined } from '@ant-design/icons'
+import { FrownOutlined, StarFilled } from '@ant-design/icons'
 
 import { REVIEW, REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
 import Header from '../components/Header'
@@ -13,6 +13,8 @@ import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
 import { MY_UID } from '../common/localstorage'
+import { Rate } from 'antd'
+import { StarOutline } from '@mui/icons-material'
 
 const Product = () => {
   const navigate = useNavigate()
@@ -48,17 +50,21 @@ const Product = () => {
 
   const [isLoginModal, setIsLoginModal] = useState(false)
   const [summaryReviewData, setSummaryReviewData] = useState(REVIEW)
+  const [rate, setRate] = useState(0)
 
   useEffect(() => {
     // 리뷰 통계 작업
     let obj = JSON.parse(JSON.stringify(REVIEW))
+    let count = 0
 
     if (reviewData.length > 0) {
       reviewData.map((item, index) => {
         obj.gender[item.gender]++
         obj.season[item.season]++
         obj.vitality[item.vitality]++
+        count += item.rate
       })
+      setRate((count / reviewData.length).toFixed(1))
       setSummaryReviewData(obj)
     }
   }, [reviewData])
@@ -91,16 +97,24 @@ const Product = () => {
               size={1.2}
               content={`${productData.size}ml / ${productData.price}원`}
             />
-
-            <Flex>
-              <CustomFont content={'⭐️⭐️⭐️⭐️⭐️'} />
-              <CustomFont
-                size={1.2}
-                content={`(${reviewData.length})`}
-                $marginLf={0.5}
-              />
-            </Flex>
           </Flex>
+          <WrapRate>
+            <Rate
+              character={
+                <StarFilled style={{ fontSize: '3rem', width: '1.5rem' }} />
+              }
+              value={rate}
+              disabled
+              allowHalf
+              style={{ display: 'flex', alignItems: 'center' }}
+            />
+            <CustomFont size={1.2} content={`(${rate})`} $marginLf={1} />
+          </WrapRate>
+          <CustomFont
+            size={1}
+            content={`리뷰 : ${reviewData.length}개`}
+            $marginTop={1}
+          />
         </ProductInfo>
         <Divider />
         {reviewData.length === 0 ? (
@@ -115,25 +129,6 @@ const Product = () => {
           </NoReview>
         ) : (
           <>
-            <WrapTags>
-              <CustomFont
-                color={palette.Gray200}
-                weight={600}
-                content={'# 남성'}
-                $marginRi={1}
-              />
-              <CustomFont
-                color={palette.Gray200}
-                weight={600}
-                content={'# 봄'}
-                $marginRi={1}
-              />
-              <CustomFont
-                color={palette.Gray200}
-                weight={600}
-                content={'# 1~2시간'}
-              />
-            </WrapTags>
             {Object.keys(summaryReviewData).map(item => (
               <WrapGraph key={item}>
                 <BarGraph>
@@ -309,6 +304,12 @@ const NoReview = styled.div`
   align-items: center;
   justify-content: center;
   margin: 5rem 0;
+`
+
+const WrapRate = styled.div`
+  display: flex;
+  align-items: center;
+  margin-top: 1rem;
 `
 
 export default Product
