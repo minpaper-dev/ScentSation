@@ -27,6 +27,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { myInfoState } from './recoil/atoms'
 import { MY_UID } from './common/localstorage'
+import NotFound from './pages/NotFound'
 
 function App() {
   const auth = getAuth()
@@ -284,6 +285,10 @@ function App() {
               <Route
                 path="/review/edit"
                 element={<AnimatedPage element={<ReviewEdit />} />}
+              />
+              <Route
+                path="*"
+                element={<AnimatedPage element={<NotFound />} />}
               />
             </Routes>
             <BottomNavi />
