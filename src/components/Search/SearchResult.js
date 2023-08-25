@@ -3,8 +3,11 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import ProductListItem from '../Product/ProductListItem'
 import CustomFont from '../../styles/CustomFont'
+import { useNavigate } from 'react-router-dom'
 
 const SearchResult = ({ filterProducts, isSelect }) => {
+  const navigate = useNavigate()
+
   if (filterProducts.brand.length + filterProducts.name.length === 0) {
     return (
       <NoSearch>
@@ -16,7 +19,12 @@ const SearchResult = ({ filterProducts, isSelect }) => {
     <>
       <Container>
         {filterProducts?.brand?.map(item => (
-          <SearchItem key={item.id}>
+          <SearchItem
+            key={item.id}
+            onClick={() =>
+              navigate(`/brand/${item.id}`, { state: { name: item.name } })
+            }
+          >
             <BrandImage src={item.image} />
             <CustomFont content={item.name} $marginLf={1} />
           </SearchItem>
