@@ -7,6 +7,7 @@ import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { v4 as uuidv4 } from 'uuid'
+import { MY_UID } from '../../common/localstorage'
 
 const VoteItem = ({
   data,
@@ -15,9 +16,9 @@ const VoteItem = ({
   setIsLoginModal,
   onDeleteVote,
 }) => {
-  const { updateData, deleteData } = useFirestore()
+  const { updateData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isVote, setIsVote] = useState(false)

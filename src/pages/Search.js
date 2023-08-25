@@ -8,6 +8,7 @@ import Searching from '../components/Search/Searching'
 import SearchResult from '../components/Search/SearchResult'
 import SearchPending from '../components/Search/SearchPending'
 import useFirestore from '../hooks/useFirestore'
+import { SEARCH_HISTORY } from '../common/localstorage'
 
 const Search = () => {
   const { getDataAll } = useFirestore()
@@ -58,7 +59,7 @@ const Search = () => {
 
     const data = { id: uuidv4(), text, date }
 
-    let localSearch = JSON.parse(localStorage.getItem('search')) || []
+    let localSearch = JSON.parse(localStorage.getItem(SEARCH_HISTORY)) || []
 
     localSearch.map((item, index) => {
       if (item.text === text) {
@@ -67,7 +68,7 @@ const Search = () => {
     })
 
     localStorage.setItem(
-      'search',
+      SEARCH_HISTORY,
       localSearch
         ? JSON.stringify([...localSearch, data])
         : JSON.stringify([data])

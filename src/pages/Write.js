@@ -1,24 +1,48 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../components/Header'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
-import CustomFont from '../styles/CustomFont'
-import CustomRadio from '../components/Custom/CustomRadio'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from 'react-query'
+import { Rate } from 'antd'
+import { StarOutlined } from '@ant-design/icons'
+import { useRecoilState } from 'recoil'
+
+import { myInfoState } from '../recoil/atoms'
 import { REVIEW_FORM } from '../common/data'
+import Header from '../components/Header'
+import CustomModal from '../components/Custom/CustomModal'
+import CustomRadio from '../components/Custom/CustomRadio'
+import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
-import CustomModal from '../components/Custom/CustomModal'
-import { StarOutlined } from '@ant-design/icons'
-import { Rate } from 'antd'
 
 const Write = () => {
   const navigate = useNavigate()
   const { state } = useLocation()
-  const { addData, getDataOne } = useFirestore()
+  const { productInfo } = state
+  const queryClient = useQueryClient()
+
+  const { addData } = useFirestore()
+  const [myInfo] = useRecoilState(myInfoState)
+
+  const onPostReview = useMutation(
+    () =>
+      addData('review', '', {
+        ...reviewInfo,
+        product: productInfo,
+        user: myInfo,
+        rate: rate,
+      }),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['review', productInfo.id] })
+      },
+      onError: error => {
+        console.log(`Delete Todo Error ${error}`)
+      },
+    }
+  )
 
   const [isModal, setIsModal] = useState(false)
-  const [userInfo, setUserInfo] = useState({})
-  const [productInfo, setProductInfo] = useState(state)
   const [rate, setRate] = useState(0)
   const [reviewInfo, setReviewInfo] = useState({
     gender: '',
@@ -28,17 +52,6 @@ const Write = () => {
     description: '',
   })
 
-  useEffect(() => {
-    getMyInfo()
-  }, [])
-
-  const id = JSON.parse(localStorage.getItem('uid'))
-
-  const getMyInfo = async () => {
-    const result = await getDataOne('user', id)
-    setUserInfo(result.data())
-  }
-
   const onChangeRadio = e => {
     let copy = reviewInfo
     copy = { ...copy, [e.target.name]: e.target.value }
@@ -46,12 +59,7 @@ const Write = () => {
   }
 
   const postReview = async () => {
-    await addData('review', '', {
-      ...reviewInfo,
-      product: state,
-      user: { ...userInfo, id: id },
-      rate: rate,
-    })
+    onPostReview.mutate()
     onModalHandler()
   }
 
@@ -69,6 +77,7 @@ const Write = () => {
       <Container>
         <Product>
           <ProductImage src={productInfo.image} />
+
           <CustomFont size={1.4} content={productInfo.brand} $marginBt={1} />
           <CustomFont size={1.8} weight={800} content={productInfo.name} />
         </Product>

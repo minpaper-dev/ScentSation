@@ -3,13 +3,14 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import closeIcon from '../../assets/icon_close.png'
+import { SEARCH_HISTORY } from '../../common/localstorage'
 
 const SearchPending = ({ onClickItem, findProduct }) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
     let searchData = (
-      JSON.parse(localStorage.getItem('search')) || []
+      JSON.parse(localStorage.getItem(SEARCH_HISTORY)) || []
     ).reverse()
 
     setData(searchData)
@@ -17,7 +18,7 @@ const SearchPending = ({ onClickItem, findProduct }) => {
 
   const deleteSearch = id => {
     let filterData = data.filter(v => v.id !== id)
-    localStorage.setItem('search', JSON.stringify(filterData))
+    localStorage.setItem(SEARCH_HISTORY, JSON.stringify(filterData))
     setData(filterData)
   }
 

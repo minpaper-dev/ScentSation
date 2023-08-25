@@ -7,10 +7,11 @@ import { useState } from 'react'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 
 import { useNavigate } from 'react-router-dom'
+import { MY_UID } from '../../common/localstorage'
 
 const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
   const navigate = useNavigate()
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 

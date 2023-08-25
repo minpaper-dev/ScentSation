@@ -12,6 +12,7 @@ import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
+import { MY_UID } from '../common/localstorage'
 
 const Product = () => {
   const navigate = useNavigate()
@@ -19,7 +20,7 @@ const Product = () => {
   const { id } = useParams()
   const { getDataWithQuery, getDataWithId, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   // 상품 정보 조회
   const { data: productData, isLoading: isProductLoading } = useQuery({

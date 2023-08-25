@@ -16,11 +16,12 @@ import {
   uploadBytesResumable,
 } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
+import { MY_UID } from '../common/localstorage'
 
 const EditProfile = () => {
   const { getDataOne, updateData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const [inputValue, setInputValue] = useState({
     gender: {

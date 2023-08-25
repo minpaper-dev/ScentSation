@@ -26,6 +26,7 @@ import ReviewEdit from './pages/ReviewEdit'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { myInfoState } from './recoil/atoms'
+import { MY_UID } from './common/localstorage'
 
 function App() {
   const auth = getAuth()
@@ -193,7 +194,7 @@ function App() {
   useEffect(() => {
     onAuthStateChanged(auth, async user => {
       if (user) {
-        localStorage.setItem('uid', JSON.stringify(user.uid))
+        localStorage.setItem(MY_UID, JSON.stringify(user.uid))
 
         const result = await getDataWithId('user', user.uid)
 

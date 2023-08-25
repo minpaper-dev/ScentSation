@@ -10,13 +10,14 @@ import ProfileDetail from '../components/Profile/ProfileDetail'
 import CustomButtonModal from '../components/Custom/CustomButtonModal'
 import CustomFont from '../styles/CustomFont'
 import useFirestore from '../hooks/useFirestore'
+import { MY_UID, SEARCH_HISTORY } from '../common/localstorage'
 
 const MyPage = () => {
   const auth = getAuth()
   const navigate = useNavigate()
   const { getDataWithId, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ['user', uid],
@@ -48,8 +49,8 @@ const MyPage = () => {
   const onLogout = () => {
     setIsOpenLogoutModal(false)
     auth.signOut()
-    localStorage.removeItem('uid')
-    localStorage.removeItem('search')
+    localStorage.removeItem(MY_UID)
+    localStorage.removeItem(SEARCH_HISTORY)
     navigate('/login', { replace: true })
   }
 
@@ -60,8 +61,8 @@ const MyPage = () => {
     deleteUser(user)
       .then(() => {
         deleteData('user', userData.id)
-        localStorage.removeItem('uid')
-        localStorage.removeItem('search')
+        localStorage.removeItem(MY_UID)
+        localStorage.removeItem(SEARCH_HISTORY)
         navigate('/login', {
           replace: true,
         })

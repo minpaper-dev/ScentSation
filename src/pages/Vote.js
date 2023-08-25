@@ -10,13 +10,14 @@ import CustomButtonModal from '../components/Custom/CustomButtonModal'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
+import { MY_UID } from '../common/localstorage'
 
 const Vote = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { getDataAll, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   // vote Data 조회
   const { data: voteData, isLoading } = useQuery({
@@ -61,9 +62,8 @@ const Vote = () => {
           </WrapFloatingButton>
 
           {voteData.map((data, index) => (
-            <WrapVoteItem>
+            <WrapVoteItem key={data.id}>
               <VoteItem
-                key={data.id}
                 data={data}
                 index={index}
                 deleteVote={onDeleteVote}

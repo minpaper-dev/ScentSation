@@ -14,6 +14,7 @@ import CommentItem from '../components/Vote/CommentItem'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
+import { MY_UID } from '../common/localstorage'
 
 const VoteDetail = () => {
   const { id } = useParams()
@@ -23,7 +24,7 @@ const VoteDetail = () => {
   const { getDataWithQuery, addData, updateData, deleteData, getDataWithId } =
     useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem('uid'))
+  const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const [myInfo] = useRecoilState(myInfoState)
 

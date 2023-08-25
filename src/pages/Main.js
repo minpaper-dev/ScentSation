@@ -26,6 +26,7 @@ const Main = () => {
   const { data: reviewData, isLoading: isReviewLoading } = useQuery({
     queryKey: 'review',
     queryFn: () => getDataAll('review'),
+    initialData: [],
   })
 
   const MainContent = [
@@ -42,7 +43,7 @@ const Main = () => {
     {
       id: 2,
       title: '최신 리뷰',
-      component: <MainReview reviewData={reviewData} />,
+      component: <MainReview reviewData={reviewData.slice(0, 5)} />,
     },
   ]
 

@@ -159,7 +159,7 @@ const Signup = () => {
     )
   }
 
-  const onSignup = async url => {
+  const onSignup = async (url = '') => {
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -179,7 +179,7 @@ const Signup = () => {
         age: inputInfo.age.value,
         gender: inputInfo.gender.value,
         category: inputInfo.category.value,
-        major: inputInfo.perfume.value,
+        // major: inputInfo.perfume.value,
         image: url,
       })
 

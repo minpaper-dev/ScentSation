@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import { useQuery } from 'react-query'
 
 import SearchPending from '../Search/SearchPending'
 import Searching from '../Search/Searching'
@@ -9,19 +10,16 @@ import useFirestore from '../../hooks/useFirestore'
 const SelectPerfume = () => {
   const { getDataAll } = useFirestore()
 
+  const { data: productData } = useQuery({
+    queryKey: 'product',
+    queryFn: () => getDataAll('product'),
+    initialData: [],
+  })
+
   const [inputState, setInputState] = useState(0)
   const [inputValue, setInputValue] = useState('')
-  const [products, setProducts] = useState([])
+
   const [filterProducts, setFilterProducts] = useState([])
-
-  useEffect(() => {
-    getProduct()
-  }, [])
-
-  const getProduct = async () => {
-    const result = await getDataAll('product')
-    setProducts(result)
-  }
 
   const onChange = e => {
     setInputValue(e.target.value)
@@ -32,7 +30,7 @@ const SelectPerfume = () => {
   }
 
   const findProduct = text => {
-    const name = products.filter(v => v.name.includes(text))
+    const name = productData.filter(v => v.name.includes(text))
     // const brand = products.filter(v => v.brand.includes(text))
 
     setFilterProducts({ name })

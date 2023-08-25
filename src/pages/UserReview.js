@@ -10,6 +10,7 @@ import useFirestore from '../hooks/useFirestore'
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
+import Loader from '../components/Loader'
 
 const UserReview = () => {
   const { id } = useParams()
@@ -25,6 +26,7 @@ const UserReview = () => {
   const { data: reviewData, isLoading: isReviewLoading } = useQuery({
     queryKey: ['review', id],
     queryFn: () => getDataWithQuery('review', 'user.id', '==', id),
+    initialData: [],
   })
 
   // 페이지네이션 관련 상태
@@ -49,66 +51,66 @@ const UserReview = () => {
     setScrollToTop(true)
   }
 
+  if (isUserLoading || isReviewLoading) return <Loader />
+
   return (
     <>
       <Header pageName={'사용자 리뷰'} />
 
-      {!isUserLoading && !isReviewLoading && (
-        <Container>
-          <ProfileDetail userInfo={userData} />
-          <WrapReview>
-            {reviewsToShow.map(data => (
-              <ReviewItemWithProduct
-                key={data.id}
-                data={data}
-                isNoProfile={true}
-              />
-            ))}
-            {/* {reviewData.map(data => (
+      <Container>
+        <ProfileDetail userInfo={userData} />
+        <WrapReview>
+          {reviewsToShow.map(data => (
+            <ReviewItemWithProduct
+              key={data.id}
+              data={data}
+              isNoProfile={true}
+            />
+          ))}
+          {/* {reviewData.map(data => (
               <ReviewItemWithProduct
                 key={data.id}
                 data={data}
                 isNoProfile={true}
               />
             ))} */}
-          </WrapReview>
-          <Pagination>
-            <PageButton
-              onClick={() => onClickPageButton(1)}
-              isActive={currentPage === 1}
-            >
-              <LeftOutlined style={{ fontSize: '1.5rem' }} />
-            </PageButton>
+        </WrapReview>
+        <Pagination>
+          <PageButton
+            onClick={() => onClickPageButton(1)}
+            isActive={currentPage === 1}
+          >
+            <LeftOutlined style={{ fontSize: '1.5rem' }} />
+          </PageButton>
 
-            {Array.from(
-              { length: Math.ceil(reviewData.length / reviewsPerPage) },
-              (_, index) => (
-                <PageButton
-                  key={index + 1}
-                  onClick={() => onClickPageButton(index + 1)}
-                  isActive={currentPage === index + 1}
-                >
-                  <CustomFont
-                    size={1.2}
-                    content={index + 1}
-                    weight={currentPage === index + 1 ? 600 : 400}
-                  />
-                </PageButton>
-              )
-            )}
-            <PageButton
-              onClick={() =>
-                onClickPageButton(Math.ceil(reviewData.length / reviewsPerPage))
-              }
-              isActive={
-                currentPage === Math.ceil(reviewData.length / reviewsPerPage)
-              }
-            >
-              <RightOutlined style={{ fontSize: '1.5rem' }} />
-            </PageButton>
-          </Pagination>
-        </Container>
-      )}
+          {Array.from(
+            { length: Math.ceil(reviewData.length / reviewsPerPage) },
+            (_, index) => (
+              <PageButton
+                key={index + 1}
+                onClick={() => onClickPageButton(index + 1)}
+                isActive={currentPage === index + 1}
+              >
+                <CustomFont
+                  size={1.2}
+                  content={index + 1}
+                  weight={currentPage === index + 1 ? 600 : 400}
+                />
+              </PageButton>
+            )
+          )}
+          <PageButton
+            onClick={() =>
+              onClickPageButton(Math.ceil(reviewData.length / reviewsPerPage))
+            }
+            isActive={
+              currentPage === Math.ceil(reviewData.length / reviewsPerPage)
+            }
+          >
+            <RightOutlined style={{ fontSize: '1.5rem' }} />
+          </PageButton>
+        </Pagination>
+      </Container>
     </>
   )
 }

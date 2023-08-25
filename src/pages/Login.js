@@ -13,6 +13,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth'
+import { MY_UID } from '../common/localstorage'
 
 const Login = () => {
   const auth = getAuth()
@@ -59,7 +60,7 @@ const Login = () => {
       const result = await getDataOne('user', user.uid)
 
       if (result.exists()) {
-        localStorage.setItem('uid', JSON.stringify(user.uid))
+        localStorage.setItem(MY_UID, JSON.stringify(user.uid))
         navigate(-1, { replace: true })
       } else {
         navigate('/signup', {
