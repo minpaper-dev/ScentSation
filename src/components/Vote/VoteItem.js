@@ -8,7 +8,13 @@ import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { v4 as uuidv4 } from 'uuid'
 
-const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
+const VoteItem = ({
+  data,
+  index,
+  deleteVote,
+  setIsLoginModal,
+  onDeleteVote,
+}) => {
   const { updateData, deleteData } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
@@ -47,8 +53,7 @@ const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
   }
 
   const onDeletevote = async () => {
-    await deleteData('vote', data.id)
-    deleteVote(index)
+    onDeleteVote.mutate({ id: data.id })
     setIsDeleteModal(false)
   }
 

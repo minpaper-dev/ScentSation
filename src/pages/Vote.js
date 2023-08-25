@@ -1,50 +1,50 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+
 import Header from '../components/Header'
+import Loader from '../components/Loader'
+import VoteItem from '../components/Vote/VoteItem'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
-import { useNavigate } from 'react-router-dom'
-import VoteItem from '../components/Vote/VoteItem'
-import Loader from '../components/Loader'
-import CustomButtonModal from '../components/Custom/CustomButtonModal'
 
 const Vote = () => {
   const navigate = useNavigate()
-  const { getDataAll } = useFirestore()
+  const queryClient = useQueryClient()
+  const { getDataAll, deleteData } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem('uid'))
 
-  const [votes, setVotes] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  // vote Data 조회
+  const { data: voteData, isLoading } = useQuery({
+    queryKey: 'vote',
+    queryFn: () => getDataAll('vote'),
+  })
+
+  // 해당 vote 삭제
+  const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vote'] })
+    },
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
+    },
+  })
+
   const [isLoginModal, setIsLoginModal] = useState(false)
 
-  useEffect(() => {
-    getVotes()
-  }, [])
-
-  const getVotes = async () => {
-    const result = await getDataAll('vote')
-    setVotes(result)
-    setIsLoading(false)
-  }
-
-  const registerVote = () => {
+  const onClickRegisterVoteButton = () => {
+    if (uid) {
+      navigate('/vote/register')
+      return
+    }
     if (!uid) {
       setIsLoginModal(true)
-    } else {
-      navigate('/vote/register')
+      return
     }
-  }
-
-  const goToDetail = id => {
-    navigate(`${id}`)
-  }
-
-  const deleteVote = index => {
-    // 새로운 배열 생성 후 해당 요소 제외
-    const newReviews = votes.filter((_, i) => i !== index)
-    setVotes(newReviews)
   }
 
   return (
@@ -55,21 +55,22 @@ const Vote = () => {
       ) : (
         <Container>
           <WrapFloatingButton>
-            <FloatingButton onClick={registerVote}>
+            <FloatingButton onClick={onClickRegisterVoteButton}>
               <CustomFont content={'투표 올리기'} />
             </FloatingButton>
           </WrapFloatingButton>
 
-          {votes.map((data, index) => (
+          {voteData.map((data, index) => (
             <WrapVoteItem>
               <VoteItem
                 key={data.id}
                 data={data}
                 index={index}
-                deleteVote={deleteVote}
+                deleteVote={onDeleteVote}
+                onDeleteVote={onDeleteVote}
                 setIsLoginModal={setIsLoginModal}
               />
-              <Comment onClick={() => goToDetail(data.id)}>
+              <Comment onClick={() => navigate(data.id)}>
                 <CustomFont
                   size={1.2}
                   content={`댓글 (${data.commentCount})`}
