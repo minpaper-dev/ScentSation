@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import CustomLogo from '../components/Custom/CustomLogo'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
-import CustomFont from '../styles/CustomFont'
-import { Link, useNavigate } from 'react-router-dom'
-import { deleteUser, getAuth, onAuthStateChanged } from 'firebase/auth'
+import { useNavigate } from 'react-router-dom'
+import { deleteUser, getAuth } from 'firebase/auth'
+import { useQuery } from 'react-query'
+
 import Header from '../components/Header'
-import useFirestore from '../hooks/useFirestore'
-import palette from '../styles/CustomColor'
+import Loader from '../components/Loader'
 import ProfileDetail from '../components/Profile/ProfileDetail'
 import CustomButtonModal from '../components/Custom/CustomButtonModal'
+import CustomFont from '../styles/CustomFont'
+import useFirestore from '../hooks/useFirestore'
 
 const MyPage = () => {
   const auth = getAuth()
   const navigate = useNavigate()
-  const { getDataOne, deleteData } = useFirestore()
+  const { getDataWithId, deleteData } = useFirestore()
+
+  const uid = JSON.parse(localStorage.getItem('uid'))
+
+  const { data: userData, isLoading } = useQuery({
+    queryKey: ['user', uid],
+    queryFn: () => getDataWithId('user', uid),
+  })
 
   const MenuData = [
     {
       title: 'My ScentSation',
-      event: () => navigate(`/review/${userInfo.id}`),
+      event: () => navigate(`/review/${userData.id}`),
     },
     {
       title: '내 정보 수정',
@@ -34,28 +42,14 @@ const MyPage = () => {
     },
   ]
 
-  const [userInfo, setUserInfo] = useState({})
   const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false)
   const [isOpenWithdrawalModal, setIsOpenWithdrawalModal] = useState(false)
-
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        const uid = user.uid
-        getUserInfo(uid)
-      }
-    })
-  }, [])
-
-  const getUserInfo = async uid => {
-    const result = await getDataOne('user', uid)
-    setUserInfo({ ...result.data(), id: uid })
-  }
 
   const onLogout = () => {
     setIsOpenLogoutModal(false)
     auth.signOut()
     localStorage.removeItem('uid')
+    localStorage.removeItem('search')
     navigate('/login', { replace: true })
   }
 
@@ -65,7 +59,9 @@ const MyPage = () => {
 
     deleteUser(user)
       .then(() => {
-        deleteData('user', userInfo.id)
+        deleteData('user', userData.id)
+        localStorage.removeItem('uid')
+        localStorage.removeItem('search')
         navigate('/login', {
           replace: true,
         })
@@ -75,11 +71,13 @@ const MyPage = () => {
       })
   }
 
+  if (isLoading) return <Loader />
+
   return (
     <>
       <Header pageName={'마이페이지'} />
       <Container>
-        <ProfileDetail userInfo={userInfo} />
+        <ProfileDetail userInfo={userData} />
         <FlexCol>
           {MenuData.map(item => (
             <Button onClick={item.event} key={item.title}>
