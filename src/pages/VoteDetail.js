@@ -15,6 +15,8 @@ import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import { MY_UID } from '../common/localstorage'
+import NotFound from './NotFound'
+import Loader from '../components/Loader'
 
 const VoteDetail = () => {
   const { id } = useParams()
@@ -30,14 +32,25 @@ const VoteDetail = () => {
 
   // 해당 투표 정보 조회
   const { data: voteData, isLoading: isVoteLoading } = useQuery({
-    queryKey: 'vote',
+    queryKey: ['vote', id],
     queryFn: () => getDataWithId('vote', id),
+    initialData: {},
   })
 
   // 해당 투표의 댓글 조회
   const { data: commentData, isLoading: isCommentLoading } = useQuery({
     queryKey: ['comment', id],
     queryFn: () => getDataWithQuery('comment', 'voteId', '==', id),
+  })
+
+  // 해당 투표 삭제
+  const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vote'] })
+    },
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
+    },
   })
 
   // 댓글 삭제
@@ -90,58 +103,65 @@ const VoteDetail = () => {
     setDeleteCommentId('')
   }
 
+  if (isVoteLoading || isCommentLoading) return <Loader />
+
+  if (Object.keys(voteData).length < 2) return <NotFound />
+
   return (
     <>
       <Header pageName={'댓글'} />
-      {!isVoteLoading && !isCommentLoading && (
-        <Container>
-          <VoteItem data={voteData} setIsLoginModal={setIsLoginModal} />
-          <Flex>
-            <CommentOutlined style={{ fontSize: '3rem' }} />
-            <CustomFont content={commentData.length} $marginLf={0.5} />
-          </Flex>
-          <WrapInput>
-            <Input
-              type="text"
-              value={commentInputValue}
-              onChange={e => setCommentInputValue(e.target.value)}
+      <Container>
+        <VoteItem
+          data={voteData}
+          setIsLoginModal={setIsLoginModal}
+          onDeleteVote={onDeleteVote}
+          isGoBack={true}
+        />
+        <Flex>
+          <CommentOutlined style={{ fontSize: '3rem' }} />
+          <CustomFont content={commentData.length} $marginLf={0.5} />
+        </Flex>
+        <WrapInput>
+          <Input
+            type="text"
+            value={commentInputValue}
+            onChange={e => setCommentInputValue(e.target.value)}
+          />
+          <AddButton onClick={postComment}>
+            <CustomFont content={'등록하기'} />
+          </AddButton>
+        </WrapInput>
+        {commentData.map(item => (
+          <>
+            <CommentItem
+              key={item.id}
+              item={item}
+              uid={uid}
+              setDeleteCommentId={setDeleteCommentId}
+              setIsDeleteCommentModal={setIsDeleteCommentModal}
             />
-            <AddButton onClick={postComment}>
-              <CustomFont content={'등록하기'} />
-            </AddButton>
-          </WrapInput>
-          {commentData.map(item => (
-            <>
-              <CommentItem
-                key={item.id}
-                item={item}
-                uid={uid}
-                setDeleteCommentId={setDeleteCommentId}
-                setIsDeleteCommentModal={setIsDeleteCommentModal}
-              />
-              <Divider />
-            </>
-          ))}
-          {isLoginModal && (
-            <CustomButtonModal
-              content={`로그인 한 유저만 사용가능한 기능입니다.
+            <Divider />
+          </>
+        ))}
+        {isLoginModal && (
+          <CustomButtonModal
+            content={`로그인 한 유저만 사용가능한 기능입니다.
         로그인 하러 이동하시겠습니까?`}
-              yesEvent={() => {
-                setIsLoginModal(false)
-                navigate('/login')
-              }}
-              noEvent={() => setIsLoginModal(false)}
-            />
-          )}
-          {isDeleteCommentModal && (
-            <CustomButtonModal
-              content={'정말로 댓글을 삭제하시겠습니까?'}
-              yesEvent={deleteComment}
-              noEvent={() => setIsDeleteCommentModal(false)}
-            />
-          )}
-        </Container>
-      )}
+            yesEvent={() => {
+              setIsLoginModal(false)
+              navigate('/login')
+            }}
+            noEvent={() => setIsLoginModal(false)}
+          />
+        )}
+        {isDeleteCommentModal && (
+          <CustomButtonModal
+            content={'정말로 댓글을 삭제하시겠습니까?'}
+            yesEvent={deleteComment}
+            noEvent={() => setIsDeleteCommentModal(false)}
+          />
+        )}
+      </Container>
     </>
   )
 }
