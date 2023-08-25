@@ -32,8 +32,12 @@ const Search = () => {
   const [filterProducts, setFilterProducts] = useState([])
 
   const findProduct = text => {
-    const name = productData.filter(v => v.name.includes(text))
-    const brand = brandData.filter(v => v.name.includes(text))
+    const name = productData.filter(v =>
+      v.name.replace(/\s+/g, '').includes(text)
+    )
+    const brand = brandData.filter(v =>
+      v.name.replace(/\s+/g, '').includes(text)
+    )
     setFilterProducts({ name, brand })
   }
 
