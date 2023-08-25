@@ -1,11 +1,11 @@
 import React from 'react'
 import { styled } from 'styled-components'
-import CustomFont from '../styles/CustomFont'
+import { LoadingOutlined } from '@ant-design/icons'
 
 const Loader = () => {
   return (
     <Container>
-      <CustomFont content={'Loading ...'} />
+      <LoadingOutlined style={{ fontSize: '5rem' }} />
     </Container>
   )
 }
@@ -14,6 +14,7 @@ const Container = styled.div`
   flex: 1;
   background-color: white;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `

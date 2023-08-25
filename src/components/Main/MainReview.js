@@ -1,22 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReviewItemWithProduct from '../Review/ReviewItemWithProduct'
-import useFirestore from '../../hooks/useFirestore'
 import CustomCarousel from '../Custom/CustomCarousel'
 
-const MainReview = () => {
-  const { getDataAll } = useFirestore()
-
-  const [reviewData, setReviewData] = useState([])
-
-  useEffect(() => {
-    getUserInfo()
-  }, [])
-
-  const getUserInfo = async () => {
-    const result = await getDataAll('review')
-    setReviewData(result)
-  }
-
+const MainReview = ({ reviewData }) => {
   return (
     <CustomCarousel
       carouselList={reviewData}

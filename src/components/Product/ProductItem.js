@@ -19,7 +19,7 @@ const Product = styled.div`
   align-items: center;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   background-color: white;
-  padding: 2rem 0.5rem;
+  padding: 2rem 2rem 2rem 0.5rem;
   border-radius: 1rem;
   margin-bottom: 19px;
 `

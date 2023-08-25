@@ -6,6 +6,7 @@ import VoteProduct from './VoteProduct'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
+import { v4 as uuidv4 } from 'uuid'
 
 const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
   const { updateData, deleteData } = useFirestore()
@@ -56,21 +57,22 @@ const VoteItem = ({ data, index, deleteVote, setIsLoginModal }) => {
 
     return (
       <VoteButton
+        key={uuidv4()}
         onClick={() => onVote(index)}
-        isSelected={selectedIndex === index}
+        $isSelected={selectedIndex === index}
       >
         <VoteProduct data={perfume} />
-        <VoteResult isVote={isVote} percent={percent} />
-        {isVote && (
-          <>
+        <VoteResult $isVote={isVote} percent={percent} />
+        <>
+          {isVote && (
             <CustomFont
               size={1.6}
               color={palette.Brown200}
               content={`${percent}%`}
               weight={800}
             />
-          </>
-        )}
+          )}
+        </>
       </VoteButton>
     )
   }
@@ -131,7 +133,7 @@ const VoteButton = styled.button`
   background-color: white;
   padding: 2rem;
   border-radius: 1rem;
-  border: ${props => (props.isSelected ? `2px solid ${palette.Brown200}` : 0)};
+  border: ${props => (props.$isSelected ? `2px solid ${palette.Brown200}` : 0)};
 
   margin-bottom: 2rem;
   cursor: pointer;
@@ -145,7 +147,7 @@ const VoteResult = styled.div`
   background-color: ${palette.Brown200};
   opacity: 0.3;
   border-radius: inherit;
-  width: ${props => (props.isVote ? `${props.percent}%` : '0')};
+  width: ${props => (props.$isVote ? `${props.percent}%` : '0')};
   transition: width 0.5s ease; /* 애니메이션 효과 설정 */
 `
 

@@ -1,31 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import VoteItem from '../Vote/VoteItem'
 import CustomCarousel from '../Custom/CustomCarousel'
-import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { useNavigate } from 'react-router-dom'
 
-const MainVote = () => {
-  const { getDataAll } = useFirestore()
+const MainVote = ({ voteData }) => {
   const navigate = useNavigate()
 
-  const [carouselList, setCarouselList] = useState([])
   const [isLoginModal, setIsLoginModal] = useState(false)
-
-  useEffect(() => {
-    getData()
-  }, [])
-
-  const getData = async () => {
-    const result = await getDataAll('vote')
-
-    setCarouselList(result)
-  }
 
   return (
     <>
       <CustomCarousel
-        carouselList={carouselList}
+        carouselList={voteData}
         renderItem={data => {
           return <VoteItem data={data} setIsLoginModal={setIsLoginModal} />
         }}

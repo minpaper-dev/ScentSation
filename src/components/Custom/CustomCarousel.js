@@ -44,7 +44,11 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
       <WrapCarousel onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <Carousel ref={carouselRef}>
           {carouselList?.map((item, index) => {
-            return <CarouselContainer>{renderItem(item)}</CarouselContainer>
+            return (
+              <CarouselContainer key={item.id}>
+                {renderItem(item)}
+              </CarouselContainer>
+            )
           })}
         </Carousel>
         <WrapIndicator>

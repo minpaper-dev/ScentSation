@@ -11,11 +11,22 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import useFirestore from '../hooks/useFirestore'
 import { useRecoilState } from 'recoil'
 import { myInfoState } from '../recoil/atoms'
+import { useQuery } from 'react-query'
+import CustomFont from '../styles/CustomFont'
+import Loader from '../components/Loader'
 
 const Main = () => {
-  const auth = getAuth()
-  const { getDataOne } = useFirestore()
-  const [, setMyInfo] = useRecoilState(myInfoState)
+  const { getDataAll } = useFirestore()
+
+  const { data: voteData, isLoading: isVoteLoading } = useQuery({
+    queryKey: 'vote',
+    queryFn: () => getDataAll('vote'),
+  })
+
+  const { data: reviewData, isLoading: isReviewLoading } = useQuery({
+    queryKey: 'review',
+    queryFn: () => getDataAll('review'),
+  })
 
   const MainContent = [
     {
@@ -26,28 +37,16 @@ const Main = () => {
     {
       id: 1,
       title: '투표',
-      component: <MainVote />,
+      component: <MainVote voteData={voteData} />,
     },
     {
       id: 2,
       title: '최신 리뷰',
-      component: <MainReview />,
+      component: <MainReview reviewData={reviewData} />,
     },
   ]
 
-  useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        localStorage.setItem('uid', JSON.stringify(user.uid))
-        setProfile(user.uid)
-      }
-    })
-  }, [])
-
-  const setProfile = async uid => {
-    const result = await getDataOne('user', uid)
-    setMyInfo({ ...result.data(), id: uid })
-  }
+  if (isVoteLoading || isReviewLoading) return <Loader />
 
   return (
     <>
