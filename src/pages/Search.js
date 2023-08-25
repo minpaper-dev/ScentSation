@@ -1,33 +1,32 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { styled } from 'styled-components'
+import { v4 as uuidv4 } from 'uuid'
+import { useQuery } from 'react-query'
+
+import Header from '../components/Header'
 import Searching from '../components/Search/Searching'
 import SearchResult from '../components/Search/SearchResult'
-import Header from '../components/Header'
 import SearchPending from '../components/Search/SearchPending'
 import useFirestore from '../hooks/useFirestore'
-import { v4 as uuidv4 } from 'uuid'
 
 const Search = () => {
   const { getDataAll } = useFirestore()
 
+  const { data: productData } = useQuery({
+    queryKey: 'product',
+    queryFn: () => getDataAll('product'),
+  })
+
+  // 0 : 검색 전, 1 : 검색 중, 2 : 검색 결과
   const [inputState, setInputState] = useState(0)
   const [inputValue, setInputValue] = useState('')
-  const [products, setProducts] = useState([])
+
   const [filterProducts, setFilterProducts] = useState([])
 
-  useEffect(() => {
-    getProduct()
-  }, [])
-
-  const getProduct = async () => {
-    const result = await getDataAll('product')
-    setProducts(result)
-  }
-
   const findProduct = text => {
-    const name = products.filter(v => v.name.includes(text))
+    console.log(text)
+    const name = productData.filter(v => v.name.includes(text))
     // const brand = products.filter(v => v.brand.includes(text))
-
     setFilterProducts({ name })
   }
 
@@ -48,7 +47,6 @@ const Search = () => {
   const onKeyDownEnter = e => {
     if (e.key === 'Enter') {
       if (e.nativeEvent.isComposing) return
-
       onClickItem(inputValue)
     }
   }
@@ -60,7 +58,7 @@ const Search = () => {
 
     const data = { id: uuidv4(), text, date }
 
-    let localSearch = JSON.parse(localStorage.getItem('search'))
+    let localSearch = JSON.parse(localStorage.getItem('search')) || []
 
     localSearch.map((item, index) => {
       if (item.text === text) {

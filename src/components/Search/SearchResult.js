@@ -23,7 +23,7 @@ const SearchResult = ({ filterProducts, isSelect }) => {
           </SearchItem>
         ))} */}
 
-        {filterProducts.name.map(item => (
+        {filterProducts?.name?.map(item => (
           <ProductListItem key={item.id} item={item} isSelect={isSelect} />
         ))}
       </Container>
