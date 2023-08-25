@@ -9,13 +9,14 @@ import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 
-import { FILTER_CATEGORY } from '../common/data'
+import { FILTER_CATEGORY, SORT_LIST } from '../common/data'
 import Header from '../components/Header'
 import Loader from '../components/Loader'
 import ProductListItem from '../components/Product/ProductListItem'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
+import { Select } from 'antd'
 
 const Filter = () => {
   const { state } = useLocation()
@@ -44,6 +45,11 @@ const Filter = () => {
       )
     }
   }
+
+  const handleChange = value => {
+    console.log(`selected ${value}`)
+  }
+
   if (isLoading) return <Loader />
   return (
     <Container>
@@ -75,7 +81,16 @@ const Filter = () => {
           ))}
         </Swiper>
       </WrapTags>
-
+      <WrapSelect>
+        <Select
+          defaultValue={SORT_LIST[0].label}
+          style={{
+            width: 120,
+          }}
+          onChange={handleChange}
+          options={SORT_LIST}
+        />
+      </WrapSelect>
       {filterProduct.map(item => (
         <ProductListItem key={item.id} item={item} />
       ))}
@@ -104,6 +119,13 @@ const Tag = styled.button`
   border-radius: 1rem;
   width: 100%;
   padding: 0.6rem 0;
+`
+
+const WrapSelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 2rem;
 `
 
 export default Filter

@@ -155,3 +155,26 @@ export const REVIEW_TAG = {
   toilette: '3~4시간',
   perfume: '5~6시간',
 }
+
+export const SORT_LIST = [
+  {
+    value: 'jack',
+    label: '최근 등록 순',
+  },
+  {
+    value: 'lucy',
+    label: '리뷰 많은 순',
+  },
+  {
+    value: 'Yiminghe',
+    label: '가격 낮은 순',
+  },
+  {
+    value: 'disabled',
+    label: '가격 높은 순',
+  },
+  {
+    value: 'disabled',
+    label: '이름 순',
+  },
+]
