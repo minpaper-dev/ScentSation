@@ -123,3 +123,22 @@ export const REVIEW_FORM = {
     },
   ],
 }
+
+export const REVIEW = {
+  gender: {
+    male: 0,
+    female: 0,
+    neutral: 0,
+  },
+  season: {
+    spring: 0,
+    summer: 0,
+    autumn: 0,
+    winter: 0,
+  },
+  vitality: {
+    cologne: 0,
+    toilette: 0,
+    perfume: 0,
+  },
+}

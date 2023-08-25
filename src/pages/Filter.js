@@ -1,23 +1,21 @@
 import React, { useEffect, useState } from 'react'
-import CustomFont from '../styles/CustomFont'
 import { styled } from 'styled-components'
-import { FILTER_CATEGORY } from '../common/data'
-import palette from '../styles/CustomColor'
-import ProductListItem from '../components/Product/ProductListItem'
-import useFirestore from '../hooks/useFirestore'
-import Header from '../components/Header'
-import Loader from '../components/Loader'
+import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
-
+import { FreeMode, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 
-import { FreeMode, Pagination } from 'swiper/modules'
-import { useQuery } from 'react-query'
+import { FILTER_CATEGORY } from '../common/data'
+import Header from '../components/Header'
+import Loader from '../components/Loader'
+import ProductListItem from '../components/Product/ProductListItem'
+import CustomFont from '../styles/CustomFont'
+import palette from '../styles/CustomColor'
+import useFirestore from '../hooks/useFirestore'
 
 const Filter = () => {
   const { state } = useLocation()

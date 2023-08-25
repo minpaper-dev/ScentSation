@@ -1,214 +1,209 @@
-import React, { useEffect, useState } from 'react'
-import CustomFont from '../styles/CustomFont'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import { styled } from 'styled-components'
-import palette from '../styles/CustomColor'
-import CustomTags from '../styles/CustomTags'
-import useFirestore from '../hooks/useFirestore'
-import { REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
-import ReviewItem from '../components/Review/ReviewItem'
-import Header from '../components/Header'
-import CustomButtonModal from '../components/Custom/CustomButtonModal'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { FrownOutlined } from '@ant-design/icons'
 
+import { REVIEW, REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
+import Header from '../components/Header'
+import ReviewItem from '../components/Review/ReviewItem'
+import CustomButtonModal from '../components/Custom/CustomButtonModal'
+import CustomFont from '../styles/CustomFont'
+import palette from '../styles/CustomColor'
+import useFirestore from '../hooks/useFirestore'
+import Loader from '../components/Loader'
+
 const Product = () => {
-  const { id } = useParams()
   const navigate = useNavigate()
-  const { getDataWithQuery, getDataOne } = useFirestore()
+  const queryClient = useQueryClient()
+  const { id } = useParams()
+  const { getDataWithQuery, getDataWithId, deleteData } = useFirestore()
+
   const uid = JSON.parse(localStorage.getItem('uid'))
 
-  const [isLoginModal, setIsLoginModal] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [reviews, setReviews] = useState([])
-  const [productInfo, setProductInfo] = useState({})
-  const [reviewData, setReviewData] = useState({
-    gender: {
-      male: 0,
-      female: 0,
-      neutral: 0,
+  // 상품 정보 조회
+  const { data: productData, isLoading: isProductLoading } = useQuery({
+    queryKey: ['product', id],
+    queryFn: () => getDataWithId('product', id),
+  })
+
+  // 상품의 리뷰 정보 조회
+  const { data: reviewData, isLoading: isReviewLoading } = useQuery({
+    queryKey: ['review', id],
+    queryFn: () => getDataWithQuery('review', 'product.id', '==', id),
+    staleTime: 0,
+    initialData: [],
+  })
+
+  // 리뷰 삭제
+  const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['review'] })
     },
-    season: {
-      spring: 0,
-      summer: 0,
-      autumn: 0,
-      winter: 0,
-    },
-    vitality: {
-      cologne: 0,
-      toilette: 0,
-      perfume: 0,
+    onError: error => {
+      console.log(`Delete Todo Error ${error}`)
     },
   })
 
+  const [isLoginModal, setIsLoginModal] = useState(false)
+  const [summaryReviewData, setSummaryReviewData] = useState(REVIEW)
+
   useEffect(() => {
-    getProduct()
-    getData()
-  }, [])
+    // 리뷰 통계 작업
+    let obj = JSON.parse(JSON.stringify(REVIEW))
 
-  const getProduct = async () => {
-    const result = await getDataOne('product', id)
-
-    setProductInfo({ ...result.data(), id })
-  }
-
-  const getData = async () => {
-    let obj = { ...reviewData }
-    const result = await getDataWithQuery('review', 'product.id', '==', id)
-
-    setReviews(result)
-    result.map(item => {
-      obj.gender[item.gender]++
-      obj.season[item.season]++
-      obj.vitality[item.vitality]++
-    })
-    setReviewData(obj)
-    setIsLoading(false)
-  }
+    if (reviewData.length > 0) {
+      reviewData.map((item, index) => {
+        obj.gender[item.gender]++
+        obj.season[item.season]++
+        obj.vitality[item.vitality]++
+      })
+      setSummaryReviewData(obj)
+    }
+  }, [reviewData])
 
   const goReviewWrite = () => {
     if (uid) {
-      navigate('/write', { state: productInfo })
+      navigate('/write', { state: { productInfo: productData } })
     } else {
       setIsLoginModal(true)
     }
   }
 
-  const deleteReview = index => {
-    // 새로운 배열 생성 후 해당 요소 제외
-    const newReviews = reviews.filter((_, i) => i !== index)
-    setReviews(newReviews)
-  }
+  if (isProductLoading || isReviewLoading) return <Loader />
 
   return (
     <>
-      {!isLoading && (
-        <Container>
-          <Header pageName={''} />
-          <ProductImage src={productInfo.image} />
-          <ProductInfo>
-            <CustomFont size={1.2} content={productInfo.brand} $marginBt={1} />
+      <Container>
+        <Header pageName={''} />
+        <ProductImage src={productData.image} />
+        <ProductInfo>
+          <CustomFont size={1.2} content={productData.brand} $marginBt={1} />
+          <CustomFont
+            size={1.6}
+            content={productData.name}
+            weight={800}
+            $marginBt={1}
+          />
+          <Flex>
             <CustomFont
-              size={1.6}
-              content={productInfo.name}
-              weight={800}
-              $marginBt={1}
+              size={1.2}
+              content={`${productData.size}ml / ${productData.price}원`}
             />
+
             <Flex>
+              <CustomFont content={'⭐️⭐️⭐️⭐️⭐️'} />
               <CustomFont
                 size={1.2}
-                content={`${productInfo.size}ml / ${productInfo.price}원`}
+                content={`(${reviewData.length})`}
+                $marginLf={0.5}
               />
-
-              <Flex>
-                <CustomFont content={'⭐️⭐️⭐️⭐️⭐️'} />
-                <CustomFont
-                  size={1.2}
-                  content={`(${reviews.length})`}
-                  $marginLf={0.5}
-                />
-              </Flex>
             </Flex>
-          </ProductInfo>
-          <Divider />
-          {reviews.length === 0 ? (
-            <NoReview>
-              <FrownOutlined style={{ fontSize: '5rem' }} />
-              <CustomFont
-                size={1.2}
-                weight={600}
-                content={'아직 작성된 리뷰가 없습니다.'}
-                $marginTop={1.5}
-              />
-            </NoReview>
-          ) : (
-            <>
-              <WrapTags>
-                <CustomFont
-                  color={palette.Gray200}
-                  weight={600}
-                  content={'# 남성'}
-                  $marginRi={1}
-                />
-                <CustomFont
-                  color={palette.Gray200}
-                  weight={600}
-                  content={'# 봄'}
-                  $marginRi={1}
-                />
-                <CustomFont
-                  color={palette.Gray200}
-                  weight={600}
-                  content={'# 1~2시간'}
-                />
-              </WrapTags>
-              {Object.keys(reviewData).map(item => (
-                <WrapGraph key={item}>
-                  <BarGraph>
-                    {Object.keys(reviewData[item]).map(category => (
-                      <BarGraphItem
-                        $width={
-                          (reviewData[item][category] / reviews.length) * 100
-                        }
-                        bgc={REVIEW_DATA_COLOR[category]}
-                        key={`${item}-${category}`}
-                      />
-                    ))}
-                  </BarGraph>
-
-                  {Object.keys(reviewData[item]).map(category => (
-                    <GraphText key={`${item}-${category}`}>
-                      <CustomFont
-                        size={1.2}
-                        content={REVIEW_DATA_TEXT[category]}
-                      />
-                      <CustomFont
-                        size={1.2}
-                        content={`${
-                          reviewData[item][category]
-                            ? (
-                                (reviewData[item][category] / reviews.length) *
-                                100
-                              ).toFixed()
-                            : 0
-                        }%`}
-                        $marginBt={1}
-                      />
-                    </GraphText>
-                  ))}
-                </WrapGraph>
-              ))}
-              <Divider />
-              <WrapReview>
-                {reviews.map((review, index) => (
-                  <ReviewItem
-                    key={review.id}
-                    data={review}
-                    deleteReview={deleteReview}
-                    index={index}
-                  />
-                ))}
-              </WrapReview>
-            </>
-          )}
-
-          <WrapFloatingButton>
-            <FloatingButton onClick={goReviewWrite}>
-              <CustomFont content={'리뷰쓰기'} />
-            </FloatingButton>
-          </WrapFloatingButton>
-          {isLoginModal && (
-            <CustomButtonModal
-              content={`로그인 한 유저만 사용가능한 기능입니다.
-        로그인 하러 이동하시겠습니까?`}
-              yesEvent={() => {
-                setIsLoginModal(false)
-                navigate('/login')
-              }}
-              noEvent={() => setIsLoginModal(false)}
+          </Flex>
+        </ProductInfo>
+        <Divider />
+        {reviewData.length === 0 ? (
+          <NoReview>
+            <FrownOutlined style={{ fontSize: '5rem' }} />
+            <CustomFont
+              size={1.2}
+              weight={600}
+              content={'아직 작성된 리뷰가 없습니다.'}
+              $marginTop={1.5}
             />
-          )}
-        </Container>
-      )}
+          </NoReview>
+        ) : (
+          <>
+            <WrapTags>
+              <CustomFont
+                color={palette.Gray200}
+                weight={600}
+                content={'# 남성'}
+                $marginRi={1}
+              />
+              <CustomFont
+                color={palette.Gray200}
+                weight={600}
+                content={'# 봄'}
+                $marginRi={1}
+              />
+              <CustomFont
+                color={palette.Gray200}
+                weight={600}
+                content={'# 1~2시간'}
+              />
+            </WrapTags>
+            {Object.keys(summaryReviewData).map(item => (
+              <WrapGraph key={item}>
+                <BarGraph>
+                  {Object.keys(summaryReviewData[item]).map(category => (
+                    <BarGraphItem
+                      $width={
+                        (summaryReviewData[item][category] /
+                          reviewData.length) *
+                        100
+                      }
+                      bgc={REVIEW_DATA_COLOR[category]}
+                      key={`${item}-${category}`}
+                    />
+                  ))}
+                </BarGraph>
+
+                {Object.keys(summaryReviewData[item]).map(category => (
+                  <GraphText key={`${item}-${category}`}>
+                    <CustomFont
+                      size={1.2}
+                      content={REVIEW_DATA_TEXT[category]}
+                    />
+                    <CustomFont
+                      size={1.2}
+                      content={`${
+                        summaryReviewData[item][category]
+                          ? (
+                              (summaryReviewData[item][category] /
+                                reviewData.length) *
+                              100
+                            ).toFixed(1)
+                          : 0
+                      }%`}
+                      $marginBt={1}
+                    />
+                  </GraphText>
+                ))}
+              </WrapGraph>
+            ))}
+            <Divider />
+            <WrapReview>
+              {reviewData.map((review, index) => (
+                <ReviewItem
+                  key={review.id}
+                  data={review}
+                  deleteReview={onDeleteVote}
+                  onDeleteVote={onDeleteVote}
+                  index={index}
+                />
+              ))}
+            </WrapReview>
+          </>
+        )}
+
+        <WrapFloatingButton>
+          <FloatingButton onClick={goReviewWrite}>
+            <CustomFont content={'리뷰쓰기'} />
+          </FloatingButton>
+        </WrapFloatingButton>
+        {isLoginModal && (
+          <CustomButtonModal
+            content={`로그인 한 유저만 사용가능한 기능입니다.
+        로그인 하러 이동하시겠습니까?`}
+            yesEvent={() => {
+              setIsLoginModal(false)
+              navigate('/login')
+            }}
+            noEvent={() => setIsLoginModal(false)}
+          />
+        )}
+      </Container>
     </>
   )
 }
@@ -243,13 +238,6 @@ const WrapTags = styled.div`
   width: 90%;
   display: flex;
   margin: 2rem auto 0;
-`
-
-const Tag = styled.div`
-  padding: 1rem;
-  background-color: ${props => props.$bgc};
-  border-radius: 1rem;
-  margin-right: 1rem;
 `
 
 const Divider = styled.div`

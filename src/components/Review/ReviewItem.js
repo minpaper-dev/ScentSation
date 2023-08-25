@@ -1,23 +1,21 @@
 import { styled } from 'styled-components'
 import ProfileItem from '../Profile/ProfileItem'
 import CustomFont from '../../styles/CustomFont'
-import CustomTags from '../../styles/CustomTags'
+
 import palette from '../../styles/CustomColor'
 import { useState } from 'react'
 import CustomButtonModal from '../Custom/CustomButtonModal'
-import useFirestore from '../../hooks/useFirestore'
+
 import { useNavigate } from 'react-router-dom'
 
-const ReviewItem = ({ data, index, deleteReview, isNoProfile }) => {
+const ReviewItem = ({ data, isNoProfile, onDeleteVote }) => {
   const navigate = useNavigate()
-  const { deleteData } = useFirestore()
   const uid = JSON.parse(localStorage.getItem('uid'))
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 
   const onDeleteReview = async () => {
-    await deleteData('review', data.id)
-    deleteReview(index)
+    onDeleteVote.mutate({ id: data.id })
     setIsDeleteModal(false)
   }
 
