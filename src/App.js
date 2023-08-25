@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Main from './pages/Main'
 import { styled } from 'styled-components'
 import app from './Firebase'
-import { RecoilRoot } from 'recoil'
+import { RecoilRoot, useRecoilState } from 'recoil'
 
 import { ScrollToTop } from './components/ScrollToTop'
 import Login from './pages/Login'
@@ -24,10 +24,13 @@ import EditProfile from './pages/EditProfile'
 import { motion, AnimatePresence } from 'framer-motion'
 import ReviewEdit from './pages/ReviewEdit'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { myInfoState } from './recoil/atoms'
 
 function App() {
+  const auth = getAuth()
   const queryClient = new QueryClient()
-  const { addData } = useFirestore()
+  const { addData, getDataWithId } = useFirestore()
 
   const data = [
     // {
@@ -185,9 +188,18 @@ function App() {
     // },
   ]
 
+  const [, setMyInfo] = useRecoilState(myInfoState)
+
   useEffect(() => {
-    // data.map(v => addData_(v))
-    // addData_()
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        localStorage.setItem('uid', JSON.stringify(user.uid))
+
+        const result = await getDataWithId('user', user.uid)
+
+        setMyInfo(result)
+      }
+    })
   }, [])
 
   const addData_ = async v => {
@@ -214,71 +226,69 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
-        <Container className="App">
-          <AnimatePresence>
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<AnimatedPage element={<Main />} />} />
-                <Route
-                  path="/login"
-                  element={<AnimatedPage element={<Login />} />}
-                />
-                <Route
-                  path="/signup"
-                  element={<AnimatedPage element={<Signup />} />}
-                />
-                <Route
-                  path="/mypage"
-                  element={<AnimatedPage element={<MyPage />} />}
-                />
-                <Route
-                  path="/search"
-                  element={<AnimatedPage element={<Search />} />}
-                />
-                <Route
-                  path="/filter"
-                  element={<AnimatedPage element={<Filter />} />}
-                />
-                <Route
-                  path="/product/:id"
-                  element={<AnimatedPage element={<Product />} />}
-                />
-                <Route
-                  path="/write"
-                  element={<AnimatedPage element={<Write />} />}
-                />
-                <Route
-                  path="/review/:id"
-                  element={<AnimatedPage element={<UserReview />} />}
-                />
-                <Route
-                  path="/vote"
-                  element={<AnimatedPage element={<Vote />} />}
-                />
-                <Route
-                  path="/vote/register"
-                  element={<AnimatedPage element={<RegisterVote />} />}
-                />
-                <Route
-                  path="/vote/:id"
-                  element={<AnimatedPage element={<VoteDetail />} />}
-                />
-                <Route
-                  path="/mypage/edit"
-                  element={<AnimatedPage element={<EditProfile />} />}
-                />
-                <Route
-                  path="/review/edit"
-                  element={<AnimatedPage element={<ReviewEdit />} />}
-                />
-              </Routes>
-              <BottomNavi />
-            </BrowserRouter>
-          </AnimatePresence>
-        </Container>
-      </RecoilRoot>
+      <Container className="App">
+        <AnimatePresence>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<AnimatedPage element={<Main />} />} />
+              <Route
+                path="/login"
+                element={<AnimatedPage element={<Login />} />}
+              />
+              <Route
+                path="/signup"
+                element={<AnimatedPage element={<Signup />} />}
+              />
+              <Route
+                path="/mypage"
+                element={<AnimatedPage element={<MyPage />} />}
+              />
+              <Route
+                path="/search"
+                element={<AnimatedPage element={<Search />} />}
+              />
+              <Route
+                path="/filter"
+                element={<AnimatedPage element={<Filter />} />}
+              />
+              <Route
+                path="/product/:id"
+                element={<AnimatedPage element={<Product />} />}
+              />
+              <Route
+                path="/write"
+                element={<AnimatedPage element={<Write />} />}
+              />
+              <Route
+                path="/review/:id"
+                element={<AnimatedPage element={<UserReview />} />}
+              />
+              <Route
+                path="/vote"
+                element={<AnimatedPage element={<Vote />} />}
+              />
+              <Route
+                path="/vote/register"
+                element={<AnimatedPage element={<RegisterVote />} />}
+              />
+              <Route
+                path="/vote/:id"
+                element={<AnimatedPage element={<VoteDetail />} />}
+              />
+              <Route
+                path="/mypage/edit"
+                element={<AnimatedPage element={<EditProfile />} />}
+              />
+              <Route
+                path="/review/edit"
+                element={<AnimatedPage element={<ReviewEdit />} />}
+              />
+            </Routes>
+            <BottomNavi />
+          </BrowserRouter>
+        </AnimatePresence>
+      </Container>
     </QueryClientProvider>
   )
 }
