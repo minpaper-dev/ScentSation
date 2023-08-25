@@ -23,6 +23,7 @@ const Vote = () => {
   const { data: voteData, isLoading } = useQuery({
     queryKey: 'vote',
     queryFn: () => getDataAll('vote'),
+    initialData: [],
   })
 
   // 해당 vote 삭제
@@ -61,12 +62,10 @@ const Vote = () => {
             </FloatingButton>
           </WrapFloatingButton>
 
-          {voteData.map((data, index) => (
+          {voteData.map(data => (
             <WrapVoteItem key={data.id}>
               <VoteItem
                 data={data}
-                index={index}
-                deleteVote={onDeleteVote}
                 onDeleteVote={onDeleteVote}
                 setIsLoginModal={setIsLoginModal}
               />

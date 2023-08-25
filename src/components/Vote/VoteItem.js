@@ -8,14 +8,10 @@ import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { v4 as uuidv4 } from 'uuid'
 import { MY_UID } from '../../common/localstorage'
+import { useNavigate } from 'react-router-dom'
 
-const VoteItem = ({
-  data,
-  index,
-  deleteVote,
-  setIsLoginModal,
-  onDeleteVote,
-}) => {
+const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
+  const navigate = useNavigate()
   const { updateData } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem(MY_UID))
@@ -56,6 +52,9 @@ const VoteItem = ({
   const onDeletevote = async () => {
     onDeleteVote.mutate({ id: data.id })
     setIsDeleteModal(false)
+    if (isGoBack) {
+      navigate(-1)
+    }
   }
 
   const voteContainer = (perfume, index) => {
