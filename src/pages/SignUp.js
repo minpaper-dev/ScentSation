@@ -23,6 +23,7 @@ import ProfileGender from '../components/Profile/ProfileGender'
 import ProfileForm from '../components/Profile/ProfileForm'
 import ProfileImage from '../components/Profile/ProfileImage'
 import SelectCategory from '../components/Profile/SelectCategory'
+import { useQuery } from 'react-query'
 
 const Signup = () => {
   const { addData, getDataAll } = useFirestore()
@@ -31,9 +32,27 @@ const Signup = () => {
   const { state } = useLocation()
   const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
 
+  const { data: userData } = useQuery({
+    queryKey: 'user',
+    queryFn: () => getDataAll('user'),
+    initialData: [],
+  })
+
+  const userNickname = userData.map(v => v.nickname)
+  const userEmail = userData.map(v => v.email)
+
   const [profileImage, setProfileImage] = useState('')
   const [profileImageUrl, setProfileImageUrl] = useState(profile)
   const [isCategoryModal, setIsCategoryModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState({
+    gender: '',
+    nickname: '',
+    email: '',
+    password: '',
+    passwordCheck: '',
+    age: '',
+    category: '',
+  })
 
   const [inputInfo, setInputInfo] = useState({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
@@ -54,78 +73,70 @@ const Signup = () => {
       type: 'password',
       title: '비밀번호',
       value: '',
-      placeholder: '비밀번호를 입력해주세요',
+      placeholder: '비밀번호를 입력해주세요. (6자리 이상)',
       hidden: oauth ? true : false,
     },
     passwordCheck: {
       type: 'password',
       title: '비밀번호 확인',
       value: '',
-      placeholder: '비밀번호를 한번 더 입력해주세요',
+      placeholder: '비밀번호를 한번 더 입력해주세요.',
       hidden: oauth ? true : false,
     },
-    age: { type: 'text', title: '나이', value: '', placeholder: '' },
+    age: {
+      type: 'text',
+      title: '나이',
+      value: '',
+      placeholder: '나이를 입력해주세요.',
+    },
     category: {
       type: 'text',
       title: '대표 향료',
       value: '',
-      placeholder: '대표 향료를 선택해주세요',
+      placeholder: '대표 향료를 선택해주세요.',
       readOnly: true,
     },
-    // perfume: { type: 'text', title: '대표 향수', value: '', placeholder: '' },
-  })
-
-  const [errorMsg, setErrorMsg] = useState({
-    nickname: '',
-    email: '',
-    password: '',
-    age: '',
-  })
-
-  const [userInfo, setUserInfo] = useState({
-    nickname: [],
-    email: [],
   })
 
   useEffect(() => {
-    getUserInfo()
-  }, [])
-
-  useEffect(() => {
-    let copyErrorMsg = { ...errorMsg }
-
-    // 닉네임 유효성 검사
-    if (userInfo.nickname.includes(inputInfo.nickname.value)) {
-      copyErrorMsg = {
-        ...copyErrorMsg,
-        nickname: '이미 존재하는 닉네임입니다.',
-      }
-    } else {
-      copyErrorMsg = { ...copyErrorMsg, nickname: '' }
-    }
-
-    // 이메일 유효성 검사
-    if (userInfo.email.includes(inputInfo.email.value)) {
-      copyErrorMsg = { ...copyErrorMsg, email: '이미 존재하는 이메일입니다.' }
-    } else {
-      copyErrorMsg = { ...copyErrorMsg, email: '' }
-    }
-
-    setErrorMsg(copyErrorMsg)
+    checkError()
   }, [inputInfo])
 
-  const getUserInfo = async () => {
-    let info = { nickname: [], email: [] }
-    const data = await getDataAll('user')
-    data.forEach(
-      doc =>
-        (info = {
-          ...info,
-          nickname: [...info.nickname, doc.nickname],
-          email: [...info.email, doc.email],
-        })
-    )
-    setUserInfo(info)
+  const checkError = () => {
+    let copyError = { ...errorMessage }
+    if (userNickname.includes(inputInfo.nickname.value))
+      copyError = { ...copyError, nickname: '이미 존재하는 닉네임입니다.' }
+    else {
+      copyError = { ...copyError, nickname: '' }
+    }
+    if (userEmail.includes(inputInfo.email.value))
+      copyError = { ...copyError, email: '이미 존재하는 이메일입니다.' }
+    else {
+      copyError = { ...copyError, email: '' }
+    }
+    if (
+      inputInfo.passwordCheck.value.length > 0 &&
+      inputInfo.password.value !== inputInfo.passwordCheck.value
+    ) {
+      copyError = {
+        ...copyError,
+        passwordCheck: '비밀번호가 일치하지 않습니다.',
+      }
+    } else {
+      copyError = {
+        ...copyError,
+        passwordCheck: '',
+      }
+      if (
+        inputInfo.age.value.length > 0 &&
+        !Number.isInteger(+inputInfo.age.value)
+      )
+        copyError = { ...copyError, age: '숫자만 입력해주세요' }
+      else {
+        copyError = { ...copyError, age: '' }
+      }
+    }
+    setErrorMessage(copyError)
   }
 
   const renderInput = (item, category, index) => {
@@ -136,23 +147,33 @@ const Signup = () => {
             category={category}
             inputInfo={inputInfo}
             onChange={onChange}
+            errorMessage={errorMessage}
           />
         ) : item.title === '대표 향료' ? (
-          <Input
-            $bgc={item.readOnly}
-            type={item.type}
-            placeholder={item.placeholder}
-            readOnly={item.readOnly}
-            value={item.value}
-            onClick={() => setIsCategoryModal(true)}
-          />
+          <WrapInput>
+            <Input
+              $bgc={item.readOnly}
+              type={item.type}
+              placeholder={item.placeholder}
+              readOnly={item.readOnly}
+              value={item.value}
+              onClick={() => setIsCategoryModal(true)}
+            />
+            <Error>
+              <CustomFont
+                color={palette.Red200}
+                content={errorMessage.category}
+                weight={600}
+              />
+            </Error>
+          </WrapInput>
         ) : (
           <ProfileForm
             item={item}
             inputInfo={inputInfo}
             onChange={onChange}
-            index={index}
-            errorMsg={errorMsg}
+            category={Object.keys(inputInfo)[index]}
+            errorMessage={errorMessage}
           />
         )}
       </>
@@ -160,6 +181,8 @@ const Signup = () => {
   }
 
   const onSignup = async (url = '') => {
+    if (Object.values(errorMessage).length > 0) return
+
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -247,7 +270,7 @@ const Signup = () => {
         </FormGrid>
       </Wrap>
       <SignupButton onClick={handleUpload}>
-        <CustomFont size={0.8} content={'회원가입'} />
+        <CustomFont size={1.4} weight={800} content={'회원가입'} />
       </SignupButton>
       {isCategoryModal && (
         <SelectCategory
@@ -270,20 +293,20 @@ const Container = styled.div`
 `
 
 const FormGrid = styled.div`
-  width: 100%;
+  width: 90%;
   display: grid;
   grid-template-columns: 8rem 1fr;
   padding: 2rem 3rem;
-  row-gap: 2rem;
+  row-gap: 3rem;
 `
 
 const SignupButton = styled.button`
-  margin: 50px 0px;
+  display: block;
   background-color: ${palette.Brown100};
+  padding: 1.5rem 0;
   width: 80%;
-  padding: 1rem 0px;
-  border-radius: 0.5rem;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+  margin: 2rem auto 0;
+  border-radius: 1rem;
 `
 
 const Wrap = styled.div`
@@ -298,11 +321,17 @@ const Center = styled.div`
   align-items: center;
 `
 
+const WrapInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`
+
 const Input = styled.input`
   width: 100%;
-  border-radius: 8px;
+  border-radius: 1rem;
   border: 1px solid ${palette.Gray100};
-  padding: 0.8rem 1rem;
+  padding: 1.2rem;
   font-size: 0.8rem;
   background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
 
@@ -315,6 +344,11 @@ const Input = styled.input`
     outline: none;
     border: 1.5px solid ${palette.Brown500};
   }
+`
+const Error = styled.div`
+  position: absolute;
+  bottom: -1.8rem;
+  left: 0.5rem;
 `
 
 export default Signup

@@ -4,7 +4,7 @@ import { genderList } from '../../common/data'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
-const ProfileGender = ({ category, inputInfo, onChange }) => {
+const ProfileGender = ({ category, inputInfo, onChange, errorMessage }) => {
   return (
     <Container>
       {genderList.map((gender, index) => (
@@ -30,6 +30,13 @@ const ProfileGender = ({ category, inputInfo, onChange }) => {
           />
         </Label>
       ))}
+      <Error>
+        <CustomFont
+          color={palette.Red200}
+          content={errorMessage.gender}
+          weight={600}
+        />
+      </Error>
     </Container>
   )
 }
@@ -38,6 +45,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  position: relative;
 `
 
 const Label = styled.label`
@@ -45,16 +53,22 @@ const Label = styled.label`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${props => (props.$isActive ? palette.Brown200 : 'white')};
+  background-color: ${props => (props.$isActive ? palette.Brown100 : 'white')};
   border: 1px solid ${palette.Gray100};
-  border-radius: 0.5rem;
-  padding: 0.8rem 0px;
+  border-radius: 1rem;
+  padding: 1.2rem 0px;
 
   cursor: pointer;
 `
 
 const Radio = styled.input`
   display: none;
+`
+
+const Error = styled.div`
+  position: absolute;
+  bottom: -1.8rem;
+  left: 0.5rem;
 `
 
 export default ProfileGender
