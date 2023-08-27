@@ -5,9 +5,11 @@ import CustomFont from '../../styles/CustomFont'
 const CustomModal = ({ content }) => {
   return (
     <ModalBackdrop>
-      <ModalView onClick={e => e.stopPropagation()}>
-        <CustomFont size={1.2} content={content} />
-      </ModalView>
+      <Container>
+        <ModalView onClick={e => e.stopPropagation()}>
+          <CustomFont size={1.2} content={content} />
+        </ModalView>
+      </Container>
     </ModalBackdrop>
   )
 }
@@ -23,6 +25,13 @@ const ModalBackdrop = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
+`
+const Container = styled.div`
+  width: 100vw;
+  max-width: 48rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const ModalView = styled.div.attrs(props => ({
