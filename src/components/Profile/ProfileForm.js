@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
-const ProfileForm = ({ item, inputInfo, onChange, category, errorMessage }) => {
+const ProfileForm = ({ item, onChange, category, errorMessage }) => {
   return (
     <Container>
       <Input
@@ -17,7 +17,7 @@ const ProfileForm = ({ item, inputInfo, onChange, category, errorMessage }) => {
       <Error>
         <CustomFont
           color={palette.Red200}
-          content={errorMessage[category]}
+          content={errorMessage?.[category]}
           weight={600}
         />
       </Error>

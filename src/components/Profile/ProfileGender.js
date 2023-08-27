@@ -33,7 +33,7 @@ const ProfileGender = ({ category, inputInfo, onChange, errorMessage }) => {
       <Error>
         <CustomFont
           color={palette.Red200}
-          content={errorMessage.gender}
+          content={errorMessage?.gender}
           weight={600}
         />
       </Error>

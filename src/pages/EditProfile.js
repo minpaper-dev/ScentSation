@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
+import { styled } from 'styled-components'
+
 import Header from '../components/Header'
 import useFirestore from '../hooks/useFirestore'
-import { styled } from 'styled-components'
-import profile from '../assets/profile.png'
 import palette from '../styles/CustomColor'
 import CustomFont from '../styles/CustomFont'
 import ProfileImage from '../components/Profile/ProfileImage'
@@ -17,9 +17,12 @@ import {
 } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
 import { MY_UID } from '../common/localstorage'
+import CustomModal from '../components/Custom/CustomModal'
+import { useNavigate } from 'react-router-dom'
 
 const EditProfile = () => {
-  const { getDataOne, updateData } = useFirestore()
+  const navigate = useNavigate()
+  const { getDataOne, updateData, getDataAll } = useFirestore()
 
   const uid = JSON.parse(localStorage.getItem(MY_UID))
 
@@ -51,6 +54,7 @@ const EditProfile = () => {
       value: '',
     },
   })
+  const [isModal, setIsModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [profileImage, setProfileImage] = useState()
   const [profileImageUrl, setProfileImageUrl] = useState('')
@@ -90,9 +94,8 @@ const EditProfile = () => {
     ) : (
       <ProfileForm
         item={item}
-        index={index}
-        inputInfo={inputValue}
         onChange={onChange}
+        category={Object.keys(inputValue)[index]}
       />
     )
   }
@@ -113,7 +116,7 @@ const EditProfile = () => {
           console.error(error)
         })
     } else {
-      onEdit()
+      onEdit(profileImageUrl)
     }
   }
 
@@ -125,6 +128,15 @@ const EditProfile = () => {
       gender: inputValue.gender.value,
       image: url,
     })
+    onModalHandler()
+  }
+
+  const onModalHandler = () => {
+    setIsModal(true)
+    setTimeout(() => {
+      setIsModal(false)
+      navigate(-1)
+    }, 1500)
   }
 
   return (
@@ -152,6 +164,7 @@ const EditProfile = () => {
           <Button onClick={OnEditBtnClick}>
             <CustomFont content={'수정하기'} />
           </Button>
+          {isModal && <CustomModal content={'수정이 완료되었습니다.'} />}
         </Container>
       )}
     </>

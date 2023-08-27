@@ -16,7 +16,6 @@ const ProfileDetail = ({ userInfo }) => {
         }`}
         $marginTop={1}
       />
-      <CustomFont size={1.4} content={'닉네임뭐로하지'} $marginTop={1} />
     </Container>
   )
 }
