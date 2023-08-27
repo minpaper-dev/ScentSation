@@ -6,7 +6,7 @@ import palette from '../../styles/CustomColor'
 import { useState } from 'react'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { MY_UID } from '../../common/localstorage'
 import { Rate } from 'antd'
 import { StarFilled } from '@ant-design/icons'
@@ -15,6 +15,7 @@ import ProductItem from '../Product/ProductItem'
 
 const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
   const navigate = useNavigate()
+  const { pathname } = useLocation()
   const uid = JSON.parse(localStorage.getItem(MY_UID))
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
@@ -30,7 +31,7 @@ const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
 
   return (
     <Container>
-      {uid === data.user.id && (
+      {pathname !== '/' && uid === data.user.id && (
         <WrapButton>
           <Button onClick={goToEdit}>
             <CustomFont content={'수정'} />

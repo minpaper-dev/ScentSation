@@ -8,9 +8,10 @@ import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { v4 as uuidv4 } from 'uuid'
 import { MY_UID } from '../../common/localstorage'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
+  const { pathname } = useLocation()
   const navigate = useNavigate()
   const { updateData } = useFirestore()
 
@@ -85,7 +86,7 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
   return (
     <>
       <Container key={data.id}>
-        {uid === data.userInfo.id && (
+        {pathname !== '/' && uid === data.userInfo.id && (
           <WrapButton>
             <Button onClick={() => setIsDeleteModal(true)}>
               <CustomFont content={'삭제'} />
