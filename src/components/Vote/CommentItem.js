@@ -3,6 +3,7 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
+import profile from '../../assets/profile.png'
 
 const CommentItem = ({
   item,
@@ -37,14 +38,16 @@ const CommentItem = ({
       <Comment key={item.id}>
         <WrapProfile>
           <Wrap>
-            <ProfileImage src={item.userInfo.image} />
+            <ProfileImage src={item.userInfo.image || profile} />
             <CustomFont
               content={item.userInfo.nickname}
               $marginRi={1}
               $marginLf={1}
             />
             <CustomFont
-              content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${item.userInfo.gender}`}
+              content={`${item.userInfo.age}세 / ${item.userInfo.category} / ${
+                item.userInfo.gender === 'male' ? '남' : '여'
+              }`}
             />
           </Wrap>
           {uid === item.userInfo.id && (

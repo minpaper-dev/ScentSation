@@ -3,12 +3,13 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import { Link } from 'react-router-dom'
 import palette from '../../styles/CustomColor'
+import profile from '../../assets/profile.png'
 
 const ProfileItem = ({ data }) => {
   return (
     <Container to={`/review/${data?.id}`}>
       <Profile>
-        <ProfileImage src={data?.image} />
+        <ProfileImage src={data?.image || profile} />
         <ProfileInfo>
           <CustomFont size={1.2} content={data?.nickname} $marginBt={0.5} />
           <CustomFont

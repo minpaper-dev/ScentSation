@@ -81,7 +81,7 @@ const Filter = () => {
           ))}
         </Swiper>
       </WrapTags>
-      <WrapSelect>
+      {/* <WrapSelect>
         <Select
           defaultValue={SORT_LIST[0].label}
           style={{
@@ -90,7 +90,7 @@ const Filter = () => {
           onChange={handleChange}
           options={SORT_LIST}
         />
-      </WrapSelect>
+      </WrapSelect> */}
       {filterProduct.map(item => (
         <ProductListItem key={item.id} item={item} />
       ))}

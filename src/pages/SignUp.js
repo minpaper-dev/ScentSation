@@ -24,6 +24,7 @@ import ProfileForm from '../components/Profile/ProfileForm'
 import ProfileImage from '../components/Profile/ProfileImage'
 import SelectCategory from '../components/Profile/SelectCategory'
 import { useQuery } from 'react-query'
+import CustomModal from '../components/Custom/CustomModal'
 
 const Signup = () => {
   const { addData, getDataAll } = useFirestore()
@@ -44,6 +45,7 @@ const Signup = () => {
   const [profileImage, setProfileImage] = useState('')
   const [profileImageUrl, setProfileImageUrl] = useState(profile)
   const [isCategoryModal, setIsCategoryModal] = useState(false)
+  const [isCompleteModal, setIsCompleteModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState({
     gender: '',
     nickname: '',
@@ -181,8 +183,6 @@ const Signup = () => {
   }
 
   const onSignup = async (url = '') => {
-    if (Object.values(errorMessage).length > 0) return
-
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -205,11 +205,17 @@ const Signup = () => {
         // major: inputInfo.perfume.value,
         image: url,
       })
-
-      navigate('/', { replace: true })
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const onModalHandler = () => {
+    setIsCompleteModal(true)
+    setTimeout(() => {
+      navigate('/', { replace: true })
+      setIsCompleteModal(false)
+    }, 1500)
   }
 
   const onChange = (e, category) => {
@@ -220,6 +226,7 @@ const Signup = () => {
   }
 
   const handleUpload = () => {
+    onModalHandler()
     const storage = getStorage()
     const storageRef = ref(storage, `image/${uuidv4()}.jpg`)
 
@@ -277,6 +284,9 @@ const Signup = () => {
           setIsCategoryModal={setIsCategoryModal}
           onChange={onChange}
         />
+      )}
+      {isCompleteModal && (
+        <CustomModal content={'회원가입이 완료되었습니다.'} />
       )}
     </Container>
   )

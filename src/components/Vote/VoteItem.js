@@ -6,7 +6,6 @@ import VoteProduct from './VoteProduct'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
-import { v4 as uuidv4 } from 'uuid'
 import { MY_UID } from '../../common/localstorage'
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -26,7 +25,7 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
     let count = 0
     data.perfume.map((item, index) => {
       count += item.count
-      if (item.voteUser.includes(uid)) {
+      if (item.voteUser?.includes(uid)) {
         setIsVote(true)
         setSelectedIndex(index)
       }
@@ -63,7 +62,6 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
 
     return (
       <VoteButton
-        key={uuidv4()}
         onClick={() => onVote(index)}
         $isSelected={selectedIndex === index}
       >
