@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 const SearchResult = ({ filterProducts, isSelect }) => {
   const navigate = useNavigate()
 
-  if (filterProducts.brand.length + filterProducts.name.length === 0) {
+  if (filterProducts?.brand?.length + filterProducts?.name?.length === 0) {
     return (
       <NoSearch>
         <CustomFont size={1.2} content={'검색 결과가 없습니다.'} />

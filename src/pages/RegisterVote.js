@@ -23,6 +23,10 @@ const RegisterVote = () => {
 
   const [description, setDescription] = useState('')
   const [isCompleteModal, setIsCompleteModal] = useState(false)
+  const [errorMessage, setErrorMessage] = useState({
+    perfume: { state: false, message: '' },
+    description: { state: false, message: '' },
+  })
 
   useEffect(() => {
     return () => {
@@ -61,6 +65,33 @@ const RegisterVote = () => {
     onModalHandler()
   }
 
+  const onClickBtn = () => {
+    if (perfume.length < 2 || !description) {
+      checkError()
+      return
+    } else {
+      postVote()
+    }
+  }
+
+  const checkError = () => {
+    let copyError = { ...errorMessage }
+    if (perfume.length < 2) {
+      copyError = {
+        ...copyError,
+        perfume: { state: true, message: '향수를 2개 선택해주세요' },
+      }
+    }
+    if (!description) {
+      copyError = {
+        ...copyError,
+        description: { state: true, message: '내용을 입력해주세요' },
+      }
+    }
+
+    setErrorMessage(copyError)
+  }
+
   return (
     <>
       <Header pageName={'투표 등록'} />
@@ -89,6 +120,11 @@ const RegisterVote = () => {
               emptyBox()
             )}
           </FlexRowBetween>
+          <CustomFont
+            color={palette.Red200}
+            content={errorMessage.perfume.message}
+            weight={600}
+          />
           <Form>
             <Label htmlFor="description">
               <CustomFont
@@ -101,11 +137,17 @@ const RegisterVote = () => {
               id="description"
               value={description}
               onChange={e => setDescription(e.target.value)}
-            ></TextArea>
+            />
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.description.message}
+              weight={600}
+              $marginTop={1}
+            />
           </Form>
         </Flex>
-        <Button onClick={postVote}>
-          <CustomFont content={'투표 올리기'} />
+        <Button onClick={onClickBtn}>
+          <CustomFont size={1.4} weight={800} content={'투표 올리기'} />
         </Button>
         {isCompleteModal && (
           <CustomModal content={'투표 작성이 완료되었습니다.'} />
@@ -159,6 +201,7 @@ const TextArea = styled.textarea`
   resize: none;
   border: 1px solid ${palette.Brown100};
   padding: 1rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
 
   &:focus {
@@ -181,12 +224,11 @@ const Product = styled.div`
 
 const Button = styled.button`
   display: block;
-  width: 100%;
   background-color: ${palette.Brown100};
+  padding: 2rem 0;
+  width: 100%;
   margin: 0 auto;
-  padding: 1rem 0;
   border-radius: 1rem;
-  margin-top: 1rem;
 `
 
 const Flex = styled.div``

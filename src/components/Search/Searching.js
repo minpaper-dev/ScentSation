@@ -6,7 +6,7 @@ const Searching = ({ onClickItem, filterProducts }) => {
   return (
     <>
       <Container>
-        {filterProducts.brand.map(item => (
+        {filterProducts?.brand?.map(item => (
           <SearchItem key={item.id} onClick={() => onClickItem(item.name)}>
             {item.name}
           </SearchItem>

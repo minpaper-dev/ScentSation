@@ -21,19 +21,20 @@ const SelectPerfume = () => {
 
   const [filterProducts, setFilterProducts] = useState([])
 
+  const findProduct = text => {
+    const name = productData.filter(v =>
+      v.name.replace(/\s+/g, '').includes(text)
+    )
+
+    setFilterProducts({ name })
+  }
+
   const onChange = e => {
     setInputValue(e.target.value)
     if (e.target.value.length) setInputState(1)
     else setInputState(0)
 
     findProduct(e.target.value)
-  }
-
-  const findProduct = text => {
-    const name = productData.filter(v => v.name.includes(text))
-    // const brand = products.filter(v => v.brand.includes(text))
-
-    setFilterProducts({ name })
   }
 
   const onKeyDownEnter = e => {
