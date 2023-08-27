@@ -19,6 +19,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { MY_UID } from '../common/localstorage'
 import CustomModal from '../components/Custom/CustomModal'
 import { useNavigate } from 'react-router-dom'
+import SelectCategory from '../components/Profile/SelectCategory'
 
 const EditProfile = () => {
   const navigate = useNavigate()
@@ -55,6 +56,7 @@ const EditProfile = () => {
     },
   })
   const [isModal, setIsModal] = useState(false)
+  const [isCategoryModal, setIsCategoryModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [profileImage, setProfileImage] = useState()
   const [profileImageUrl, setProfileImageUrl] = useState('')
@@ -85,12 +87,23 @@ const EditProfile = () => {
   }
 
   const renderInput = (item, index, category) => {
-    return item.type === 'radio' ? (
+    return item.title === '성별' ? (
       <ProfileGender
         category={category}
         inputInfo={inputValue}
         onChange={onChange}
       />
+    ) : item.title === '대표 향료' ? (
+      <WrapInput>
+        <Input
+          $bgc={item.readOnly}
+          type={item.type}
+          placeholder={item.placeholder}
+          readOnly={true}
+          value={item.value}
+          onClick={() => setIsCategoryModal(true)}
+        />
+      </WrapInput>
     ) : (
       <ProfileForm
         item={item}
@@ -162,8 +175,14 @@ const EditProfile = () => {
             ))}
           </Grid>
           <Button onClick={OnEditBtnClick}>
-            <CustomFont content={'수정하기'} />
+            <CustomFont size={1.4} weight={800} content={'수정하기'} />
           </Button>
+          {isCategoryModal && (
+            <SelectCategory
+              setIsCategoryModal={setIsCategoryModal}
+              onChange={onChange}
+            />
+          )}
           {isModal && <CustomModal content={'수정이 완료되었습니다.'} />}
         </Container>
       )}
@@ -195,10 +214,38 @@ const Center = styled.div`
 `
 
 const Button = styled.button`
+  display: block;
   background-color: ${palette.Brown100};
-  border-radius: 1rem;
+  padding: 1.5rem 0;
   width: 80%;
-  padding: 1rem 0;
+  margin: 2rem auto 0;
+  border-radius: 1rem;
+`
+
+const WrapInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`
+
+const Input = styled.input`
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid ${palette.Gray100};
+  padding: 1.2rem;
+  font-size: 0.8rem;
+  background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
+  cursor: pointer;
+
+  &::placeholder {
+    color: ${palette.Gray100};
+    font-size: 0.8rem;
+  }
+
+  &:focus {
+    outline: none;
+    border: 1.5px solid ${palette.Brown500};
+  }
 `
 
 export default EditProfile
