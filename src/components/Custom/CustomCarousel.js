@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
+import { LeftSquareFilled, RightSquareFilled } from '@ant-design/icons'
 
 const CustomCarousel = ({ carouselList, renderItem }) => {
   const carouselRef = useRef()
@@ -39,8 +40,25 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
     }
   }
 
+  const handleNext = () => {
+    handleSwipe(1)
+  }
+
+  const handlePrev = () => {
+    handleSwipe(-1)
+  }
+
   return (
     <Container>
+      <Button onClick={handlePrev}>
+        <LeftSquareFilled
+          style={{
+            fontSize: '3rem',
+            color: palette.Brown500,
+            marginRight: 5,
+          }}
+        />
+      </Button>
       <WrapCarousel onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <Carousel ref={carouselRef}>
           {carouselList?.map((item, index) => {
@@ -57,6 +75,11 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
           ))}
         </WrapIndicator>
       </WrapCarousel>
+      <Button onClick={handleNext}>
+        <RightSquareFilled
+          style={{ fontSize: '3rem', color: palette.Brown500, marginLeft: 5 }}
+        />
+      </Button>
     </Container>
   )
 }
@@ -100,6 +123,10 @@ const CarouselContainer = styled.div`
   width: 100%;
   overflow: hidden;
   padding: 1.5%;
+`
+
+const Button = styled.button`
+  margin: 0 0.5rem;
 `
 
 export default CustomCarousel
