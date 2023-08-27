@@ -106,9 +106,8 @@ const Product = () => {
                 <StarFilled style={{ fontSize: '3rem', width: '1.5rem' }} />
               }
               value={rate}
-              disabled
-              allowHalf
               style={{ display: 'flex', alignItems: 'center' }}
+              disabled
             />
             <CustomFont size={1.2} content={`(${rate})`} $marginLf={1} />
           </WrapRate>
@@ -116,7 +115,18 @@ const Product = () => {
             size={1}
             content={`리뷰 : ${reviewData.length}개`}
             $marginTop={1}
+            $marginBt={1}
           />
+          <Flex>
+            {productData.category.map(item => (
+              <CustomFont
+                key={item}
+                content={`# ${item}`}
+                $marginRi={0.5}
+                color={palette.Brown500}
+              />
+            ))}
+          </Flex>
         </ProductInfo>
         <Divider />
         {reviewData.length === 0 ? (
@@ -229,12 +239,6 @@ const ProductInfo = styled.div`
 const Flex = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-`
-const WrapTags = styled.div`
-  width: 90%;
-  display: flex;
-  margin: 2rem auto 0;
 `
 
 const Divider = styled.div`
