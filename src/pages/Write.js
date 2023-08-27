@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from 'react-query'
-import { Rate } from 'antd'
+import { Alert, Rate } from 'antd'
 import { StarFilled, StarOutlined } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
 
@@ -48,8 +48,14 @@ const Write = () => {
     gender: '',
     season: '',
     vitality: '',
-    tag: [],
     description: '',
+  })
+  const [errorMessage, setErrorMessage] = useState({
+    rate: { state: false, message: '' },
+    gender: { state: false, message: '' },
+    season: { state: false, message: '' },
+    vitality: { state: false, message: '' },
+    description: { state: false, message: '' },
   })
 
   const onChangeRadio = e => {
@@ -58,9 +64,45 @@ const Write = () => {
     setReviewInfo(copy)
   }
 
-  const postReview = async () => {
-    onPostReview.mutate()
-    onModalHandler()
+  const onClickBtn = () => {
+    if (!rate || Object.values(reviewInfo).includes('')) {
+      checkError()
+      return
+    } else {
+      onPostReview.mutate()
+      onModalHandler()
+    }
+  }
+
+  const checkError = () => {
+    let copyError = { ...errorMessage }
+    if (!rate)
+      copyError = {
+        ...copyError,
+        rate: { state: true, message: '별점을 입력해주세요' },
+      }
+    if (!reviewInfo.gender)
+      copyError = {
+        ...copyError,
+        gender: { state: true, message: '성별을 입력해주세요' },
+      }
+    if (!reviewInfo.season)
+      copyError = {
+        ...copyError,
+        season: { state: true, message: '계절을 입력해주세요' },
+      }
+    if (!reviewInfo.vitality)
+      copyError = {
+        ...copyError,
+        vitality: { state: true, message: '지속력을 입력해주세요' },
+      }
+    if (!reviewInfo.description)
+      copyError = {
+        ...copyError,
+        description: { state: true, message: '내용을 입력해주세요' },
+      }
+
+    setErrorMessage(copyError)
   }
 
   const onModalHandler = () => {
@@ -86,8 +128,15 @@ const Write = () => {
             character={<StarFilled style={{ fontSize: '5rem' }} />}
             value={rate}
             onChange={value => setRate(value)}
-            allowHalf
           />
+          {errorMessage.rate.state && (
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.rate.message}
+              weight={600}
+              $marginTop={1}
+            />
+          )}
           <CustomFont
             size={1.2}
             weight={500}
@@ -107,7 +156,21 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont size={1.2} weight={500} content={'어울리는 계절'} />
+          {errorMessage.gender.state && (
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.gender.message}
+              weight={600}
+              $marginTop={1}
+            />
+          )}
+
+          <CustomFont
+            size={1.2}
+            weight={500}
+            content={'어울리는 계절'}
+            $marginTop={2}
+          />
           <WrapRadio>
             {REVIEW_FORM.season.map(item => (
               <CustomRadio
@@ -121,7 +184,20 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont size={1.2} weight={500} content={'지속력'} />
+          {errorMessage.season.state && (
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.season.message}
+              weight={600}
+              $marginTop={1}
+            />
+          )}
+          <CustomFont
+            size={1.2}
+            weight={500}
+            content={'지속력'}
+            $marginTop={2}
+          />
           <WrapRadio>
             {REVIEW_FORM.vitality.map(item => (
               <CustomRadio
@@ -135,14 +211,35 @@ const Write = () => {
               />
             ))}
           </WrapRadio>
-          <CustomFont size={1.2} weight={500} content={'상세리뷰'} />
+          {errorMessage.vitality.state && (
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.vitality.message}
+              weight={600}
+              $marginTop={1}
+            />
+          )}
+          <CustomFont
+            size={1.2}
+            weight={500}
+            content={'상세리뷰'}
+            $marginTop={2}
+          />
           <Input
             name="description"
             value={reviewInfo.description}
             onChange={onChangeRadio}
           />
+          {errorMessage.description.state && (
+            <CustomFont
+              color={palette.Red200}
+              content={errorMessage.description.message}
+              weight={600}
+              $marginTop={1}
+            />
+          )}
         </Form>
-        <SubmitButton onClick={postReview}>
+        <SubmitButton onClick={onClickBtn}>
           <CustomFont size={1.4} weight={800} content={'리뷰쓰기'} />
         </SubmitButton>
         {isModal && (
@@ -181,17 +278,15 @@ const Form = styled.form`
   flex-direction: column;
 `
 
-// const Rate = styled.input``
-
 const WrapRadio = styled.div`
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 0;
 `
 
 const Input = styled.textarea`
   width: 100%;
   height: 8rem;
   border-radius: 1rem;
-  margin: 1rem 0 2rem;
+  margin: 1rem 0 0;
   padding: 1.5rem;
   resize: none;
   font-size: 1.2rem;
