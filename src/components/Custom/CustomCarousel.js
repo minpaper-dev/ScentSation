@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
-import { LeftSquareFilled, RightSquareFilled } from '@ant-design/icons'
+import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons'
 
 const CustomCarousel = ({ carouselList, renderItem }) => {
   const carouselRef = useRef()
@@ -51,7 +51,7 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
   return (
     <Container>
       <Button onClick={handlePrev}>
-        <LeftSquareFilled
+        <LeftCircleFilled
           style={{
             fontSize: '3rem',
             color: palette.Brown500,
@@ -76,7 +76,7 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
         </WrapIndicator>
       </WrapCarousel>
       <Button onClick={handleNext}>
-        <RightSquareFilled
+        <RightCircleFilled
           style={{ fontSize: '3rem', color: palette.Brown500, marginLeft: 5 }}
         />
       </Button>
