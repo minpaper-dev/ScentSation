@@ -25,7 +25,7 @@
 |                                                            윤민지                                                             |
 | :---------------------------------------------------------------------------------------------------------------------------: |
 | <img width="160px" src="https://github.com/minpaper-dev/ScentSation/assets/137516352/7f40b042-f45c-40ae-b445-e1283205cd61" /> |
-|                                           [@minpaper](https://github.com/minpaper)                                            |
+|                                         [@minpaper](https://github.com/minpaper-dev)                                          |
 
 </div>
 
