@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { styled } from 'styled-components'
-import palette from '../styles/CustomColor'
 import MainComponent from '../components/Main/MainComponent'
 import MainSearch from '../components/Main/MainSearch'
 import MainCategories from '../components/Main/MainCategories'
@@ -9,21 +8,58 @@ import MainReview from '../components/Main/MainReview'
 import CustomLogo from '../components/Custom/CustomLogo'
 import useFirestore from '../hooks/useFirestore'
 
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import Loader from '../components/Loader'
+interface UserInterface {
+  id: string
+  age: number | string
+  auth: string
+  category: string
+  email: string
+  gender: string
+  image: string | null
+  major: string
+  nickname: string
+  password: string | null
+}
+
+export interface PerfumeInterface {
+  brand: string
+  category: string[]
+  count: number
+  id: string
+  image: string
+  name: string
+  price: number | string
+  size: number | string
+  voteUser: (string | null)[]
+}
+
+export interface VoteInterface {
+  id: string
+  commentCount?: number
+  description?: string
+  perfume?: PerfumeInterface[]
+  userInfo?: UserInterface
+}
+
+interface QueryInterface {
+  id: string
+  [key: string]: any
+}
 
 const Main = () => {
   const { getDataAll } = useFirestore()
 
-  const { data: voteData, isLoading: isVoteLoading } = useQuery({
-    queryKey: 'vote',
-    queryFn: () => getDataAll('vote'),
+  const { data: voteData, isLoading: isVoteLoading } = useQuery<
+    VoteInterface[]
+  >(['vote'], () => getDataAll('vote'), {
     initialData: [],
   })
 
-  const { data: reviewData, isLoading: isReviewLoading } = useQuery({
-    queryKey: 'review',
-    queryFn: () => getDataAll('review'),
+  const { data: reviewData, isLoading: isReviewLoading } = useQuery<
+    QueryInterface[]
+  >(['review'], () => getDataAll('review'), {
     initialData: [],
   })
 
@@ -80,7 +116,6 @@ const Container = styled.div`
 const Header = styled.div`
   width: 100vw;
   max-width: 48rem;
-  /* position: fixed; */
   top: 0;
   height: 6rem;
   background-color: rgba(255, 255, 255);

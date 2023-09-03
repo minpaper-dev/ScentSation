@@ -8,39 +8,56 @@ import useFirestore from '../../hooks/useFirestore'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { MY_UID } from '../../common/localstorage'
 import { useLocation, useNavigate } from 'react-router-dom'
+import type { VoteInterface } from '../../pages/Main'
+import type { PerfumeInterface } from '../../pages/Main'
 
-const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
+interface VoteItemProps {
+  data: VoteInterface
+  setIsLoginModal: (value: boolean) => void
+  onDeleteVote?: { mutate: (params: { id: string }) => void }
+  isGoBack?: boolean
+}
+
+const VoteItem: React.FC<VoteItemProps> = ({
+  data,
+  setIsLoginModal,
+  onDeleteVote,
+  isGoBack,
+}) => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { updateData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
   const [isVote, setIsVote] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState('')
+  const [selectedIndex, setSelectedIndex] = useState(0)
   const [voteCount, setVoteCount] = useState(0)
 
   useEffect(() => {
     let count = 0
-    data.perfume.map((item, index) => {
-      count += item.count
-      if (item.voteUser?.includes(uid)) {
-        setIsVote(true)
-        setSelectedIndex(index)
-      }
-    })
-    setVoteCount(count)
-  }, [isVote])
+    if (data.perfume) {
+      data.perfume.map((item, index) => {
+        count += item.count
+        if (item.voteUser?.includes(uid)) {
+          setIsVote(true)
+          setSelectedIndex(index)
+        }
+      })
+    }
 
-  const onVote = async index => {
+    setVoteCount(count)
+  }, [isVote, data.perfume, uid])
+
+  const onVote = async (index: number) => {
     if (isVote) return
     if (!uid) {
       setIsLoginModal(true)
       return
     }
 
-    let updateValue = [...data.perfume]
+    let updateValue: PerfumeInterface[] = data.perfume || []
     updateValue[index].count++
     updateValue[index].voteUser.push(uid)
 
@@ -50,14 +67,16 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
   }
 
   const onDeletevote = async () => {
-    onDeleteVote.mutate({ id: data.id })
-    setIsDeleteModal(false)
-    if (isGoBack) {
-      navigate(-1)
+    if (onDeleteVote) {
+      onDeleteVote.mutate({ id: data.id })
+      setIsDeleteModal(false)
+      if (isGoBack) {
+        navigate(-1)
+      }
     }
   }
 
-  const voteContainer = (perfume, index) => {
+  const voteContainer = (perfume: PerfumeInterface, index: number) => {
     let percent = ((perfume.count / voteCount) * 100).toFixed()
 
     return (
@@ -66,7 +85,7 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
         $isSelected={selectedIndex === index}
       >
         <VoteProduct data={perfume} />
-        <VoteResult $isVote={isVote} percent={percent} />
+        <VoteResult $isVote={isVote} $percent={percent} />
         <>
           {isVote && (
             <CustomFont
@@ -84,7 +103,7 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
   return (
     <>
       <Container key={data.id}>
-        {pathname !== '/' && uid === data.userInfo.id && (
+        {pathname !== '/' && uid === data?.userInfo?.id && (
           <WrapButton>
             <Button onClick={() => setIsDeleteModal(true)}>
               <CustomFont content={'삭제'} />
@@ -100,7 +119,7 @@ const VoteItem = ({ data, setIsLoginModal, onDeleteVote, isGoBack }) => {
           $marginBt={2}
         />
         <WrapVoteButton>
-          {data.perfume.map((item, index) => voteContainer(item, index))}
+          {data?.perfume?.map((item, index) => voteContainer(item, index))}
         </WrapVoteButton>
         {isDeleteModal && (
           <CustomButtonModal
@@ -127,7 +146,7 @@ const WrapVoteButton = styled.div`
   justify-content: space-between;
 `
 
-const VoteButton = styled.button`
+const VoteButton = styled.button<{ $isSelected: boolean }>`
   flex: 1;
   position: relative;
   display: flex;
@@ -143,7 +162,7 @@ const VoteButton = styled.button`
   cursor: pointer;
 `
 
-const VoteResult = styled.div`
+const VoteResult = styled.div<{ $isVote: boolean; $percent: string }>`
   position: absolute;
   left: 0;
   width: 70%;
@@ -151,7 +170,7 @@ const VoteResult = styled.div`
   background-color: ${palette.Brown200};
   opacity: 0.3;
   border-radius: inherit;
-  width: ${props => (props.$isVote ? `${props.percent}%` : '0')};
+  width: ${props => (props.$isVote ? `${props.$percent}%` : '0')};
   transition: width 0.5s ease; /* 애니메이션 효과 설정 */
 `
 

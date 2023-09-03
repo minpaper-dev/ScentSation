@@ -3,20 +3,25 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
-const CustomLogo = ({ $marginTop, $marginBt }) => {
+interface CustomLogoProps {
+  $marginTop?: number
+  $marginBt?: number
+}
+
+const CustomLogo: React.FC<CustomLogoProps> = ({ $marginTop, $marginBt }) => {
   return (
     <Logo $marginTop={$marginTop} $marginBt={$marginBt}>
-      <CustomFont
+      {/* <CustomFont
         size={2.5}
         content={'ScentSation'}
         color={palette.Brown200}
         weight={800}
-      />
+      /> */}
     </Logo>
   )
 }
 
-const Logo = styled.div`
+const Logo = styled.div<CustomLogoProps>`
   color: ${palette.Brown100};
   font-weight: 700;
   font-size: 2rem;

@@ -5,8 +5,14 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import { Link } from 'react-router-dom'
 
+interface categoryInterface {
+  id: number
+  title: string
+  icon: string
+}
+
 const MainCategories = () => {
-  const renderCategory = item => {
+  const renderCategory = (item: categoryInterface) => {
     return (
       <Link to={`/filter`} state={{ category: item.title }} key={item.title}>
         <CategoryBox>

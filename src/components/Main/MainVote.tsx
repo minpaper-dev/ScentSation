@@ -4,7 +4,13 @@ import CustomCarousel from '../Custom/CustomCarousel'
 import CustomButtonModal from '../Custom/CustomButtonModal'
 import { useNavigate } from 'react-router-dom'
 
-const MainVote = ({ voteData }) => {
+import type { VoteInterface } from '../../pages/Main'
+
+type info = {
+  voteData: VoteInterface[]
+}
+
+const MainVote = ({ voteData }: info) => {
   const navigate = useNavigate()
 
   const [isLoginModal, setIsLoginModal] = useState(false)
@@ -13,7 +19,7 @@ const MainVote = ({ voteData }) => {
     <>
       <CustomCarousel
         carouselList={voteData}
-        renderItem={data => {
+        renderItem={(data: VoteInterface) => {
           return <VoteItem data={data} setIsLoginModal={setIsLoginModal} />
         }}
       />
