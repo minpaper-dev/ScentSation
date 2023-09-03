@@ -1,3 +1,4 @@
+import React from 'react'
 import { styled } from 'styled-components'
 import ProfileItem from '../Profile/ProfileItem'
 import CustomFont from '../../styles/CustomFont'
@@ -12,17 +13,32 @@ import { Rate } from 'antd'
 import { StarFilled } from '@ant-design/icons'
 import { REVIEW_TAG } from '../../common/data'
 import ProductItem from '../Product/ProductItem'
+import type { ReviewInterface } from '../../pages/Main'
 
-const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
+interface ReviewItemProps {
+  data: ReviewInterface
+  onDeleteVote?: { mutate: (params: { id: string }) => void }
+  isNoProfile?: boolean
+  isNoProduct?: boolean
+}
+
+const ReviewItem: React.FC<ReviewItemProps> = ({
+  data,
+  onDeleteVote,
+  isNoProfile,
+  isNoProduct,
+}) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   const [isDeleteModal, setIsDeleteModal] = useState(false)
 
   const onDeleteReview = async () => {
-    onDeleteVote.mutate({ id: data.id })
-    setIsDeleteModal(false)
+    if (onDeleteVote) {
+      onDeleteVote.mutate({ id: data.id })
+      setIsDeleteModal(false)
+    }
   }
 
   const goToEdit = () => {
@@ -31,7 +47,7 @@ const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
 
   return (
     <Container>
-      {pathname !== '/' && uid === data.user.id && (
+      {pathname !== '/' && uid === data?.user?.id && (
         <WrapButton>
           <Button onClick={goToEdit}>
             <CustomFont content={'수정'} />
@@ -43,7 +59,7 @@ const ReviewItem = ({ data, onDeleteVote, isNoProfile, isNoProduct }) => {
       )}
 
       {!isNoProduct && (
-        <Link to={`/product/${data.product.id}`}>
+        <Link to={`/product/${data?.product?.id}`}>
           <ProductItem data={data.product} />
         </Link>
       )}

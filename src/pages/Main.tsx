@@ -43,9 +43,15 @@ export interface VoteInterface {
   userInfo?: UserInterface
 }
 
-interface QueryInterface {
+export interface ReviewInterface {
   id: string
-  [key: string]: any
+  description?: string
+  product?: PerfumeInterface
+  rate?: number
+  gender?: string
+  season?: string
+  vitality?: string
+  user?: UserInterface
 }
 
 const Main = () => {
@@ -58,7 +64,7 @@ const Main = () => {
   })
 
   const { data: reviewData, isLoading: isReviewLoading } = useQuery<
-    QueryInterface[]
+    ReviewInterface[]
   >(['review'], () => getDataAll('review'), {
     initialData: [],
   })

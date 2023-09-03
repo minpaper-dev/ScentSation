@@ -6,11 +6,11 @@ import { useNavigate } from 'react-router-dom'
 
 import type { VoteInterface } from '../../pages/Main'
 
-type info = {
+interface MainVoteProps {
   voteData: VoteInterface[]
 }
 
-const MainVote = ({ voteData }: info) => {
+const MainVote: React.FC<MainVoteProps> = ({ voteData }) => {
   const navigate = useNavigate()
 
   const [isLoginModal, setIsLoginModal] = useState(false)
