@@ -94,9 +94,7 @@ const EditProfile = () => {
   const [isCategoryModal, setIsCategoryModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [profileImage, setProfileImage] = useState<File | undefined>()
-  const [profileImageUrl, setProfileImageUrl] = useState<
-    string | null | undefined
-  >('')
+  const [profileImageUrl, setProfileImageUrl] = useState<string>('')
 
   useEffect(() => {
     getUserInfo()
@@ -113,7 +111,9 @@ const EditProfile = () => {
         nickname: { ...inputValue.nickname, value: result.nickname },
         category: { ...inputValue.category, value: result.category },
       })
-      setProfileImageUrl(result.image)
+      if (result.image) {
+        setProfileImageUrl(result.image)
+      }
     }
 
     setIsLoading(false)

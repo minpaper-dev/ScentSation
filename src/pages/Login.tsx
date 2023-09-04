@@ -31,7 +31,7 @@ const Login = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password)
 
-      navigate(-1, { replace: true })
+      navigate('-1', { replace: true })
     } catch (error) {
       console.log(error)
 
@@ -61,7 +61,7 @@ const Login = () => {
 
       if (result.exists()) {
         localStorage.setItem(MY_UID, JSON.stringify(user.uid))
-        navigate(-1, { replace: true })
+        navigate('-1', { replace: true })
       } else {
         navigate('/signup', {
           state: {
@@ -104,7 +104,7 @@ const Login = () => {
 
         <LoginButton
           onClick={onLoginEmail}
-          bgc={palette.Brown100}
+          $bgc={palette.Brown100}
           $marginTop={2}
         >
           <CustomFont size={1.2} weight={600} content={'로그인'} />
@@ -133,8 +133,8 @@ const Container = styled.div`
   justify-content: space-between;
 `
 
-const LoginButton = styled.button`
-  background-color: ${props => (props.bgc ? props.bgc : 'white')};
+const LoginButton = styled.button<{ $bgc?: string; $marginTop: number }>`
+  background-color: ${props => (props.$bgc ? props.$bgc : 'white')};
   padding: 15px 0px;
   border-radius: 8px;
   border: 0px;

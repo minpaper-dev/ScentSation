@@ -1,5 +1,6 @@
 {
   "compileOnSave": true,
+  "typeRoots": ["assets"],
   "compilerOptions": {
     "target": "es2016",
     "jsx": "react-jsx",

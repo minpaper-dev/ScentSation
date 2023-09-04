@@ -1,19 +1,26 @@
-import React, { useState } from 'react'
+import React, { ChangeEvent } from 'react'
 import profile from '../../assets/profile.png'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import { styled } from 'styled-components'
 
-const ProfileImage = ({ src, setProfileImageUrl, setProfileImage }) => {
-  //   const [profileImageUrl, setProfileImageUrl] = useState()
-  //   const [profileImage, setProfileImage] = useState()
+interface ProfileImageProps {
+  src: string | null | undefined
+  setProfileImageUrl: React.Dispatch<React.SetStateAction<string>>
+  setProfileImage: React.Dispatch<React.SetStateAction<File | undefined>>
+}
 
+const ProfileImage: React.FC<ProfileImageProps> = ({
+  src,
+  setProfileImageUrl,
+  setProfileImage,
+}) => {
   const setProfileBase = () => {
     setProfileImageUrl(profile)
   }
 
-  const handleImageChange = e => {
-    const file = e.target.files[0]
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
     if (file) {
       setProfileImage(file)
       const imageUrl = URL.createObjectURL(file)

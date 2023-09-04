@@ -2,13 +2,18 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 
-const CustomInput = ({
+interface CustomInputProps {
+  value: string
+  setValue: (e: string) => void
+  type?: string
+  placeholder: string
+}
+
+const CustomInput: React.FC<CustomInputProps> = ({
   value,
   setValue,
   type,
   placeholder,
-  $marginBt,
-  ...props
 }) => {
   return (
     <Input
@@ -16,7 +21,6 @@ const CustomInput = ({
       placeholder={placeholder}
       onChange={e => setValue(e.target.value)}
       value={value}
-      $marginBt={$marginBt}
     />
   )
 }
@@ -26,7 +30,6 @@ const Input = styled.input`
   border-radius: 8px;
   border: 1px solid ${palette.Brown200};
   padding: 15px 18px;
-  margin-bottom: ${props => (props.$marginBt ? `${props.$marginBt}rem` : 0)};
 
   &::placeholder {
     color: ${palette.Gray200};

@@ -23,8 +23,53 @@ import ProfileGender from '../components/Profile/ProfileGender'
 import ProfileForm from '../components/Profile/ProfileForm'
 import ProfileImage from '../components/Profile/ProfileImage'
 import SelectCategory from '../components/Profile/SelectCategory'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import CustomModal from '../components/Custom/CustomModal'
+import { UserInterface } from './Main'
+
+interface InputValueInterface {
+  gender: {
+    type: string
+    title: string
+    value: string | undefined
+    placeholder: string
+    readOnly?: boolean
+    hidden?: boolean
+  }
+  nickname: {
+    type: string
+    title: string
+    value: string | undefined
+    placeholder: string
+    readOnly?: boolean
+    hidden?: boolean
+  }
+  email: {
+    type: string
+    title: string
+    value: string
+    placeholder: string
+    readOnly?: boolean
+    hidden?: boolean
+  }
+  age: {
+    type: string
+    title: string
+    value: string
+    placeholder: string
+    readOnly?: boolean
+    hidden?: boolean
+  }
+  category: {
+    type: string
+    title: string
+    value: string | undefined
+    placeholder: string
+    readOnly?: boolean
+    hidden?: boolean
+  }
+  [key: string]: any
+}
 
 const Signup = () => {
   const { addData, getDataAll } = useFirestore()
@@ -33,16 +78,16 @@ const Signup = () => {
   const { state } = useLocation()
   const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
 
-  const { data: userData } = useQuery({
-    queryKey: 'user',
-    queryFn: () => getDataAll('user'),
-    initialData: [],
-  })
+  const { data: userData } = useQuery<UserInterface[]>(
+    ['user'],
+    () => getDataAll('user'),
+    { initialData: [] }
+  )
 
   const userNickname = userData.map(v => v.nickname)
   const userEmail = userData.map(v => v.email)
 
-  const [profileImage, setProfileImage] = useState('')
+  const [profileImage, setProfileImage] = useState<File | undefined>()
   const [profileImageUrl, setProfileImageUrl] = useState(profile)
   const [isCategoryModal, setIsCategoryModal] = useState(false)
   const [isCompleteModal, setIsCompleteModal] = useState(false)
@@ -56,7 +101,7 @@ const Signup = () => {
     category: '',
   })
 
-  const [inputInfo, setInputInfo] = useState({
+  const [inputInfo, setInputInfo] = useState<InputValueInterface>({
     gender: { type: 'radio', title: '성별', value: '', placeholder: '' },
     nickname: {
       type: 'text',
@@ -141,7 +186,11 @@ const Signup = () => {
     setErrorMessage(copyError)
   }
 
-  const renderInput = (item, category, index) => {
+  const renderInput = (
+    item: InputValueInterface[keyof InputValueInterface],
+    category: string,
+    index: number
+  ) => {
     return (
       <>
         {item.title === '성별' ? (
@@ -172,7 +221,6 @@ const Signup = () => {
         ) : (
           <ProfileForm
             item={item}
-            inputInfo={inputInfo}
             onChange={onChange}
             category={Object.keys(inputInfo)[index]}
             errorMessage={errorMessage}
@@ -182,7 +230,7 @@ const Signup = () => {
     )
   }
 
-  const onSignup = async (url = '') => {
+  const onSignup = async (url: string | unknown = '') => {
     try {
       let userId = uid ?? ''
       if (!userId) {
@@ -202,7 +250,6 @@ const Signup = () => {
         age: inputInfo.age.value,
         gender: inputInfo.gender.value,
         category: inputInfo.category.value,
-        // major: inputInfo.perfume.value,
         image: url,
       })
     } catch (error) {
@@ -218,7 +265,7 @@ const Signup = () => {
     }, 1500)
   }
 
-  const onChange = (e, category) => {
+  const onChange = (e: string, category: string) => {
     setInputInfo({
       ...inputInfo,
       [category]: { ...inputInfo[category], value: e },
@@ -337,7 +384,7 @@ const WrapInput = styled.div`
   position: relative;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ $bgc: string }>`
   width: 100%;
   border-radius: 1rem;
   border: 1px solid ${palette.Gray100};

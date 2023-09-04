@@ -6,7 +6,7 @@ import { NO_HEADER } from '../common/data'
 import arrowIcon from '../assets/icon_chevron_left.png'
 import searchIcon from '../assets/icon_search.png'
 
-const Header = ({ pageName }) => {
+const Header = ({ pageName }: { pageName: string }) => {
   const navigate = useNavigate()
 
   const goBack = () => {
