@@ -4,8 +4,9 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import { useNavigate } from 'react-router-dom'
 
-const MainSearch = () => {
+const MainSearch: React.FC = () => {
   const navigate = useNavigate()
+
   const navigateToSearch = () => {
     navigate('/search')
   }
@@ -29,26 +30,6 @@ const MainSearch = () => {
           <CustomFont size={2} content={'🔍'} />
         </SearchButton>
       </WrapInput>
-      {/* <RecommendList>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-        <RecommendItem>
-          <CustomFont content={'딥디크'} />
-        </RecommendItem>
-      </RecommendList> */}
     </Container>
   )
 }
@@ -71,7 +52,6 @@ const WrapInput = styled.button`
   border-radius: 1.6rem;
   padding: 1.6rem;
   color: #a0a0a0;
-
   cursor: pointer;
 `
 
@@ -86,19 +66,7 @@ const SearchButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
   cursor: pointer;
-`
-
-const RecommendList = styled.ul`
-  display: flex;
-  color: #4a4a4a;
-  margin-top: 2rem;
-`
-
-const RecommendItem = styled.li`
-  list-style: none;
-  margin: 0px 8px;
 `
 
 export default MainSearch

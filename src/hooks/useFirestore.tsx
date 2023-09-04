@@ -27,7 +27,7 @@ const useFirestore = () => {
     collectionName: string,
     requirement1: string,
     requirement2: any,
-    requirement3: string
+    requirement3: string | undefined
   ) => {
     const q = query(
       collection(db, collectionName),
@@ -51,10 +51,15 @@ const useFirestore = () => {
     return snap
   }
 
-  const getDataWithId = async (collectionName: string, id: string) => {
-    const ref = doc(db, collectionName, id)
-    const snap = await getDoc(ref)
-    return { id: snap.id, ...snap.data() }
+  const getDataWithId = async (
+    collectionName: string,
+    id: string | undefined
+  ) => {
+    if (id) {
+      const ref = doc(db, collectionName, id)
+      const snap = await getDoc(ref)
+      return { id: snap.id, ...snap.data() }
+    }
   }
 
   const addData = async (collectionName: string, id: string, data: object) => {
@@ -65,8 +70,10 @@ const useFirestore = () => {
     }
   }
 
-  const deleteData = async (collectionName: string, id: string) => {
-    await deleteDoc(doc(db, collectionName, id))
+  const deleteData = async (collectionName: string, id: string | undefined) => {
+    if (id) {
+      await deleteDoc(doc(db, collectionName, id))
+    }
   }
 
   const updateData = async (collectionName: string, id: string, data: any) => {

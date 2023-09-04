@@ -3,8 +3,21 @@ import { styled } from 'styled-components'
 import { genderList } from '../../common/data'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
+import { InputValueInterface } from '../../pages/EditProfile'
 
-const ProfileGender = ({ category, inputInfo, onChange, errorMessage }) => {
+interface ProfileGenderProps {
+  category: string
+  inputInfo: InputValueInterface
+  onChange: (e: string, category: string) => void
+  errorMessage?: { gender: string }
+}
+
+const ProfileGender: React.FC<ProfileGenderProps> = ({
+  category,
+  inputInfo,
+  onChange,
+  errorMessage,
+}) => {
   return (
     <Container>
       {genderList.map((gender, index) => (
@@ -48,7 +61,7 @@ const Container = styled.div`
   position: relative;
 `
 
-const Label = styled.label`
+const Label = styled.label<{ $isActive: boolean }>`
   width: 100%;
   display: flex;
   align-items: center;

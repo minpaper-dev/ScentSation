@@ -20,14 +20,49 @@ import { MY_UID } from '../common/localstorage'
 import CustomModal from '../components/Custom/CustomModal'
 import { useNavigate } from 'react-router-dom'
 import SelectCategory from '../components/Profile/SelectCategory'
+import { UserInterface } from './Main'
+
+export interface InputValueInterface {
+  gender: {
+    type: string
+    title: string
+    value: string | undefined
+    readOnly?: boolean
+  }
+  nickname: {
+    type: string
+    title: string
+    value: string | undefined
+    readOnly?: boolean
+  }
+  email: {
+    type: string
+    title: string
+    value: string | undefined
+    readOnly?: boolean
+  }
+  age: {
+    type: string
+    title: string
+    value: string | number | undefined
+    readOnly?: boolean
+  }
+  category: {
+    type: string
+    title: string
+    value: string | undefined
+    readOnly?: boolean
+  }
+  [key: string]: any
+}
 
 const EditProfile = () => {
   const navigate = useNavigate()
-  const { getDataOne, updateData, getDataAll } = useFirestore()
+  const { updateData, getDataWithId } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
-  const [inputValue, setInputValue] = useState({
+  const [inputValue, setInputValue] = useState<InputValueInterface>({
     gender: {
       type: 'radio',
       title: '성별',
@@ -58,35 +93,44 @@ const EditProfile = () => {
   const [isModal, setIsModal] = useState(false)
   const [isCategoryModal, setIsCategoryModal] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [profileImage, setProfileImage] = useState()
-  const [profileImageUrl, setProfileImageUrl] = useState('')
+  const [profileImage, setProfileImage] = useState<File | undefined>()
+  const [profileImageUrl, setProfileImageUrl] = useState<
+    string | null | undefined
+  >('')
 
   useEffect(() => {
     getUserInfo()
   }, [])
 
   const getUserInfo = async () => {
-    const result = await getDataOne('user', uid)
-    setInputValue({
-      ...inputValue,
-      gender: { ...inputValue.gender, value: result.data().gender },
-      age: { ...inputValue.age, value: result.data().age },
-      email: { ...inputValue.email, value: result.data().email },
-      nickname: { ...inputValue.nickname, value: result.data().nickname },
-      category: { ...inputValue.category, value: result.data().category },
-    })
-    setProfileImageUrl(result.data().image)
+    const result: UserInterface | undefined = await getDataWithId('user', uid)
+    if (result) {
+      setInputValue({
+        ...inputValue,
+        gender: { ...inputValue.gender, value: result.gender },
+        age: { ...inputValue.age, value: result.age },
+        email: { ...inputValue.email, value: result.email },
+        nickname: { ...inputValue.nickname, value: result.nickname },
+        category: { ...inputValue.category, value: result.category },
+      })
+      setProfileImageUrl(result.image)
+    }
+
     setIsLoading(false)
   }
 
-  const onChange = (e, category) => {
+  const onChange = (e: string, category: string) => {
     setInputValue({
       ...inputValue,
       [category]: { ...inputValue[category], value: e },
     })
   }
 
-  const renderInput = (item, index, category) => {
+  const renderInput = (
+    item: InputValueInterface[keyof InputValueInterface],
+    index: number,
+    category: string
+  ) => {
     return item.title === '성별' ? (
       <ProfileGender
         category={category}
@@ -96,9 +140,8 @@ const EditProfile = () => {
     ) : item.title === '대표 향료' ? (
       <WrapInput>
         <Input
-          $bgc={item.readOnly}
+          $bgc={item?.readOnly}
           type={item.type}
-          placeholder={item.placeholder}
           readOnly={true}
           value={item.value}
           onClick={() => setIsCategoryModal(true)}
@@ -133,7 +176,7 @@ const EditProfile = () => {
     }
   }
 
-  const onEdit = async url => {
+  const onEdit = async (url: string | unknown) => {
     await updateData('user', uid, {
       nickname: inputValue.nickname.value,
       age: inputValue.age.value,
@@ -228,7 +271,7 @@ const WrapInput = styled.div`
   position: relative;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ $bgc: boolean | undefined }>`
   width: 100%;
   border-radius: 1rem;
   border: 1px solid ${palette.Gray100};
@@ -236,11 +279,6 @@ const Input = styled.input`
   font-size: 0.8rem;
   background-color: ${props => (props.$bgc ? palette.Gray400 : 'white')};
   cursor: pointer;
-
-  &::placeholder {
-    color: ${palette.Gray100};
-    font-size: 0.8rem;
-  }
 
   &:focus {
     outline: none;

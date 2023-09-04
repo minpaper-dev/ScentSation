@@ -10,17 +10,17 @@ import useFirestore from '../hooks/useFirestore'
 
 import { useQuery } from '@tanstack/react-query'
 import Loader from '../components/Loader'
-interface UserInterface {
+export interface UserInterface {
   id: string
-  age: number | string
-  auth: string
-  category: string
-  email: string
-  gender: string
-  image: string | null
-  major: string
-  nickname: string
-  password: string | null
+  age?: number | string | undefined
+  auth?: string | undefined
+  category?: string | undefined
+  email?: string | undefined
+  gender?: string | undefined
+  image?: string | null | undefined
+  major?: string | undefined
+  nickname?: string | undefined
+  password?: string | null | undefined
 }
 
 export interface PerfumeInterface {

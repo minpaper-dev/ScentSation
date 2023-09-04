@@ -143,7 +143,7 @@ export const REVIEW = {
   },
 }
 
-export const REVIEW_TAG = {
+export const REVIEW_TAG: { [key: string]: string } = {
   female: '여성',
   male: '남성',
   neutral: '중성',
@@ -154,6 +154,7 @@ export const REVIEW_TAG = {
   cologne: '1~2시간',
   toilette: '3~4시간',
   perfume: '5~6시간',
+  default: '',
 }
 
 export const SORT_LIST = [

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
 import { deleteUser, getAuth } from 'firebase/auth'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import Header from '../components/Header'
 import Loader from '../components/Loader'
@@ -17,7 +17,7 @@ const MyPage = () => {
   const navigate = useNavigate()
   const { getDataWithId, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   const { data: userData, isLoading } = useQuery({
     queryKey: ['user', uid],
@@ -27,7 +27,7 @@ const MyPage = () => {
   const MenuData = [
     {
       title: 'My ScentSation',
-      event: () => navigate(`/review/${userData.id}`),
+      event: () => navigate(`/review/${userData?.id}`),
     },
     {
       title: '내 정보 수정',
@@ -57,19 +57,20 @@ const MyPage = () => {
   const onWithdrawal = async () => {
     setIsOpenLogoutModal(false)
     const user = auth.currentUser
-
-    deleteUser(user)
-      .then(() => {
-        deleteData('user', userData.id)
-        localStorage.removeItem(MY_UID)
-        localStorage.removeItem(SEARCH_HISTORY)
-        navigate('/login', {
-          replace: true,
+    if (user) {
+      deleteUser(user)
+        .then(() => {
+          deleteData('user', userData?.id)
+          localStorage.removeItem(MY_UID)
+          localStorage.removeItem(SEARCH_HISTORY)
+          navigate('/login', {
+            replace: true,
+          })
         })
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .catch(error => {
+          console.log(error)
+        })
+    }
   }
 
   if (isLoading) return <Loader />

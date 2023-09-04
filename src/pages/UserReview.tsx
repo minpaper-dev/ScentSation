@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useParams } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import Header from '../components/Header'
 import ProfileDetail from '../components/Profile/ProfileDetail'
@@ -31,14 +31,17 @@ const UserReview = () => {
   })
 
   // 리뷰 삭제
-  const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['review'] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  const onDeleteVote = useMutation(
+    ({ id }: { id: string }) => deleteData('review', id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['review'] })
+      },
+      onError: error => {
+        console.log(`Delete Todo Error ${error}`)
+      },
+    }
+  )
 
   // 페이지네이션 관련 상태
   const reviewsPerPage = 5 // 페이지 당 보여줄 리뷰 개수
@@ -57,7 +60,7 @@ const UserReview = () => {
     }
   }, [scrollToTop])
 
-  const onClickPageButton = pageNumber => {
+  const onClickPageButton = (pageNumber: number) => {
     setCurrentPage(pageNumber)
     setScrollToTop(true)
   }
@@ -82,10 +85,7 @@ const UserReview = () => {
           ))}
         </WrapReview>
         <Pagination>
-          <PageButton
-            onClick={() => onClickPageButton(1)}
-            isActive={currentPage === 1}
-          >
+          <PageButton onClick={() => onClickPageButton(1)}>
             <LeftOutlined style={{ fontSize: '1.5rem' }} />
           </PageButton>
 
@@ -95,7 +95,6 @@ const UserReview = () => {
               <PageButton
                 key={index + 1}
                 onClick={() => onClickPageButton(index + 1)}
-                isActive={currentPage === index + 1}
               >
                 <CustomFont
                   size={1.2}
@@ -108,9 +107,6 @@ const UserReview = () => {
           <PageButton
             onClick={() =>
               onClickPageButton(Math.ceil(reviewData.length / reviewsPerPage))
-            }
-            isActive={
-              currentPage === Math.ceil(reviewData.length / reviewsPerPage)
             }
           >
             <RightOutlined style={{ fontSize: '1.5rem' }} />

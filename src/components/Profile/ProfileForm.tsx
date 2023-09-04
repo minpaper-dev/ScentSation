@@ -2,8 +2,23 @@ import React from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
+import { InputValueInterface } from '../../pages/EditProfile'
 
-const ProfileForm = ({ item, onChange, category, errorMessage }) => {
+interface ProfileFormProps {
+  item: InputValueInterface
+  onChange: (e: string, category: string) => void
+  category: string
+  errorMessage?: {
+    [key: string]: string
+  }
+}
+
+const ProfileForm: React.FC<ProfileFormProps> = ({
+  item,
+  onChange,
+  category,
+  errorMessage,
+}) => {
   return (
     <Container>
       <Input
@@ -31,7 +46,7 @@ const Container = styled.div`
   position: relative;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ $bgc: boolean }>`
   width: 100%;
   border-radius: 1rem;
   border: 1px solid ${palette.Gray100};

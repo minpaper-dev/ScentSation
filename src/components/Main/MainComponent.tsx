@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 
-const MainComponent = ({ title, component }) => {
+interface MainComponentProps {
+  title: string
+  component: ReactNode
+}
+
+const MainComponent: React.FC<MainComponentProps> = ({ title, component }) => {
   return (
     <Container>
       <CustomFont size={1.8} weight={800} content={title} $marginBt={2} />

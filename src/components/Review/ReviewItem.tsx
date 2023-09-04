@@ -74,17 +74,17 @@ const ReviewItem: React.FC<ReviewItemProps> = ({
       <TagList>
         <CustomFont
           color={palette.Brown500}
-          content={`# ${REVIEW_TAG[data.gender]}`}
+          content={`# ${REVIEW_TAG[data?.gender || 'default']}`}
           $marginRi={1}
         />
         <CustomFont
           color={palette.Brown500}
-          content={`# ${REVIEW_TAG[data.season]}`}
+          content={`# ${REVIEW_TAG[data?.season || 'default']}`}
           $marginRi={1}
         />
         <CustomFont
           color={palette.Brown500}
-          content={`# ${REVIEW_TAG[data.vitality]}`}
+          content={`# ${REVIEW_TAG[data?.vitality || 'default']}`}
         />
       </TagList>
       <CustomFont size={1.2} content={data?.description} />

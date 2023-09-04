@@ -3,7 +3,11 @@ import CustomCarousel from '../Custom/CustomCarousel'
 import ReviewItem from '../Review/ReviewItem'
 import type { ReviewInterface } from '../../pages/Main'
 
-const MainReview = ({ reviewData }) => {
+interface MainReviewProps {
+  reviewData: ReviewInterface[]
+}
+
+const MainReview: React.FC<MainReviewProps> = ({ reviewData }) => {
   return (
     <CustomCarousel
       carouselList={reviewData}

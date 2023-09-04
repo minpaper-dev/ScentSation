@@ -4,7 +4,7 @@ import styled from 'styled-components'
 interface CustomFontProps {
   size?: number
   color?: string
-  content?: string
+  content?: string | number
   weight?: number
   $marginRi?: number
   $marginLf?: number
