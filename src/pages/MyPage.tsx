@@ -11,6 +11,7 @@ import CustomButtonModal from '../components/Custom/CustomButtonModal'
 import CustomFont from '../styles/CustomFont'
 import useFirestore from '../hooks/useFirestore'
 import { MY_UID, SEARCH_HISTORY } from '../common/localstorage'
+import { UserInterface } from './Main'
 
 const MyPage = () => {
   const auth = getAuth()
@@ -19,10 +20,10 @@ const MyPage = () => {
 
   const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
-  const { data: userData, isLoading } = useQuery({
-    queryKey: ['user', uid],
-    queryFn: () => getDataWithId('user', uid),
-  })
+  const { data: userData, isLoading } = useQuery<UserInterface | undefined>(
+    ['user', uid],
+    () => getDataWithId<UserInterface>('user', uid)
+  )
 
   const MenuData = [
     {

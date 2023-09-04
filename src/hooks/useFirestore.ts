@@ -12,23 +12,39 @@ import {
 } from 'firebase/firestore/lite'
 
 const useFirestore = () => {
-  const getDataAll = async (collectionName: string) => {
-    const ref = collection(db, collectionName)
-    const snap = await getDocs(ref)
-    const data = snap.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id,
-    }))
+  const getDataAll = async <T>(
+    collectionName: string
+  ): Promise<T | undefined> => {
+    if (collectionName) {
+      const ref = collection(db, collectionName)
+      const snap = await getDocs(ref)
+      const data = snap.docs.map(doc => ({
+        ...doc.data(),
+        id: doc.id,
+      }))
 
-    return data
+      return data as T
+    } else return undefined
   }
 
-  const getDataWithQuery = async (
+  const getDataWithId = async <T>(
+    collectionName: string,
+    id: string | undefined
+  ): Promise<T | undefined> => {
+    if (id) {
+      const ref = doc(db, collectionName, id)
+      const snap = await getDoc(ref)
+      return { id: snap.id, ...snap.data() } as T
+    }
+    return undefined
+  }
+
+  const getDataWithQuery = async <T>(
     collectionName: string,
     requirement1: string,
     requirement2: any,
     requirement3: string | undefined
-  ) => {
+  ): Promise<T | undefined> => {
     const q = query(
       collection(db, collectionName),
       where(requirement1, requirement2, requirement3)
@@ -41,7 +57,7 @@ const useFirestore = () => {
       id: doc.id,
     }))
 
-    return data
+    return data as T
   }
 
   const getDataOne = async (collectionName: string, id: string) => {
@@ -49,17 +65,6 @@ const useFirestore = () => {
     const snap = await getDoc(ref)
 
     return snap
-  }
-
-  const getDataWithId = async (
-    collectionName: string,
-    id: string | undefined
-  ) => {
-    if (id) {
-      const ref = doc(db, collectionName, id)
-      const snap = await getDoc(ref)
-      return { id: snap.id, ...snap.data() }
-    }
   }
 
   const addData = async (collectionName: string, id: string, data: object) => {

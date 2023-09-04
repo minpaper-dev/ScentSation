@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { FrownOutlined, StarFilled } from '@ant-design/icons'
+import { Rate } from 'antd'
 
 import { REVIEW, REVIEW_DATA_COLOR, REVIEW_DATA_TEXT } from '../common/data'
 import Header from '../components/Header'
@@ -13,22 +14,34 @@ import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
 import { MY_UID } from '../common/localstorage'
-import { Rate } from 'antd'
 import { formatAmountWithCommas } from '../utils/format'
+import { PerfumeInterface } from './Main'
 
-const Product = () => {
+interface ProductInterface {
+  id: string
+  brand: string
+  category: string[]
+  count: number
+  image: string
+  name: string
+  price: number | string
+  size: number | string
+  voteUser: (string | null)[]
+}
+
+const Product: React.FC = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { id } = useParams()
   const { getDataWithQuery, getDataWithId, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   // 상품 정보 조회
-  const { data: productData, isLoading: isProductLoading } = useQuery({
-    queryKey: ['product', id],
-    queryFn: () => getDataWithId('product', id),
-  })
+
+  const { data: productData, isLoading: isProductLoading } = useQuery<
+    ProductInterface | undefined
+  >(['product', id], () => getDataWithId<ProductInterface>('product', id))
 
   // 상품의 리뷰 정보 조회
   const { data: reviewData, isLoading: isReviewLoading } = useQuery({
@@ -39,35 +52,35 @@ const Product = () => {
   })
 
   // 리뷰 삭제
-  const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['review'] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  // const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['review'] })
+  //   },
+  //   onError: error => {
+  //     console.log(`Delete Todo Error ${error}`)
+  //   },
+  // })
 
   const [isLoginModal, setIsLoginModal] = useState(false)
   const [summaryReviewData, setSummaryReviewData] = useState(REVIEW)
   const [rate, setRate] = useState(0)
 
-  useEffect(() => {
-    // 리뷰 통계 작업
-    let obj = JSON.parse(JSON.stringify(REVIEW))
-    let count = 0
+  // useEffect(() => {
+  //   // 리뷰 통계 작업
+  //   const obj = JSON.parse(JSON.stringify(REVIEW));
+  //   let count = 0;
 
-    if (reviewData.length > 0) {
-      reviewData.map((item, index) => {
-        obj.gender[item.gender]++
-        obj.season[item.season]++
-        obj.vitality[item.vitality]++
-        count += item.rate
-      })
-      setRate((count / reviewData.length).toFixed(1))
-      setSummaryReviewData(obj)
-    }
-  }, [reviewData])
+  //   if (reviewData.length > 0) {
+  //     reviewData.forEach(item => {
+  //       obj.gender[item.gender]++;
+  //       obj.season[item.season]++;
+  //       obj.vitality[item.vitality]++;
+  //       count += item.rate;
+  //     });
+  //     setRate((count / reviewData.length).toFixed(1));
+  //     setSummaryReviewData(obj);
+  //   }
+  // }, [reviewData]);
 
   const goReviewWrite = () => {
     if (uid) {
@@ -77,26 +90,26 @@ const Product = () => {
     }
   }
 
-  if (isProductLoading || isReviewLoading) return <Loader />
+  // if (isProductLoading || isReviewLoading) return <Loader />;
 
   return (
     <>
-      <Container>
+      {/* <Container>
         <Header pageName={''} />
-        <ProductImage src={productData.image} />
+        <ProductImage src={productData?.image} />
         <ProductInfo>
-          <CustomFont size={1.2} content={productData.brand} $marginBt={1} />
+          <CustomFont size={1.2} content={productData?.brand} $marginBt={1} />
           <CustomFont
             size={1.6}
-            content={productData.name}
+            content={productData?.name}
             weight={800}
             $marginBt={1}
           />
           <Flex>
             <CustomFont
               size={1.2}
-              content={`${productData.size}ml / ${formatAmountWithCommas(
-                productData.price
+              content={`${productData?.size}ml / ${formatAmountWithCommas(
+                productData?.price || 0
               )}원`}
             />
           </Flex>
@@ -105,7 +118,7 @@ const Product = () => {
               character={
                 <StarFilled style={{ fontSize: '3rem', width: '1.5rem' }} />
               }
-              value={rate}
+              value={Number(rate)}
               style={{ display: 'flex', alignItems: 'center' }}
               disabled
             />
@@ -118,7 +131,7 @@ const Product = () => {
             $marginBt={1}
           />
           <Flex>
-            {productData.category.map(item => (
+            {productData?.category.map(item => (
               <CustomFont
                 key={item}
                 content={`# ${item}`}
@@ -147,8 +160,7 @@ const Product = () => {
                   {Object.keys(summaryReviewData[item]).map(category => (
                     <BarGraphItem
                       $width={
-                        (summaryReviewData[item][category] /
-                          reviewData.length) *
+                        (summaryReviewData[item][category] / reviewData.length) *
                         100
                       }
                       bgc={REVIEW_DATA_COLOR[category]}
@@ -159,17 +171,13 @@ const Product = () => {
 
                 {Object.keys(summaryReviewData[item]).map(category => (
                   <GraphText key={`${item}-${category}`}>
-                    <CustomFont
-                      size={1.2}
-                      content={REVIEW_DATA_TEXT[category]}
-                    />
+                    <CustomFont size={1.2} content={REVIEW_DATA_TEXT[category]} />
                     <CustomFont
                       size={1.2}
                       content={`${
                         summaryReviewData[item][category]
                           ? (
-                              (summaryReviewData[item][category] /
-                                reviewData.length) *
+                              (summaryReviewData[item][category] / reviewData.length) *
                               100
                             ).toFixed(1)
                           : 0
@@ -186,7 +194,7 @@ const Product = () => {
                 <ReviewItem
                   key={review.id}
                   data={review}
-                  onDeleteVote={onDeleteVote}
+                  onDeleteVote={() => onDeleteVote.mutate({ id: review.id })}
                   isNoProduct={true}
                 />
               ))}
@@ -204,13 +212,13 @@ const Product = () => {
             content={`로그인 한 유저만 사용가능한 기능입니다.
         로그인 하러 이동하시겠습니까?`}
             yesEvent={() => {
-              setIsLoginModal(false)
-              navigate('/login')
+              setIsLoginModal(false);
+              navigate('/login');
             }}
             noEvent={() => setIsLoginModal(false)}
           />
         )}
-      </Container>
+      </Container> */}
     </>
   )
 }
@@ -250,7 +258,6 @@ const Divider = styled.div`
 
 const WrapGraph = styled.div`
   width: 90%;
-
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -264,10 +271,9 @@ const BarGraph = styled.div`
   margin: 2rem 0;
 `
 
-const BarGraphItem = styled.div`
+const BarGraphItem = styled.div<{ $width: number; bgc: string }>`
   width: ${props => props.$width}%;
   height: 100%;
-  /* border-radius: 1rem; */
   background-color: ${props => props.bgc};
 `
 

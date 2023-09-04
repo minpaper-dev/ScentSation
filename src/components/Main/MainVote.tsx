@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import type { VoteInterface } from '../../pages/Main'
 
 interface MainVoteProps {
-  voteData: VoteInterface[]
+  voteData: VoteInterface[] | undefined
 }
 
 const MainVote: React.FC<MainVoteProps> = ({ voteData }) => {

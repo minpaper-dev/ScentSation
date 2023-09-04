@@ -31,7 +31,7 @@ interface InputValueInterface {
   gender: {
     type: string
     title: string
-    value: string | undefined
+    value: string
     placeholder: string
     readOnly?: boolean
     hidden?: boolean
@@ -39,7 +39,7 @@ interface InputValueInterface {
   nickname: {
     type: string
     title: string
-    value: string | undefined
+    value: string
     placeholder: string
     readOnly?: boolean
     hidden?: boolean
@@ -63,7 +63,7 @@ interface InputValueInterface {
   category: {
     type: string
     title: string
-    value: string | undefined
+    value: string
     placeholder: string
     readOnly?: boolean
     hidden?: boolean
@@ -78,14 +78,14 @@ const Signup = () => {
   const { state } = useLocation()
   const { oauth = '', uid = '', nickname = '', email = '' } = state || {}
 
-  const { data: userData } = useQuery<UserInterface[]>(
+  const { data: userData } = useQuery<UserInterface[] | undefined>(
     ['user'],
-    () => getDataAll('user'),
+    () => getDataAll<UserInterface[]>('user'),
     { initialData: [] }
   )
 
-  const userNickname = userData.map(v => v.nickname)
-  const userEmail = userData.map(v => v.email)
+  const userNickname = userData ? userData.map(v => v.nickname) : []
+  const userEmail = userData ? userData.map(v => v.email) : []
 
   const [profileImage, setProfileImage] = useState<File | undefined>()
   const [profileImageUrl, setProfileImageUrl] = useState(profile)

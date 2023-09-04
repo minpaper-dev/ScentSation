@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useLocation } from 'react-router-dom'
 import { FreeMode, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -9,25 +9,26 @@ import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
 import 'swiper/css/pagination'
 
-import { FILTER_CATEGORY, SORT_LIST } from '../common/data'
+import { FILTER_CATEGORY } from '../common/data'
 import Header from '../components/Header'
 import Loader from '../components/Loader'
 import ProductListItem from '../components/Product/ProductListItem'
 import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
-import { Select } from 'antd'
+import { PerfumeInterface } from './Main'
 
 const Filter = () => {
   const { state } = useLocation()
   const { getDataAll } = useFirestore()
 
-  const { data: productData, isLoading } = useQuery({
-    queryKey: 'product',
-    queryFn: () => getDataAll('product'),
+  const { data: productData, isLoading } = useQuery<
+    PerfumeInterface[] | undefined
+  >(['product'], () => getDataAll<PerfumeInterface[]>('product'), {
+    initialData: [],
   })
 
-  const [filterProduct, setFilterProduct] = useState([])
+  const [filterProduct, setFilterProduct] = useState<PerfumeInterface[]>([])
   const [category, setCategory] = useState(state.category || '')
 
   useEffect(() => {
@@ -37,17 +38,16 @@ const Filter = () => {
   }, [category, isLoading])
 
   const filter = () => {
+    if (!productData) return
     if (category === '전체') {
       setFilterProduct(productData)
     } else {
       setFilterProduct(
-        productData?.filter(item => item.category.includes(category))
+        productData?.filter(
+          item => item.category && item.category.includes(category)
+        )
       )
     }
-  }
-
-  const handleChange = value => {
-    console.log(`selected ${value}`)
   }
 
   if (isLoading) return <Loader />
@@ -55,7 +55,7 @@ const Filter = () => {
     <Container>
       <Header pageName={'필터'} />
       <WrapTags>
-        <Swiper
+        {/* <Swiper
           slidesPerView={6}
           spaceBetween={10}
           freeMode={true}
@@ -79,18 +79,9 @@ const Filter = () => {
               </Tag>
             </SwiperSlide>
           ))}
-        </Swiper>
+        </Swiper> */}
       </WrapTags>
-      {/* <WrapSelect>
-        <Select
-          defaultValue={SORT_LIST[0].label}
-          style={{
-            width: 120,
-          }}
-          onChange={handleChange}
-          options={SORT_LIST}
-        />
-      </WrapSelect> */}
+
       {filterProduct.map(item => (
         <ProductListItem key={item.id} item={item} />
       ))}
@@ -114,18 +105,11 @@ const WrapTags = styled.div`
   margin-bottom: 2rem;
 `
 
-const Tag = styled.button`
+const Tag = styled.button<{ $bgc: string }>`
   background-color: ${props => props.$bgc};
   border-radius: 1rem;
   width: 100%;
   padding: 0.6rem 0;
-`
-
-const WrapSelect = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-right: 2rem;
 `
 
 export default Filter

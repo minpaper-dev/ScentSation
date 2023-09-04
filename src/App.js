@@ -30,6 +30,7 @@ import { myInfoState } from './recoil/atoms'
 import { MY_UID } from './common/localstorage'
 import NotFound from './pages/NotFound'
 import Brand from './pages/Brand'
+import ProductDetail from './pages/ProductDetail'
 
 function App() {
   const auth = getAuth()
@@ -206,9 +207,13 @@ function App() {
                 path="/filter"
                 element={<AnimatedPage element={<Filter />} />}
               />
-              <Route
+              {/* <Route
                 path="/product/:id"
                 element={<AnimatedPage element={<Product />} />}
+              /> */}
+              <Route
+                path="/product/:id"
+                element={<AnimatedPage element={<ProductDetail />} />}
               />
               <Route
                 path="/write"

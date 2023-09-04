@@ -11,6 +11,7 @@ import CustomFont from '../styles/CustomFont'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import Loader from '../components/Loader'
 import ReviewItem from '../components/Review/ReviewItem'
+import { ReviewInterface, UserInterface } from './Main'
 
 const UserReview = () => {
   const { id } = useParams()
@@ -18,17 +19,18 @@ const UserReview = () => {
   const { getDataWithId, getDataWithQuery, deleteData } = useFirestore()
 
   // 사용자 리뷰 조회
-  const { data: userData, isLoading: isUserLoading } = useQuery({
-    queryKey: ['user', id],
-    queryFn: () => getDataWithId('user', id),
-  })
+  const { data: userData, isLoading: isUserLoading } = useQuery<
+    UserInterface | undefined
+  >(['user', id], () => getDataWithId<UserInterface>('user', id))
 
   // 사용자 리뷰 조회
-  const { data: reviewData, isLoading: isReviewLoading } = useQuery({
-    queryKey: ['review', id],
-    queryFn: () => getDataWithQuery('review', 'user.id', '==', id),
-    initialData: [],
-  })
+  const { data: reviewData, isLoading: isReviewLoading } = useQuery<
+    ReviewInterface[] | undefined
+  >(
+    ['review', id],
+    () => getDataWithQuery<ReviewInterface[]>('review', 'user.id', '==', id),
+    { initialData: [] }
+  )
 
   // 리뷰 삭제
   const onDeleteVote = useMutation(
@@ -51,7 +53,7 @@ const UserReview = () => {
   // 현재 페이지에 해당하는 리뷰 데이터 추출
   const startIndex = (currentPage - 1) * reviewsPerPage
   const endIndex = startIndex + reviewsPerPage
-  const reviewsToShow = reviewData.slice(startIndex, endIndex)
+  const reviewsToShow = reviewData ? reviewData.slice(startIndex, endIndex) : []
 
   useEffect(() => {
     if (scrollToTop) {
@@ -90,7 +92,7 @@ const UserReview = () => {
           </PageButton>
 
           {Array.from(
-            { length: Math.ceil(reviewData.length / reviewsPerPage) },
+            { length: Math.ceil((reviewData?.length || 0) / reviewsPerPage) },
             (_, index) => (
               <PageButton
                 key={index + 1}
@@ -106,7 +108,9 @@ const UserReview = () => {
           )}
           <PageButton
             onClick={() =>
-              onClickPageButton(Math.ceil(reviewData.length / reviewsPerPage))
+              onClickPageButton(
+                Math.ceil((reviewData?.length || 0) / reviewsPerPage)
+              )
             }
           >
             <RightOutlined style={{ fontSize: '1.5rem' }} />

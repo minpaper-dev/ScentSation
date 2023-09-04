@@ -39,7 +39,9 @@ const VoteItem: React.FC<VoteItemProps> = ({
     let count = 0
     if (data.perfume) {
       data.perfume.map((item, index) => {
-        count += item.count
+        if (item.count) {
+          count += item.count
+        }
         if (item.voteUser?.includes(uid)) {
           setIsVote(true)
           setSelectedIndex(index)
@@ -57,8 +59,9 @@ const VoteItem: React.FC<VoteItemProps> = ({
       return
     }
 
-    let updateValue: PerfumeInterface[] = data.perfume || []
+    const updateValue = data.perfume
     updateValue[index].count++
+
     updateValue[index].voteUser.push(uid)
 
     setIsVote(true)
@@ -77,7 +80,9 @@ const VoteItem: React.FC<VoteItemProps> = ({
   }
 
   const voteContainer = (perfume: PerfumeInterface, index: number) => {
-    let percent = ((perfume.count / voteCount) * 100).toFixed()
+    const percent = (
+      (perfume.count ? perfume.count : 0 / voteCount) * 100
+    ).toFixed()
 
     return (
       <VoteButton

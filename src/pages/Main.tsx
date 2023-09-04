@@ -7,27 +7,27 @@ import MainVote from '../components/Main/MainVote'
 import MainReview from '../components/Main/MainReview'
 import CustomLogo from '../components/Custom/CustomLogo'
 import useFirestore from '../hooks/useFirestore'
-
 import { useQuery } from '@tanstack/react-query'
 import Loader from '../components/Loader'
+
 export interface UserInterface {
   id: string
-  age?: number | string | undefined
-  auth?: string | undefined
-  category?: string | undefined
-  email?: string | undefined
-  gender?: string | undefined
-  image?: string | null | undefined
-  major?: string | undefined
-  nickname?: string | undefined
-  password?: string | null | undefined
+  age: number | string
+  auth: string
+  category: string
+  email: string
+  gender: string
+  image: string | null
+  major: string
+  nickname: string
+  password: string | null
 }
 
 export interface PerfumeInterface {
+  id: string
   brand: string
   category: string[]
   count: number
-  id: string
   image: string
   name: string
   price: number | string
@@ -37,35 +37,35 @@ export interface PerfumeInterface {
 
 export interface VoteInterface {
   id: string
-  commentCount?: number
-  description?: string
-  perfume?: PerfumeInterface[]
-  userInfo?: UserInterface
+  commentCount: number
+  description: string
+  perfume: PerfumeInterface[]
+  userInfo: UserInterface
 }
 
 export interface ReviewInterface {
   id: string
-  description?: string
-  product?: PerfumeInterface
-  rate?: number
-  gender?: string
-  season?: string
-  vitality?: string
-  user?: UserInterface
+  description: string
+  product: PerfumeInterface
+  rate: number
+  gender: string
+  season: string
+  vitality: string
+  user: UserInterface
 }
 
 const Main = () => {
   const { getDataAll } = useFirestore()
 
   const { data: voteData, isLoading: isVoteLoading } = useQuery<
-    VoteInterface[]
-  >(['vote'], () => getDataAll('vote'), {
+    VoteInterface[] | undefined
+  >(['vote'], () => getDataAll<VoteInterface[]>('vote'), {
     initialData: [],
   })
 
   const { data: reviewData, isLoading: isReviewLoading } = useQuery<
-    ReviewInterface[]
-  >(['review'], () => getDataAll('review'), {
+    ReviewInterface[] | undefined
+  >(['review'], () => getDataAll<ReviewInterface[]>('review'), {
     initialData: [],
   })
 
@@ -83,7 +83,9 @@ const Main = () => {
     {
       id: 2,
       title: '최신 리뷰',
-      component: <MainReview reviewData={reviewData.slice(0, 5)} />,
+      component: reviewData ? (
+        <MainReview reviewData={reviewData.slice(0, 5)} />
+      ) : null,
     },
   ]
 
