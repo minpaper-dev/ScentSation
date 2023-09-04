@@ -81,7 +81,8 @@ const VoteItem: React.FC<VoteItemProps> = ({
 
   const voteContainer = (perfume: PerfumeInterface, index: number) => {
     const percent = (
-      (perfume.count ? perfume.count : 0 / voteCount) * 100
+      ((perfume.count ? perfume.count : 0) / voteCount) *
+      100
     ).toFixed()
 
     return (

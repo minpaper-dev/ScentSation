@@ -72,7 +72,8 @@ const SelectPerfume = () => {
             filterProducts={filterProducts}
           />
         ) : (
-          <SearchResult filterProducts={filterProducts} isSelect={true} />
+          // <SearchResult filterProducts={filterProducts} isSelect={true} />
+          <></>
         )}
       </ModalView>
     </ModalBackdrop>

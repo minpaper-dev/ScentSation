@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import Header from '../components/Header'
 import Loader from '../components/Loader'
@@ -11,30 +11,31 @@ import CustomFont from '../styles/CustomFont'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
 import { MY_UID } from '../common/localstorage'
+import { VoteInterface } from './Main'
 
 const Vote = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { getDataAll, deleteData } = useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   // vote Data 조회
-  const { data: voteData, isLoading } = useQuery({
-    queryKey: 'vote',
-    queryFn: () => getDataAll('vote'),
-    initialData: [],
-  })
+  const { data: voteData, isLoading } = useQuery<VoteInterface[] | undefined>(
+    ['vote'],
+    () => getDataAll<VoteInterface[]>('vote'),
+    { initialData: [] }
+  )
 
   // 해당 vote 삭제
-  const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vote'] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  // const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['vote'] })
+  //   },
+  //   onError: error => {
+  //     console.log(`Delete Todo Error ${error}`)
+  //   },
+  // })
 
   const [isLoginModal, setIsLoginModal] = useState(false)
 
@@ -62,21 +63,22 @@ const Vote = () => {
             </FloatingButton>
           </WrapFloatingButton>
 
-          {voteData.map(data => (
-            <WrapVoteItem key={data.id}>
-              <VoteItem
-                data={data}
-                onDeleteVote={onDeleteVote}
-                setIsLoginModal={setIsLoginModal}
-              />
-              <Comment onClick={() => navigate(data.id)}>
-                <CustomFont
-                  size={1.2}
-                  content={`댓글 (${data.commentCount})`}
+          {voteData &&
+            voteData.map(data => (
+              <WrapVoteItem key={data.id}>
+                <VoteItem
+                  data={data}
+                  // onDeleteVote={onDeleteVote}
+                  setIsLoginModal={setIsLoginModal}
                 />
-              </Comment>
-            </WrapVoteItem>
-          ))}
+                <Comment onClick={() => navigate(data.id)}>
+                  <CustomFont
+                    size={1.2}
+                    content={`댓글 (${data.commentCount})`}
+                  />
+                </Comment>
+              </WrapVoteItem>
+            ))}
           {isLoginModal && (
             <CustomButtonModal
               content={`로그인 한 유저만 사용가능한 기능입니다.

@@ -26,7 +26,7 @@ const VoteDetail = () => {
   const { getDataWithQuery, addData, updateData, deleteData, getDataWithId } =
     useFirestore()
 
-  const uid = JSON.parse(localStorage.getItem(MY_UID))
+  const uid = JSON.parse(localStorage.getItem(MY_UID) || 'null')
 
   const [myInfo] = useRecoilState(myInfoState)
 

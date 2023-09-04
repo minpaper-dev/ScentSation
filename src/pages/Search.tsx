@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import { v4 as uuidv4 } from 'uuid'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import Header from '../components/Header'
 import Searching from '../components/Search/Searching'
@@ -9,29 +9,51 @@ import SearchResult from '../components/Search/SearchResult'
 import SearchPending from '../components/Search/SearchPending'
 import useFirestore from '../hooks/useFirestore'
 import { SEARCH_HISTORY } from '../common/localstorage'
+import { PerfumeInterface } from './Main'
+
+interface BrandInterface {
+  id: string
+  image: string
+  name: string
+}
+
+interface SearchInterface {
+  id: string
+  text: string
+  date: string
+}
+
+export interface FilterProductInterface {
+  name: PerfumeInterface[]
+  brand: BrandInterface[]
+}
 
 const Search = () => {
   const { getDataAll } = useFirestore()
 
-  const { data: productData } = useQuery({
-    queryKey: 'product',
-    queryFn: () => getDataAll('product'),
-    initialData: [],
-  })
+  const { data: productData } = useQuery<PerfumeInterface[] | undefined>(
+    ['product'],
+    () => getDataAll<PerfumeInterface[]>('product'),
+    { initialData: [] }
+  )
 
-  const { data: brandData } = useQuery({
-    queryKey: 'brand',
-    queryFn: () => getDataAll('brand'),
-    initialData: [],
-  })
+  const { data: brandData } = useQuery<BrandInterface[] | undefined>(
+    ['brand'],
+    () => getDataAll<BrandInterface[]>('brand'),
+    { initialData: [] }
+  )
 
   // 0 : 검색 전, 1 : 검색 중, 2 : 검색 결과
   const [inputState, setInputState] = useState(0)
   const [inputValue, setInputValue] = useState('')
 
-  const [filterProducts, setFilterProducts] = useState([])
+  const [filterProducts, setFilterProducts] = useState<FilterProductInterface>({
+    name: [],
+    brand: [],
+  })
 
-  const findProduct = text => {
+  const findProduct = (text: string) => {
+    if (!productData || !brandData) return
     const name = productData.filter(v =>
       v.name.replace(/\s+/g, '').includes(text)
     )
@@ -41,7 +63,7 @@ const Search = () => {
     setFilterProducts({ name, brand })
   }
 
-  const onChange = e => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
     if (e.target.value.length) setInputState(1)
     else setInputState(0)
@@ -49,29 +71,31 @@ const Search = () => {
     findProduct(e.target.value)
   }
 
-  const onClickItem = value => {
+  const onClickItem = (value: string) => {
     setInputState(2)
     setInputValue(value)
     recordSearchValue(value)
   }
 
-  const onKeyDownEnter = e => {
+  const onKeyDownEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (e.nativeEvent.isComposing) return
       onClickItem(inputValue)
     }
   }
 
-  const recordSearchValue = text => {
+  const recordSearchValue = (text: string) => {
     const date = `${new Date().getFullYear()}.${
       new Date().getMonth() + 1
     }.${new Date().getDate()}`
 
     const data = { id: uuidv4(), text, date }
 
-    let localSearch = JSON.parse(localStorage.getItem(SEARCH_HISTORY)) || []
+    const localSearch = JSON.parse(
+      localStorage.getItem(SEARCH_HISTORY) || 'null'
+    )
 
-    localSearch.map((item, index) => {
+    localSearch.map((item: SearchInterface, index: number) => {
       if (item.text === text) {
         localSearch.splice(index, 1)
       }

@@ -4,8 +4,17 @@ import palette from '../../styles/CustomColor'
 import ProductListItem from '../Product/ProductListItem'
 import CustomFont from '../../styles/CustomFont'
 import { useNavigate } from 'react-router-dom'
+import { FilterProductInterface } from '../../pages/Search'
 
-const SearchResult = ({ filterProducts, isSelect }) => {
+interface SearchResultProps {
+  filterProducts: FilterProductInterface
+  isSelect?: boolean
+}
+
+const SearchResult: React.FC<SearchResultProps> = ({
+  filterProducts,
+  isSelect,
+}) => {
   const navigate = useNavigate()
 
   if (filterProducts?.brand?.length + filterProducts?.name?.length === 0) {
@@ -60,18 +69,6 @@ const BrandImage = styled.img`
   width: 5rem;
   height: 2.5rem;
   background-color: ${palette.Gray100};
-`
-
-const ProductImage = styled.img`
-  width: 5rem;
-  height: 5rem;
-  background-color: ${palette.Gray100};
-`
-
-const ProductInfo = styled.div`
-  margin-left: 1rem;
-  display: flex;
-  flex-direction: column;
 `
 
 export default SearchResult
