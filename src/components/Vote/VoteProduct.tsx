@@ -1,7 +1,8 @@
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
+import { PerfumeInterface } from '../../pages/Main'
 
-const VoteProduct = ({ data }) => {
+const VoteProduct = ({ data }: { data: PerfumeInterface }) => {
   return (
     <Container>
       <ProductImage src={data.image} />

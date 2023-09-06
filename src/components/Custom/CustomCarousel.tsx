@@ -2,9 +2,18 @@ import React, { useRef, useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons'
+import { ReviewInterface, VoteInterface } from '../../pages/Main'
 
-const CustomCarousel = ({ carouselList, renderItem }) => {
-  const carouselRef = useRef()
+interface CustomCarouselProps {
+  carouselList: (ReviewInterface | VoteInterface)[] | undefined
+  renderItem: (data: ReviewInterface | VoteInterface) => React.ReactNode
+}
+
+const CustomCarousel: React.FC<CustomCarouselProps> = ({
+  carouselList,
+  renderItem,
+}) => {
+  const carouselRef = useRef<HTMLUListElement>(null)
 
   const [currIndex, setCurrIndex] = useState(0)
 
@@ -12,10 +21,13 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
   let touchEndX = 0
 
   useEffect(() => {
-    carouselRef.current.style.transform = `translateX(-${currIndex}00%)`
+    if (carouselRef.current) {
+      carouselRef.current.style.transform = `translateX(-${currIndex}00%)`
+    }
   }, [currIndex])
 
-  const handleSwipe = direction => {
+  const handleSwipe = (direction: number) => {
+    if (!carouselList) return
     const newIndex = currIndex + direction
     if (newIndex > carouselList.length - 1 || newIndex < 0) return
 
@@ -26,11 +38,11 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
     }
   }
 
-  const handleTouchStart = e => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX = e.nativeEvent.touches[0].clientX
   }
 
-  const handleTouchEnd = e => {
+  const handleTouchEnd = (e: React.TouchEvent) => {
     touchEndX = e.nativeEvent.changedTouches[0].clientX
 
     if (touchStartX >= touchEndX) {
@@ -61,7 +73,7 @@ const CustomCarousel = ({ carouselList, renderItem }) => {
       </Button>
       <WrapCarousel onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         <Carousel ref={carouselRef}>
-          {carouselList?.map((item, index) => {
+          {carouselList?.map(item => {
             return (
               <CarouselContainer key={item.id}>
                 {renderItem(item)}
@@ -106,7 +118,7 @@ const WrapIndicator = styled.div`
   margin-top: 1rem;
 `
 
-const Indicator = styled.div`
+const Indicator = styled.div<{ $isActive: boolean }>`
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 100%;

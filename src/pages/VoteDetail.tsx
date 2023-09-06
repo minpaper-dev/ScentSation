@@ -19,7 +19,7 @@ import NotFound from './NotFound'
 import Loader from '../components/Loader'
 import { UserInterface, VoteInterface } from './Main'
 
-interface CommentInterface {
+export interface CommentInterface {
   id: string
   voteId: string
   userInfo: UserInterface

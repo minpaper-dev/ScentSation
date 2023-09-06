@@ -4,14 +4,22 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import useFirestore from '../../hooks/useFirestore'
 import profile from '../../assets/profile.png'
+import { CommentInterface } from '../../pages/VoteDetail'
 
-const CommentItem = ({
+interface CommentItem {
+  item: CommentInterface
+  uid: string
+  setDeleteCommentId: (id: string) => void
+  setIsDeleteCommentModal: (state: boolean) => void
+}
+
+const CommentItem: React.FC<CommentItem> = ({
   item,
   uid,
   setDeleteCommentId,
   setIsDeleteCommentModal,
 }) => {
-  const inputRef = useRef()
+  const inputRef = useRef<HTMLInputElement>(null)
   const { updateData } = useFirestore()
 
   const [isEdit, setIsEdit] = useState(false)
@@ -27,7 +35,9 @@ const CommentItem = ({
     setIsEdit(!isEdit)
 
     if (!isEdit) {
-      inputRef.current.focus()
+      if (inputRef.current) {
+        inputRef.current.focus()
+      }
     } else {
       await updateData('comment', item.id, { content: description })
     }
@@ -106,7 +116,7 @@ const Wrap = styled.div`
   align-items: center;
 `
 
-const Input = styled.input`
+const Input = styled.input<{ isEdit: boolean }>`
   width: 100%;
   font-size: 1.2rem;
   border: 0px;

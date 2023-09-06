@@ -1,7 +1,7 @@
 import React from 'react'
 import CustomCarousel from '../Custom/CustomCarousel'
 import ReviewItem from '../Review/ReviewItem'
-import type { ReviewInterface } from '../../pages/Main'
+import type { ReviewInterface, VoteInterface } from '../../pages/Main'
 
 interface MainReviewProps {
   reviewData: ReviewInterface[]

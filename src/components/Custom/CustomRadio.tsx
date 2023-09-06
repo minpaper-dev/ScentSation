@@ -3,23 +3,30 @@ import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 
-const CustomRadio = ({
+interface CustomRadioProps {
+  name: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  content: string
+  $isActive: boolean
+}
+
+const CustomRadio: React.FC<CustomRadioProps> = ({
   name,
   value,
   onChange,
-  checked,
   content,
   $isActive,
 }) => {
   return (
-    <Label key={'gender'} checked={checked} $isActive={$isActive}>
+    <Label key={'gender'} $isActive={$isActive}>
       <Input type="radio" name={name} value={value} onChange={onChange} />
       <CustomFont size={1.2} content={content} weight={$isActive ? 800 : 400} />
     </Label>
   )
 }
 
-const Label = styled.label`
+const Label = styled.label<{ $isActive: boolean }>`
   display: inline-block;
   background-color: ${props => (props.$isActive ? palette.Brown100 : 'white')};
   border: 1px solid

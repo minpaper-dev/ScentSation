@@ -3,7 +3,17 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 
-const CustomButtonModal = ({ content, yesEvent, noEvent }) => {
+interface CustomButtonModalProps {
+  content: string
+  yesEvent: () => void
+  noEvent: () => void
+}
+
+const CustomButtonModal: React.FC<CustomButtonModalProps> = ({
+  content,
+  yesEvent,
+  noEvent,
+}) => {
   return (
     <ModalBackdrop onClick={noEvent}>
       <Container>

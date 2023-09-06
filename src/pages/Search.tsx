@@ -17,15 +17,16 @@ interface BrandInterface {
   name: string
 }
 
-interface SearchInterface {
+export interface SearchInterface {
   id: string
   text: string
   date: string
+  index: number
 }
 
 export interface FilterProductInterface {
   name: PerfumeInterface[]
-  brand: BrandInterface[]
+  brand?: BrandInterface[]
 }
 
 const Search = () => {

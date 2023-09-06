@@ -17,7 +17,10 @@ const SearchResult: React.FC<SearchResultProps> = ({
 }) => {
   const navigate = useNavigate()
 
-  if (filterProducts?.brand?.length + filterProducts?.name?.length === 0) {
+  const brandLength = filterProducts.brand ? filterProducts.brand.length : 0
+  const nameLength = filterProducts.name.length
+
+  if (brandLength + nameLength === 0) {
     return (
       <NoSearch>
         <CustomFont size={1.2} content={'검색 결과가 없습니다.'} />

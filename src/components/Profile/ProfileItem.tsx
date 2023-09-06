@@ -2,10 +2,10 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import { Link } from 'react-router-dom'
-import palette from '../../styles/CustomColor'
 import profile from '../../assets/profile.png'
+import { UserInterface } from '../../pages/Main'
 
-const ProfileItem = ({ data }) => {
+const ProfileItem = ({ data }: { data: UserInterface }) => {
   return (
     <Container to={`/review/${data?.id}`}>
       <Profile>

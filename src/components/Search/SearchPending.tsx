@@ -4,19 +4,28 @@ import CustomFont from '../../styles/CustomFont'
 import palette from '../../styles/CustomColor'
 import closeIcon from '../../assets/icon_close.png'
 import { SEARCH_HISTORY } from '../../common/localstorage'
+import { SearchInterface } from '../../pages/Search'
 
-const SearchPending = ({ onClickItem, findProduct }) => {
-  const [data, setData] = useState([])
+interface SearchPending {
+  onClickItem: (value: string) => void
+  findProduct: (value: string) => void
+}
+
+const SearchPending: React.FC<SearchPending> = ({
+  onClickItem,
+  findProduct,
+}) => {
+  const [data, setData] = useState<SearchInterface[]>([])
 
   useEffect(() => {
-    let searchData = (
-      JSON.parse(localStorage.getItem(SEARCH_HISTORY)) || []
+    let searchData = JSON.parse(
+      localStorage.getItem(SEARCH_HISTORY) || 'null'
     ).reverse()
 
     setData(searchData)
   }, [])
 
-  const deleteSearch = id => {
+  const deleteSearch = (id: string) => {
     let filterData = data.filter(v => v.id !== id)
     localStorage.setItem(SEARCH_HISTORY, JSON.stringify(filterData))
     setData(filterData)
@@ -25,7 +34,7 @@ const SearchPending = ({ onClickItem, findProduct }) => {
   return (
     <>
       <div>
-        {data.map((item, index) => (
+        {data.map(item => (
           <SearchItem key={item.id}>
             <SearchButton
               onClick={() => {

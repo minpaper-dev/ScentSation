@@ -3,8 +3,9 @@ import { styled } from 'styled-components'
 import palette from '../../styles/CustomColor'
 import CustomFont from '../../styles/CustomFont'
 import profile from '../../assets/profile.png'
+import { UserInterface } from '../../pages/Main'
 
-const ProfileDetail = ({ userInfo }) => {
+const ProfileDetail = ({ userInfo }: { userInfo: UserInterface }) => {
   return (
     <Container>
       <ProfileImage src={userInfo.image || profile} />

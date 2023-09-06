@@ -15,7 +15,7 @@ const BottomNavi = () => {
     checkLogin()
   }, [])
 
-  const goToPage = page => {
+  const goToPage = (page: string) => {
     navigate(page)
   }
 

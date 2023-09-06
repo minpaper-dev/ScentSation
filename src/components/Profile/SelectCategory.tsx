@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 import { categories } from '../../common/data'
 
-const SelectCategory = ({ setIsCategoryModal, onChange }) => {
-  const onClickItem = value => {
+interface SelectCategoryProps {
+  setIsCategoryModal: (state: boolean) => void
+  onChange: (value: string, category: string) => void
+}
+
+const SelectCategory: React.FC<SelectCategoryProps> = ({
+  setIsCategoryModal,
+  onChange,
+}) => {
+  const onClickItem = (value: string) => {
     onChange(value, 'category')
     setIsCategoryModal(false)
   }
 
   return (
     <ModalBackdrop onClick={() => setIsCategoryModal(false)}>
-      <ModalView isVisible={true}>
+      <ModalView>
         {categories.map((item, index) => (
           <Item key={item.id} onClick={() => onClickItem(item.title)}>
             <CustomFont size={1.4} content={item.title} $marginRi={1} />

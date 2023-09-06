@@ -1,8 +1,14 @@
 import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
+import { FilterProductInterface } from '../../pages/Search'
 
-const Searching = ({ onClickItem, filterProducts }) => {
+interface Searching {
+  onClickItem: (value: string) => void
+  filterProducts: FilterProductInterface
+}
+
+const Searching: React.FC<Searching> = ({ onClickItem, filterProducts }) => {
   return (
     <>
       <Container>

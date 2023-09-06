@@ -2,7 +2,11 @@ import React from 'react'
 import { styled } from 'styled-components'
 import CustomFont from '../../styles/CustomFont'
 
-const CustomModal = ({ content }) => {
+interface CustomModalProps {
+  content: string
+}
+
+const CustomModal: React.FC<CustomModalProps> = ({ content }) => {
   return (
     <ModalBackdrop>
       <Container>

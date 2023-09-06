@@ -1,27 +1,32 @@
 import React, { useState } from 'react'
 import { styled } from 'styled-components'
-import { useQuery } from 'react-query'
+import { useQuery } from '@tanstack/react-query'
 
 import SearchPending from '../Search/SearchPending'
 import Searching from '../Search/Searching'
 import SearchResult from '../Search/SearchResult'
 import useFirestore from '../../hooks/useFirestore'
+import { PerfumeInterface } from '../../pages/Main'
+import { FilterProductInterface } from '../../pages/Search'
 
 const SelectPerfume = () => {
   const { getDataAll } = useFirestore()
 
-  const { data: productData } = useQuery({
-    queryKey: 'product',
-    queryFn: () => getDataAll('product'),
-    initialData: [],
-  })
+  const { data: productData } = useQuery<PerfumeInterface[] | undefined>(
+    ['product'],
+    () => getDataAll<PerfumeInterface[]>('product')
+  )
 
   const [inputState, setInputState] = useState(0)
   const [inputValue, setInputValue] = useState('')
 
-  const [filterProducts, setFilterProducts] = useState([])
+  const [filterProducts, setFilterProducts] = useState<FilterProductInterface>({
+    name: [],
+  })
 
-  const findProduct = text => {
+  const findProduct = (text: string) => {
+    if (!productData) return
+
     const name = productData.filter(v =>
       v.name.replace(/\s+/g, '').includes(text)
     )
@@ -29,7 +34,7 @@ const SelectPerfume = () => {
     setFilterProducts({ name })
   }
 
-  const onChange = e => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)
     if (e.target.value.length) setInputState(1)
     else setInputState(0)
@@ -37,7 +42,7 @@ const SelectPerfume = () => {
     findProduct(e.target.value)
   }
 
-  const onKeyDownEnter = e => {
+  const onKeyDownEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (e.nativeEvent.isComposing) return
 
@@ -45,7 +50,7 @@ const SelectPerfume = () => {
     }
   }
 
-  const onClickItem = value => {
+  const onClickItem = (value: string) => {
     setInputState(2)
     setInputValue(value)
   }
@@ -72,8 +77,7 @@ const SelectPerfume = () => {
             filterProducts={filterProducts}
           />
         ) : (
-          // <SearchResult filterProducts={filterProducts} isSelect={true} />
-          <></>
+          <SearchResult filterProducts={filterProducts} isSelect={true} />
         )}
       </ModalView>
     </ModalBackdrop>
