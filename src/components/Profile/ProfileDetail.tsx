@@ -5,7 +5,12 @@ import CustomFont from '../../styles/CustomFont'
 import profile from '../../assets/profile.png'
 import { UserInterface } from '../../pages/Main'
 
-const ProfileDetail = ({ userInfo }: { userInfo: UserInterface }) => {
+const ProfileDetail = ({
+  userInfo,
+}: {
+  userInfo: UserInterface | undefined
+}) => {
+  if (!userInfo) return <></>
   return (
     <Container>
       <ProfileImage src={userInfo.image || profile} />

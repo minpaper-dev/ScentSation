@@ -95,14 +95,11 @@ function App() {
                 path="/filter"
                 element={<AnimatedPage element={<Filter />} />}
               />
-              {/* <Route
-                path="/product/:id"
-                element={<AnimatedPage element={<Product />} />}
-              /> */}
               <Route
                 path="/product/:id"
-                element={<AnimatedPage element={<ProductDetail />} />}
+                element={<AnimatedPage element={<Product />} />}
               />
+
               <Route
                 path="/write"
                 element={<AnimatedPage element={<Write />} />}

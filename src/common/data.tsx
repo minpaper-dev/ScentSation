@@ -48,7 +48,7 @@ export const FILTER_CATEGORY = [
   '머스크',
 ]
 
-export const REVIEW_DATA_COLOR = {
+export const REVIEW_DATA_COLOR: { [key: string]: string } = {
   male: palette.Blue100,
   female: palette.Pink100,
   neutral: palette.Gray100,
@@ -61,7 +61,7 @@ export const REVIEW_DATA_COLOR = {
   perfume: palette.Brown500,
 }
 
-export const REVIEW_DATA_TEXT = {
+export const REVIEW_DATA_TEXT: { [key: string]: string } = {
   male: '남성에게 더 잘어울려요',
   female: '여성에게 더 잘어울려요',
   neutral: '성별과 상관 없어요',

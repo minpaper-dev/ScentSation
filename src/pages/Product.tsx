@@ -15,7 +15,14 @@ import useFirestore from '../hooks/useFirestore'
 import Loader from '../components/Loader'
 import { MY_UID } from '../common/localstorage'
 import { formatAmountWithCommas } from '../utils/format'
-import { PerfumeInterface } from './Main'
+import { PerfumeInterface, ReviewInterface } from './Main'
+
+interface SummaryReviewDataInterface {
+  gender: { male: number; female: number; neutral: number }
+  season: { spring: number; summer: number; autumn: number; winter: number }
+  vitality: { cologne: number; toilette: number; perfume: number }
+  [key: string]: any // 문자열 인덱스 시그니처 추가
+}
 
 interface ProductInterface {
   id: string
@@ -44,12 +51,13 @@ const Product: React.FC = () => {
   >(['product', id], () => getDataWithId<ProductInterface>('product', id))
 
   // 상품의 리뷰 정보 조회
-  const { data: reviewData, isLoading: isReviewLoading } = useQuery({
-    queryKey: ['review', id],
-    queryFn: () => getDataWithQuery('review', 'product.id', '==', id),
-    staleTime: 0,
-    initialData: [],
-  })
+  const { data: reviewData, isLoading: isReviewLoading } = useQuery<
+    ReviewInterface[] | undefined
+  >(
+    ['review', id],
+    () => getDataWithQuery<ReviewInterface[]>('review', 'product.id', '==', id),
+    { initialData: [] }
+  )
 
   // 리뷰 삭제
   // const onDeleteVote = useMutation(({ id }) => deleteData('review', id), {
@@ -62,25 +70,28 @@ const Product: React.FC = () => {
   // })
 
   const [isLoginModal, setIsLoginModal] = useState(false)
-  const [summaryReviewData, setSummaryReviewData] = useState(REVIEW)
+  const [summaryReviewData, setSummaryReviewData] =
+    useState<SummaryReviewDataInterface>(REVIEW)
   const [rate, setRate] = useState(0)
+  const [reviewCount, setReviewCount] = useState(0)
 
-  // useEffect(() => {
-  //   // 리뷰 통계 작업
-  //   const obj = JSON.parse(JSON.stringify(REVIEW));
-  //   let count = 0;
+  useEffect(() => {
+    // 리뷰 통계 작업
+    const obj = JSON.parse(JSON.stringify(REVIEW))
+    let count = 0
 
-  //   if (reviewData.length > 0) {
-  //     reviewData.forEach(item => {
-  //       obj.gender[item.gender]++;
-  //       obj.season[item.season]++;
-  //       obj.vitality[item.vitality]++;
-  //       count += item.rate;
-  //     });
-  //     setRate((count / reviewData.length).toFixed(1));
-  //     setSummaryReviewData(obj);
-  //   }
-  // }, [reviewData]);
+    if (reviewData && reviewData.length > 0) {
+      reviewData.forEach(item => {
+        obj.gender[item.gender]++
+        obj.season[item.season]++
+        obj.vitality[item.vitality]++
+        count += item.rate
+      })
+      setRate(Number((count / reviewData.length).toFixed(1)))
+      setSummaryReviewData(obj)
+      setReviewCount(reviewData.length)
+    }
+  }, [reviewData])
 
   const goReviewWrite = () => {
     if (uid) {
@@ -90,11 +101,11 @@ const Product: React.FC = () => {
     }
   }
 
-  // if (isProductLoading || isReviewLoading) return <Loader />;
+  if (isProductLoading || isReviewLoading) return <Loader />
 
   return (
     <>
-      {/* <Container>
+      <Container>
         <Header pageName={''} />
         <ProductImage src={productData?.image} />
         <ProductInfo>
@@ -126,7 +137,7 @@ const Product: React.FC = () => {
           </WrapRate>
           <CustomFont
             size={1}
-            content={`리뷰 : ${reviewData.length}개`}
+            content={`리뷰 : ${reviewData?.length}개`}
             $marginTop={1}
             $marginBt={1}
           />
@@ -142,7 +153,7 @@ const Product: React.FC = () => {
           </Flex>
         </ProductInfo>
         <Divider />
-        {reviewData.length === 0 ? (
+        {reviewData?.length === 0 ? (
           <NoReview>
             <FrownOutlined style={{ fontSize: '5rem' }} />
             <CustomFont
@@ -160,8 +171,7 @@ const Product: React.FC = () => {
                   {Object.keys(summaryReviewData[item]).map(category => (
                     <BarGraphItem
                       $width={
-                        (summaryReviewData[item][category] / reviewData.length) *
-                        100
+                        (summaryReviewData[item][category] / reviewCount) * 100
                       }
                       bgc={REVIEW_DATA_COLOR[category]}
                       key={`${item}-${category}`}
@@ -171,13 +181,17 @@ const Product: React.FC = () => {
 
                 {Object.keys(summaryReviewData[item]).map(category => (
                   <GraphText key={`${item}-${category}`}>
-                    <CustomFont size={1.2} content={REVIEW_DATA_TEXT[category]} />
+                    <CustomFont
+                      size={1.2}
+                      content={REVIEW_DATA_TEXT[category]}
+                    />
                     <CustomFont
                       size={1.2}
                       content={`${
                         summaryReviewData[item][category]
                           ? (
-                              (summaryReviewData[item][category] / reviewData.length) *
+                              (summaryReviewData[item][category] /
+                                reviewCount) *
                               100
                             ).toFixed(1)
                           : 0
@@ -190,11 +204,11 @@ const Product: React.FC = () => {
             ))}
             <Divider />
             <WrapReview>
-              {reviewData.map((review, index) => (
+              {reviewData?.map((review, index) => (
                 <ReviewItem
                   key={review.id}
                   data={review}
-                  onDeleteVote={() => onDeleteVote.mutate({ id: review.id })}
+                  // onDeleteVote={() => onDeleteVote.mutate({ id: review.id })}
                   isNoProduct={true}
                 />
               ))}
@@ -212,13 +226,13 @@ const Product: React.FC = () => {
             content={`로그인 한 유저만 사용가능한 기능입니다.
         로그인 하러 이동하시겠습니까?`}
             yesEvent={() => {
-              setIsLoginModal(false);
-              navigate('/login');
+              setIsLoginModal(false)
+              navigate('/login')
             }}
             noEvent={() => setIsLoginModal(false)}
           />
         )}
-      </Container> */}
+      </Container>
     </>
   )
 }

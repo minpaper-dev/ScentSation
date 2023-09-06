@@ -134,7 +134,6 @@ const ReviewEdit = () => {
                 key={item.value}
                 name={'gender'}
                 value={item.value}
-                checked={true}
                 content={item.content}
                 onChange={onChangeRadio}
                 $isActive={reviewInfo.gender === item.value}
@@ -161,7 +160,6 @@ const ReviewEdit = () => {
                 key={item.value}
                 name={'season'}
                 value={item.value}
-                checked={true}
                 content={item.content}
                 onChange={onChangeRadio}
                 $isActive={reviewInfo.season === item.value}
@@ -188,7 +186,6 @@ const ReviewEdit = () => {
                 key={item.value}
                 name={'vitality'}
                 value={item.value}
-                checked={true}
                 content={item.content}
                 onChange={onChangeRadio}
                 $isActive={reviewInfo.vitality === item.value}

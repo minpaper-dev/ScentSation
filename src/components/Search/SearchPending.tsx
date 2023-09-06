@@ -18,9 +18,8 @@ const SearchPending: React.FC<SearchPending> = ({
   const [data, setData] = useState<SearchInterface[]>([])
 
   useEffect(() => {
-    let searchData = JSON.parse(
-      localStorage.getItem(SEARCH_HISTORY) || 'null'
-    ).reverse()
+    let searchData =
+      JSON.parse(localStorage.getItem(SEARCH_HISTORY) || 'null') || [].reverse()
 
     setData(searchData)
   }, [])

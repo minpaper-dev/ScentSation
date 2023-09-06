@@ -3,7 +3,7 @@ import { styled } from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import { useLocation } from 'react-router-dom'
 import { FreeMode, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide, SwiperProps } from 'swiper/react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/free-mode'
@@ -38,15 +38,16 @@ const Filter = () => {
   }, [category, isLoading])
 
   const filter = () => {
-    if (!productData) return
+    if (!productData) {
+      return
+    }
     if (category === '전체') {
       setFilterProduct(productData)
     } else {
-      setFilterProduct(
-        productData?.filter(
-          item => item.category && item.category.includes(category)
-        )
+      const filteredProducts = productData.filter(
+        item => item.category && item.category.includes(category)
       )
+      setFilterProduct(filteredProducts)
     }
   }
 
@@ -55,7 +56,7 @@ const Filter = () => {
     <Container>
       <Header pageName={'필터'} />
       <WrapTags>
-        {/* <Swiper
+        <Swiper
           slidesPerView={6}
           spaceBetween={10}
           freeMode={true}
@@ -79,7 +80,7 @@ const Filter = () => {
               </Tag>
             </SwiperSlide>
           ))}
-        </Swiper> */}
+        </Swiper>
       </WrapTags>
 
       {filterProduct.map(item => (

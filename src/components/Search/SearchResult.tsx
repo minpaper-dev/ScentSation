@@ -20,6 +20,8 @@ const SearchResult: React.FC<SearchResultProps> = ({
   const brandLength = filterProducts.brand ? filterProducts.brand.length : 0
   const nameLength = filterProducts.name.length
 
+  console.log(filterProducts)
+
   if (brandLength + nameLength === 0) {
     return (
       <NoSearch>

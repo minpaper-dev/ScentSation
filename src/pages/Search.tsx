@@ -92,9 +92,8 @@ const Search = () => {
 
     const data = { id: uuidv4(), text, date }
 
-    const localSearch = JSON.parse(
-      localStorage.getItem(SEARCH_HISTORY) || 'null'
-    )
+    const localSearch =
+      JSON.parse(localStorage.getItem(SEARCH_HISTORY) || 'null') || []
 
     localSearch.map((item: SearchInterface, index: number) => {
       if (item.text === text) {

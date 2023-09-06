@@ -11,12 +11,12 @@ interface CustomLogoProps {
 const CustomLogo: React.FC<CustomLogoProps> = ({ $marginTop, $marginBt }) => {
   return (
     <Logo $marginTop={$marginTop} $marginBt={$marginBt}>
-      {/* <CustomFont
+      <CustomFont
         size={2.5}
         content={'ScentSation'}
         color={palette.Brown200}
         weight={800}
-      /> */}
+      />
     </Logo>
   )
 }

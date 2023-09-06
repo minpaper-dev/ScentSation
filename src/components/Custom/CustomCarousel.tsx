@@ -6,7 +6,7 @@ import { ReviewInterface, VoteInterface } from '../../pages/Main'
 
 interface CustomCarouselProps {
   carouselList: (ReviewInterface | VoteInterface)[] | undefined
-  renderItem: (data: ReviewInterface | VoteInterface) => React.ReactNode
+  renderItem: any
 }
 
 const CustomCarousel: React.FC<CustomCarouselProps> = ({
