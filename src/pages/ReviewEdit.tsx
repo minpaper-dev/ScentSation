@@ -1,54 +1,29 @@
 import React, { useState } from 'react'
-import { styled } from 'styled-components'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from 'react-query'
-import { Alert, Rate } from 'antd'
-import { StarFilled, StarOutlined } from '@ant-design/icons'
-import { useRecoilState } from 'recoil'
-
-import { myInfoState } from '../recoil/atoms'
-import { REVIEW_FORM } from '../common/data'
 import Header from '../components/Header'
-import CustomModal from '../components/Custom/CustomModal'
-import CustomRadio from '../components/Custom/CustomRadio'
+import { styled } from 'styled-components'
 import CustomFont from '../styles/CustomFont'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { REVIEW_FORM } from '../common/data'
+import CustomRadio from '../components/Custom/CustomRadio'
+import { Rate } from 'antd'
+import { StarFilled } from '@ant-design/icons'
 import palette from '../styles/CustomColor'
 import useFirestore from '../hooks/useFirestore'
+import CustomModal from '../components/Custom/CustomModal'
 
-const Write = () => {
-  const navigate = useNavigate()
+const ReviewEdit = () => {
   const { state } = useLocation()
-  const { productInfo } = state
-  const queryClient = useQueryClient()
+  const { updateData } = useFirestore()
+  const navigate = useNavigate()
 
-  const { addData } = useFirestore()
-  const [myInfo] = useRecoilState(myInfoState)
-
-  const onPostReview = useMutation(
-    () =>
-      addData('review', '', {
-        ...reviewInfo,
-        product: productInfo,
-        user: myInfo,
-        rate: rate,
-      }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['review', productInfo.id] })
-      },
-      onError: error => {
-        console.log(`Delete Todo Error ${error}`)
-      },
-    }
-  )
-
+  const [rate, setRate] = useState(state.rate)
   const [isModal, setIsModal] = useState(false)
-  const [rate, setRate] = useState(0)
   const [reviewInfo, setReviewInfo] = useState({
-    gender: '',
-    season: '',
-    vitality: '',
-    description: '',
+    gender: state.gender,
+    season: state.season,
+    vitality: state.vitality,
+    tag: [],
+    description: state.description,
   })
   const [errorMessage, setErrorMessage] = useState({
     rate: { state: false, message: '' },
@@ -58,7 +33,11 @@ const Write = () => {
     description: { state: false, message: '' },
   })
 
-  const onChangeRadio = e => {
+  const onChangeRadio = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     let copy = reviewInfo
     copy = { ...copy, [e.target.name]: e.target.value }
     setReviewInfo(copy)
@@ -69,8 +48,7 @@ const Write = () => {
       checkError()
       return
     } else {
-      onPostReview.mutate()
-      onModalHandler()
+      postReview()
     }
   }
 
@@ -105,6 +83,14 @@ const Write = () => {
     setErrorMessage(copyError)
   }
 
+  const postReview = async () => {
+    updateData('review', state.id, {
+      ...reviewInfo,
+      rate: rate,
+    })
+    onModalHandler()
+  }
+
   const onModalHandler = () => {
     setIsModal(true)
     setTimeout(() => {
@@ -115,13 +101,12 @@ const Write = () => {
 
   return (
     <>
-      <Header pageName={'리뷰 작성'} />
+      <Header pageName={'리뷰 수정'} />
       <Container>
         <Product>
-          <ProductImage src={productInfo.image} />
-
-          <CustomFont size={1.4} content={productInfo.brand} $marginBt={1} />
-          <CustomFont size={1.8} weight={800} content={productInfo.name} />
+          <ProductImage src={state.product.image} />
+          <CustomFont size={1.4} content={state.product.brand} $marginBt={1} />
+          <CustomFont size={1.8} weight={800} content={state.product.name} />
         </Product>
         <Form>
           <Rate
@@ -164,7 +149,6 @@ const Write = () => {
               $marginTop={1}
             />
           )}
-
           <CustomFont
             size={1.2}
             weight={500}
@@ -240,11 +224,9 @@ const Write = () => {
           )}
         </Form>
         <SubmitButton onClick={onClickBtn}>
-          <CustomFont size={1.4} weight={800} content={'리뷰쓰기'} />
+          <CustomFont size={1.4} weight={800} content={'리뷰 수정'} />
         </SubmitButton>
-        {isModal && (
-          <CustomModal content={'리뷰를 작성해주셔서 감사합니다 : )'} />
-        )}
+        {isModal && <CustomModal content={'리뷰 수정이 완료되었습니다.'} />}
       </Container>
     </>
   )
@@ -270,6 +252,7 @@ const ProductImage = styled.img`
   margin: 0 auto 2rem;
   background-color: white;
 `
+
 const Form = styled.form`
   width: 90%;
   margin: 0 auto;
@@ -307,4 +290,4 @@ const SubmitButton = styled.button`
   border-radius: 1rem;
 `
 
-export default Write
+export default ReviewEdit

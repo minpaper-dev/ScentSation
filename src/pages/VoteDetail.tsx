@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import { increment } from 'firebase/firestore/lite'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useRecoilState } from 'recoil'
 import { myInfoState } from '../recoil/atoms'
 import { CommentOutlined } from '@ant-design/icons'
@@ -17,6 +17,14 @@ import useFirestore from '../hooks/useFirestore'
 import { MY_UID } from '../common/localstorage'
 import NotFound from './NotFound'
 import Loader from '../components/Loader'
+import { UserInterface, VoteInterface } from './Main'
+
+interface CommentInterface {
+  id: string
+  voteId: string
+  userInfo: UserInterface
+  content: string
+}
 
 const VoteDetail = () => {
   const { id } = useParams()
@@ -31,95 +39,100 @@ const VoteDetail = () => {
   const [myInfo] = useRecoilState(myInfoState)
 
   // 해당 투표 정보 조회
-  const { data: voteData, isLoading: isVoteLoading } = useQuery({
-    queryKey: ['vote', id],
-    queryFn: () => getDataWithId('vote', id),
-    initialData: {},
-  })
+  const { data: voteData, isLoading: isVoteLoading } = useQuery<
+    VoteInterface | undefined
+  >(['vote', id], () => getDataWithId<VoteInterface>('vote', id))
 
   // 해당 투표의 댓글 조회
-  const { data: commentData, isLoading: isCommentLoading } = useQuery({
-    queryKey: ['comment', id],
-    queryFn: () => getDataWithQuery('comment', 'voteId', '==', id),
-  })
+  const { data: commentData, isLoading: isCommentLoading } = useQuery<
+    CommentInterface[] | undefined
+  >(['comment', id], () =>
+    getDataWithQuery<CommentInterface[]>('comment', 'voteId', '==', id)
+  )
 
   // 해당 투표 삭제
-  const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vote'] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  // const onDeleteVote = useMutation(({ id }) => deleteData('vote', id), {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['vote'] })
+  //   },
+  //   onError: error => {
+  //     console.log(`Delete Todo Error ${error}`)
+  //   },
+  // })
 
   // 댓글 삭제
-  const onDeleteComment = useMutation({
-    mutationFn: () => deleteData('comment', deleteCommentId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', id] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  // const onDeleteComment = useMutation({
+  //   mutationFn: () => deleteData('comment', deleteCommentId),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['comment', id] })
+  //   },
+  //   onError: error => {
+  //     console.log(`Delete Todo Error ${error}`)
+  //   },
+  // })
 
   // 댓글 추가
-  const onPostComment = useMutation({
-    mutationFn: () =>
-      addData('comment', '', {
-        voteId: voteData.id,
-        userInfo: myInfo,
-        content: commentInputValue,
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['comment', id] })
-    },
-    onError: error => {
-      console.log(`Delete Todo Error ${error}`)
-    },
-  })
+  // const onPostComment = useMutation({
+  //   mutationFn: () =>
+  //     addData('comment', '', {
+  //       voteId: voteData.id,
+  //       userInfo: myInfo,
+  //       content: commentInputValue,
+  //     }),
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries({ queryKey: ['comment', id] })
+  //   },
+  //   onError: error => {
+  //     console.log(`Delete Todo Error ${error}`)
+  //   },
+  // })
 
   const [commentInputValue, setCommentInputValue] = useState('')
   const [isLoginModal, setIsLoginModal] = useState(false)
   const [isDeleteCommentModal, setIsDeleteCommentModal] = useState(false)
   const [deleteCommentId, setDeleteCommentId] = useState('')
 
-  const postComment = async () => {
-    if (uid) {
-      onPostComment.mutate()
-      await updateData('vote', id, { commentCount: increment(1) })
-      setCommentInputValue('')
-    } else {
-      setIsLoginModal(true)
-    }
-  }
+  // const postComment = async () => {
+  //   if (uid) {
+  //     onPostComment.mutate()
+  //     await updateData('vote', id, { commentCount: increment(1) })
+  //     setCommentInputValue('')
+  //   } else {
+  //     setIsLoginModal(true)
+  //   }
+  // }
 
-  const deleteComment = async () => {
-    onDeleteComment.mutate()
-    await updateData('vote', id, { commentCount: increment(-1) })
+  // const deleteComment = async () => {
+  //   onDeleteComment.mutate()
+  //   await updateData('vote', id, { commentCount: increment(-1) })
 
-    setIsDeleteCommentModal(false)
-    setDeleteCommentId('')
-  }
+  //   setIsDeleteCommentModal(false)
+  //   setDeleteCommentId('')
+  // }
 
   if (isVoteLoading || isCommentLoading) return <Loader />
 
-  if (Object.keys(voteData).length < 2) return <NotFound />
+  if (voteData && Object.keys(voteData).length < 2) return <NotFound />
 
   return (
     <>
       <Header pageName={'댓글'} />
       <Container>
-        <VoteItem
-          data={voteData}
-          setIsLoginModal={setIsLoginModal}
-          onDeleteVote={onDeleteVote}
-          isGoBack={true}
-        />
+        {voteData && (
+          <VoteItem
+            data={voteData}
+            setIsLoginModal={setIsLoginModal}
+            // onDeleteVote={onDeleteVote}
+            isGoBack={true}
+          />
+        )}
+
         <Flex>
           <CommentOutlined style={{ fontSize: '3rem' }} />
-          <CustomFont content={commentData.length} $marginLf={0.5} />
+          <CustomFont
+            content={commentData ? commentData.length : 0}
+            $marginLf={0.5}
+          />
         </Flex>
         <WrapInput>
           <Input
@@ -127,11 +140,13 @@ const VoteDetail = () => {
             value={commentInputValue}
             onChange={e => setCommentInputValue(e.target.value)}
           />
-          <AddButton onClick={postComment}>
+          <AddButton
+          // onClick={postComment}
+          >
             <CustomFont content={'등록하기'} />
           </AddButton>
         </WrapInput>
-        {commentData.map(item => (
+        {commentData?.map(item => (
           <>
             <CommentItem
               key={item.id}
@@ -157,7 +172,10 @@ const VoteDetail = () => {
         {isDeleteCommentModal && (
           <CustomButtonModal
             content={'정말로 댓글을 삭제하시겠습니까?'}
-            yesEvent={deleteComment}
+            // yesEvent={deleteComment}
+            yesEvent={() => {
+              console.log('test')
+            }}
             noEvent={() => setIsDeleteCommentModal(false)}
           />
         )}
