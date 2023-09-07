@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'styled-components'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from 'react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Rate } from 'antd'
 import { StarFilled } from '@ant-design/icons'
 import { useRecoilState } from 'recoil'
