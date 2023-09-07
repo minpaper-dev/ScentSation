@@ -15,6 +15,7 @@ import { PerfumeInterface } from './Main'
 const Filter = () => {
   const { state } = useLocation()
   const { getDataAll } = useFirestore()
+  console.log(state)
 
   const { data: productData, isLoading } = useQuery<
     PerfumeInterface[] | undefined
@@ -26,10 +27,10 @@ const Filter = () => {
   const [category, setCategory] = useState(state.category || '')
 
   useEffect(() => {
-    if (!isLoading) {
+    if (productData && productData.length > 0) {
       filter()
     }
-  }, [category, isLoading])
+  }, [category, isLoading, productData])
 
   const filter = () => {
     if (!productData) {

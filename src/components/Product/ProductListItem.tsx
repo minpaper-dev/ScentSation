@@ -75,6 +75,7 @@ const ProductInfo = styled.div`
   margin-left: 1.5rem;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `
 
 export default ProductListItem
