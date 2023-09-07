@@ -2,12 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { styled } from 'styled-components'
 import { useQuery } from '@tanstack/react-query'
 import { useLocation } from 'react-router-dom'
-import { FreeMode, Pagination } from 'swiper/modules'
-import { Swiper, SwiperSlide, SwiperProps } from 'swiper/react'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/free-mode'
-import 'swiper/css/pagination'
 
 import { FILTER_CATEGORY } from '../common/data'
 import Header from '../components/Header'
@@ -56,31 +50,20 @@ const Filter = () => {
     <Container>
       <Header pageName={'필터'} />
       <WrapTags>
-        <Swiper
-          slidesPerView={6}
-          spaceBetween={10}
-          freeMode={true}
-          modules={[FreeMode, Pagination]}
-          className="mySwiper"
-          style={{ paddingRight: 15 }}
-        >
-          {FILTER_CATEGORY.map(item => (
-            <SwiperSlide key={item}>
-              <Tag
-                $bgc={category === item ? palette.Brown500 : palette.Brown200}
-                onClick={() => {
-                  setCategory(item)
-                }}
-              >
-                <CustomFont
-                  color={'white'}
-                  weight={category === item ? 600 : 400}
-                  content={item}
-                />
-              </Tag>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        {FILTER_CATEGORY.map(item => (
+          <Tag
+            $bgc={category === item ? palette.Brown500 : palette.Brown200}
+            onClick={() => {
+              setCategory(item)
+            }}
+          >
+            <CustomFont
+              color={'white'}
+              weight={category === item ? 600 : 400}
+              content={item}
+            />
+          </Tag>
+        ))}
       </WrapTags>
 
       {filterProduct.map(item => (
@@ -109,8 +92,9 @@ const WrapTags = styled.div`
 const Tag = styled.button<{ $bgc: string }>`
   background-color: ${props => props.$bgc};
   border-radius: 1rem;
-  width: 100%;
+  width: 20%;
   padding: 0.6rem 0;
+  margin-right: 1rem;
 `
 
 export default Filter
